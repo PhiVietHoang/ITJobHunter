@@ -18,7 +18,7 @@ module.exports = {
         arrowParens: 'always',
         semi: false,
         trailingComma: 'none',
-        tabWidth: 2,
+        tabWidth: 4,
         endOfLine: 'auto',
         useTabs: false,
         singleQuote: true,
