@@ -1,11 +1,18 @@
-import { Button } from '~/components/ui/button'
+import { Outlet } from 'react-router-dom'
+
+import Navbar from './components/layout/Navbar'
 
 const App = () => {
     return (
         <div>
-            <Button>
-                <span>Hello World!</span>
-            </Button>
+            <div className='bg-white'>
+                <div className='mx-auto w-2/3'>
+                    <Navbar />
+                </div>
+            </div>
+            <div className='mx-auto w-2/3'>
+                <Outlet />
+            </div>
         </div>
     )
 }
