@@ -13,7 +13,6 @@ import {
   BsFillWalletFill,
 } from "react-icons/bs";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { getJobs } from "../Redux/JobsSearching/action";
 
 export const LandingPage2 = () => {
   const auth = useSelector((store) => store.auth.username);
@@ -22,17 +21,6 @@ export const LandingPage2 = () => {
 
   console.log("auth", auth);
   const [skill,setSkill] =useState("");
-
-  const [search,setSearch]=useState(false)
-
-  const handleSkill=()=>{
-    dispatch(getJobs(skill));
-    setSearch(true)
-  }
-  if(search){
-navigate(`/search/${skill}`)
-  }
-
   return (
     <>
       <Navbar2></Navbar2>
