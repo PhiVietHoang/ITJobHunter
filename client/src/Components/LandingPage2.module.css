@@ -1,0 +1,191 @@
+.backgroundImage{
+    background-image:"https://static.naukimg.com/s/5/105/i/dashboardbg.png"
+}
+.head{
+    color:white;
+    font-size:20px;
+    margin-bottom:1.5%
+}
+.searchBtn{
+    background:rgb(74,144,226);
+    color:white;
+    padding:1.2%;
+    width:13%
+}
+.profileBox{
+    width:25%;
+     height:330px;
+
+    background:white;
+
+    margin-top:5.7%;
+   
+    box-shadow:rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px
+}
+.appearences{
+    width:50%;
+     padding:2%;
+      margin-right:2%;
+
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.avatarBox{
+    padding-top:5%;
+     width:32%;
+      display:flex;
+     margin:auto;
+      text-align: center;
+      align-items: center;
+}
+.name{
+   
+    text-align:center;
+    padding-top:4%;
+}
+
+.right_first_div{
+    padding-top:2%;
+    width:100%;
+    margin-left:5%;
+
+    background:rgb(254,249,244);
+}
+.first_div_heading{
+    
+        padding-left: 5%;
+        padding-top: 5%;
+        margin-bottom: 2%;
+     
+}
+.rate_company{
+   
+    padding: 2%;
+    color: white;
+    margin-left: 70%;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    margin-bottom: 2%;
+}
+.second_div_upper_heading{
+    font-size: 25px;
+    font-weight: bold;
+    padding-left: 5%;
+    margin-top: 10%;
+}
+.second_div{
+    margin-top:2%;
+            padding-top:2%;
+            width:100%;
+            margin-left:5%;
+            background:white;
+            box-shadow:rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.third_div{
+
+    margin-top:10%;
+    padding-top:2%;
+    width:100%;
+    margin-left:5%;
+    background:white;
+    box-shadow:rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+
+.second_div_first_heading{
+   
+        font-size: 18px;
+        margin-top: 2%;
+        margin-bottom: 1%;
+        font-weight: bold;
+   
+}
+
+.experince_icon{
+ 
+        width: 30px;
+        height: 30px;
+        margin-top: 2%;
+        margin-right: 2%
+    
+}
+
+.third_div_heading{
+   
+        font-size: 20px;
+        font-weight: bold;
+        margin-left: 2%;
+        margin-bottom: 2%;
+   
+}
+
+.sixth_div_first_box{
+    width:100%;
+     display:flex; 
+     padding:4%;
+}
+
+.credit_score{
+   
+        margin-right: 5%;
+        font-size: 30px;
+        font-weight: bold;
+     
+}
+.buy_credits{
+    padding:2%;
+
+    color:white;
+  
+    margin-top:2%;
+    margin-bottom:2%;
+}
+
+.last_div{
+    margin-top:10%;
+    margin-bottom:4%;
+    padding-top:2%;
+    width:100%;
+    margin-left:5%;
+    background:white;
+    box-shadow:rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.send_message{
+  
+        color: blue;
+        font-size: 17px;
+        text-align: center;
+     
+}
+
+.follow_btn{
+    color:blue;
+    border:1px solid blue;
+    font-size:15px;
+}
+.right_first_box{
+    width:100%;
+    margin-top:60%;
+    display:flex;
+    background:white;
+    box-shadow:
+      rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+}
+.right_second_div{
+    width:100%;
+    margin-top:20%;
+    padding:6%;
+    background:white;
+    box-shadow:
+      rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+
+}
+.right_third_div{
+    width:100%;
+    margin-top:20%;
+    padding:6%;
+    background:white;
+    box-shadow:
+      rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px
+    
+}
