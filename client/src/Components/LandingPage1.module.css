@@ -1,0 +1,9 @@
+.jobsButton>Button{
+    border-radius:15px;
+    border: 1px solid gray;
+    background: none;
+    color:black;
+    padding:1px;
+    margin:10px;
+    
+    }
