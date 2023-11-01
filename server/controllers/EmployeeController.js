@@ -127,7 +127,7 @@ exports.getEmployeeById = async (req, res) => {
 
 exports.updateEmployee = async (req, res) => {
     const employeeId = req.params.id;
-    const { name, email, phoneNumber, dob, joinDate, avatar } = req.body;
+    const { name, email, phoneNumber, dob, joinDate, avatar, description, experience, address, gender, education, certificates, skill } = req.body;
 
     try {
         if (email) {
@@ -148,10 +148,17 @@ exports.updateEmployee = async (req, res) => {
                 dob,
                 joinDate,
                 avatar,
+                description,
+                experience,
+                address,
+                gender,
+                education,
+                certificates,
+                skill
             },
             { new: true }
         );
-
+        console.log("hello");
         if (!updatedEmployee) {
             return res.status(404).json({
                 message: 'Employee not found.',

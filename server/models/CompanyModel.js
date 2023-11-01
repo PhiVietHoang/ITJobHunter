@@ -37,7 +37,7 @@ const companySchema = new mongoose.Schema({
         default: [],
     },
     companyLogo: {
-        type: Buffer,
+        type: String,
     },
     description: {
         type: String,
