@@ -6,6 +6,12 @@ import './index.css'
 import App from './App.tsx'
 import Home from './pages/Home.tsx'
 import EmployeeProfile from './pages/EmployeeProfile.tsx'
+import EmployeeAuth from './pages/EmployeeAuth.tsx'
+import EmployeeLoginForm from './components/EmployeeLoginForm.tsx'
+import EmployeeRegisterForm from './components/EmployeeRegisterForm.tsx'
+import EmployerAuth from './pages/EmployerAuth.tsx'
+import EmployerLoginForm from './components/EmployerLoginForm.tsx'
+import EmployerRegisterForm from './components/EmployerRegisterForm.tsx'
 
 const router = createBrowserRouter([
     {
@@ -19,6 +25,34 @@ const router = createBrowserRouter([
             {
                 path: '/profile/:id',
                 element: <EmployeeProfile />
+            }
+        ]
+    },
+    {
+        path: '/auth',
+        element: <EmployeeAuth />,
+        children: [
+            {
+                path: '/auth/login',
+                element: <EmployeeLoginForm />
+            },
+            {
+                path: '/auth/register',
+                element: <EmployeeRegisterForm />
+            }
+        ]
+    },
+    {
+        path: '/employer/auth',
+        element: <EmployerAuth />,
+        children: [
+            {
+                path: 'login',
+                element: <EmployerLoginForm />
+            },
+            {
+                path: 'register',
+                element: <EmployerRegisterForm />
             }
         ]
     }
