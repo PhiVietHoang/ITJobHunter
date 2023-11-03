@@ -5,6 +5,8 @@ const connectWithDB = require('./config/mongoose.js');
 const cookieParser = require('cookie-parser');
 const EmployeeRoute = require('./routes/EmployeeRoute');
 const CompanyRoute = require('./routes/CompanyRoute');
+const JobApplicationRoute = require('./routes/JobApplicationRoute');
+const JobRoute = require('./routes/JobRoute');
 require('dotenv').config();
 
 // connect with database
@@ -17,6 +19,8 @@ app.use(express.json());
 
 app.use('/employee', EmployeeRoute);
 app.use('/company', CompanyRoute);
+app.use('/jobApplication', JobApplicationRoute);
+app.use('/job', JobRoute);
 
 const PORT = process.env.PORT;
 
