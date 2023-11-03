@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 
+import { loginSuccess } from '~/features/auth/authSlice'
 import { login } from '~/services/api'
 
 const EmployeeLoginForm = () => {
+    const dispatch = useDispatch()
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
         email: '',
@@ -20,6 +23,8 @@ const EmployeeLoginForm = () => {
         try {
             const response = await login(formData)
             if (response?.status === 200) {
+                dispatch(loginSuccess({ token: response.data.token, user: response.data.employee }))
+                localStorage.setItem('token', response.data.token)
                 navigate('/')
             } else if (response) {
                 setFormMessage({ type: 'error', message: response.data.message })
