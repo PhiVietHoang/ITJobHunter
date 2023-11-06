@@ -14,6 +14,7 @@ const companySchema = new mongoose.Schema({
     phoneNumber: {
         type: String,
         trim: true,
+        default: null,
     },
     companyName: {
         type: String,
@@ -38,10 +39,12 @@ const companySchema = new mongoose.Schema({
     },
     companyLogo: {
         type: String,
+        default: null,
     },
     description: {
         type: String,
         trim: true,
+        default: null,
     },
 });
 

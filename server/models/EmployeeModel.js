@@ -20,10 +20,12 @@ const employeeSchema = new mongoose.Schema({
     phoneNumber: {
         type: String,
         trim: true,
-        match: /^\d{10}$/
+        match: /^\d{10}$/,
+        default: null,
     },
     dob: {
         type: Date,
+        default: null,
     },
     joinDate: {
         type: Date,
@@ -31,13 +33,16 @@ const employeeSchema = new mongoose.Schema({
     },
     avatar: {
         type: String,
+        default: null,
     },
     description:{
         type: String,
+        default: null,
     },
     experience: {
         type: String, 
         enum: ["Fresher", "1 year", "2 years", "3 years", "4 years", "More than 4 years"], 
+        default: null,
     },
     address:{
         city: {
@@ -114,6 +119,7 @@ const employeeSchema = new mongoose.Schema({
     gender:{
         type: String,
         enum: ["Male", "Female"],
+        default: null,
     },
     education:[{
         nameSchool: String,
