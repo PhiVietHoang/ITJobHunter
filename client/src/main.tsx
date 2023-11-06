@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './index.css'
 import App from './App.tsx'
 import Home from './pages/Home.tsx'
+import EmployeeProfile from './pages/EmployeeProfile.tsx'
 
 const router = createBrowserRouter([
     {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
             {
                 path: '/',
                 element: <Home />
+            },
+            {
+                path: '/profile/:id',
+                element: <EmployeeProfile />
             }
         ]
     }
