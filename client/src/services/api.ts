@@ -28,3 +28,23 @@ export const login = async (requestBody: { email: string; password: string }) =>
         console.error(error)
     }
 }
+
+export const employerRegister = async (requestBody: { companyName: string; email: string; password: string }) => {
+    try {
+        const { companyName, email, password } = requestBody
+        const response = await api.post('company/register', { companyName, email, password })
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const employerLogin = async (requestBody: { email: string; password: string }) => {
+    try {
+        const { email, password } = requestBody
+        const response = await api.post('company/login', { email, password })
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
