@@ -21,7 +21,6 @@ const EmployeeRegisterForm = () => {
         e.preventDefault()
         try {
             const response = await register(formData)
-            console.log('Res mtfk', response)
             if (response?.status === 200) {
                 setFormMessage({ type: 'success', message: 'Register successfully, redirecting to login ...' })
                 setTimeout(() => {

@@ -3,8 +3,8 @@ const initialState = {
     token: localStorage.getItem('token'),
     user: null
 }
-const authSlice = createSlice({
-    name: 'auth',
+const employeeAuthSlice = createSlice({
+    name: 'employeeAuth',
     initialState,
     reducers: {
         loginSuccess: (state, action) => {
@@ -14,5 +14,5 @@ const authSlice = createSlice({
     }
 })
 
-export const { loginSuccess } = authSlice.actions
-export default authSlice.reducer
+export const { loginSuccess } = employeeAuthSlice.actions
+export default employeeAuthSlice.reducer
