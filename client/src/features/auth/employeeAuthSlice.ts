@@ -1,18 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
     token: localStorage.getItem('token'),
-    user: null
+    employee: null
 }
 const employeeAuthSlice = createSlice({
     name: 'employeeAuth',
     initialState,
     reducers: {
-        loginSuccess: (state, action) => {
+        employeeLoginSuccess: (state, action) => {
             state.token = action.payload.token
-            state.user = action.payload.user
+            state.employee = action.payload.employee
         }
     }
 })
 
-export const { loginSuccess } = employeeAuthSlice.actions
+export const { employeeLoginSuccess } = employeeAuthSlice.actions
 export default employeeAuthSlice.reducer
