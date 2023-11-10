@@ -7,12 +7,12 @@ import { Separator } from '~/components/ui/separator'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 
 const Navbar = () => {
-    const token = useSelector((state: RootState) => state.employeeAuth.token)
+    const token = useSelector((state: RootState) => state.employeeAuth.employeeToken)
     const employee = useSelector((state: RootState) => state.employeeAuth.employee)
     const navigate = useNavigate()
 
     const logout = () => {
-        localStorage.removeItem('token')
+        localStorage.removeItem('employeeToken')
         navigate('/')
         window.location.reload()
     }

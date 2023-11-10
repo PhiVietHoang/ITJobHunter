@@ -1,18 +1,19 @@
 import { configureStore } from '@reduxjs/toolkit'
 
 import employeeAuthReducer from '~/features/auth/employeeAuthSlice'
+import employerAuthReducer from '~/features/auth/employerAuthSlice'
 
 export interface RootState {
     employeeAuth: {
-        token: string
+        employeeToken: string
         employee: {
             id: string
             avatar: string
         }
     }
     employerAuth: {
-        token: string
-        employer: {
+        employerToken: string
+        company: {
             id: string
             avatar: string
         }
@@ -21,7 +22,8 @@ export interface RootState {
 
 const store = configureStore({
     reducer: {
-        employeeAuth: employeeAuthReducer
+        employeeAuth: employeeAuthReducer,
+        employerAuth: employerAuthReducer
     }
 })
 

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
-    token: localStorage.getItem('token'),
+    employeeToken: localStorage.getItem('employeeToken'),
     employee: null
 }
 const employeeAuthSlice = createSlice({
@@ -8,7 +8,7 @@ const employeeAuthSlice = createSlice({
     initialState,
     reducers: {
         employeeLoginSuccess: (state, action) => {
-            state.token = action.payload.token
+            state.employeeToken = action.payload.employeeToken
             state.employee = action.payload.employee
         }
     }

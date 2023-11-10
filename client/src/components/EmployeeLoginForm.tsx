@@ -23,8 +23,8 @@ const EmployeeLoginForm = () => {
         try {
             const response = await login(formData)
             if (response?.status === 200) {
-                dispatch(employeeLoginSuccess({ token: response.data.token, employee: response.data.employee }))
-                localStorage.setItem('token', response.data.token)
+                dispatch(employeeLoginSuccess({ employeeToken: response.data.token, employee: response.data.employee }))
+                localStorage.setItem('employeeToken', response.data.token)
                 navigate('/')
             } else if (response) {
                 setFormMessage({ type: 'error', message: response.data.message })

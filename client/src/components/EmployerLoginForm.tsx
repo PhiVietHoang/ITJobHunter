@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
-import { loginSuccess } from '~/features/auth/employeeAuthSlice'
+import { employerLoginSuccess } from '~/features/auth/employerAuthSlice'
 import { employerLogin } from '~/services/api'
 
 const EmployerLoginForm = () => {
@@ -23,8 +23,8 @@ const EmployerLoginForm = () => {
         try {
             const response = await employerLogin(formData)
             if (response?.status === 200) {
-                dispatch(loginSuccess({ token: response.data.token, user: response.data.employee }))
-                localStorage.setItem('token', response.data.token)
+                dispatch(employerLoginSuccess({ employerToken: response.data.token, company: response.data.company }))
+                localStorage.setItem('employerToken', response.data.token)
                 navigate('/employer')
             } else if (response) {
                 setFormMessage({ type: 'error', message: response.data.message })
