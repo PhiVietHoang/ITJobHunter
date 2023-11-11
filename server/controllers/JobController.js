@@ -131,3 +131,71 @@ exports.deleteJob = async (req, res) => {
         res.status(500).json({ message: 'Internal server error', error: err });
     }
 };
+
+// Filter and paginate jobs
+exports.filterAndPaginateJobs = async (req, res) => {
+    try {
+        const {
+            title,
+            categories,
+            level,
+            requiredSkills,
+            minYearsOfExp,
+            maxYearsOfExp,
+            minSalary,
+            maxSalary,
+            page = 1,
+            pageSize = 10,
+        } = req.body;
+
+        // Build the filter object based on the provided criteria
+        const filter = {};
+
+        if (title) {
+            filter.title = { $regex: new RegExp(title, 'i') };
+        }
+
+        if (categories && categories.length > 0) {
+            filter.categories = { $in: categories };
+        }
+
+        if (level) {
+            filter.level = level;
+        }
+
+        if (requiredSkills && requiredSkills.length > 0) {
+            filter.requiredSkills = { $all: requiredSkills };
+        }
+
+        if (minYearsOfExp || maxYearsOfExp) {
+            filter.yearsOfExp = {};
+            if (minYearsOfExp) {
+                filter.yearsOfExp.$gte = minYearsOfExp;
+            }
+            if (maxYearsOfExp) {
+                filter.yearsOfExp.$lte = maxYearsOfExp;
+            }
+        }
+
+        if (minSalary || maxSalary) {
+            filter.offerSalary = {};
+            if (minSalary) {
+                filter.offerSalary.$gte = minSalary;
+            }
+            if (maxSalary) {
+                filter.offerSalary.$lte = maxSalary;
+            }
+        }
+
+        // Paginate using skip and limit
+        const skip = (page - 1) * pageSize;
+        const jobs = await Job.find(filter)
+            .populate('companyID', 'name')
+            .skip(skip)
+            .limit(pageSize);
+
+        res.status(200).json(jobs);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err });
+    }
+}
