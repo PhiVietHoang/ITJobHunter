@@ -18,7 +18,7 @@ router.post('/login', login);
 router.post('/logout', authMiddleware, logout);
 router.get('/companies', getAllCompanies);
 router.get('/companies/:id', getCompanyById);
-router.put('/companies/:id', updateCompany);
-router.delete('/companies/:id', deleteCompany);
+router.put('/companies/:id', authMiddleware, updateCompany);
+router.delete('/companies/:id', authMiddleware, deleteCompany);
 
 module.exports = router;
