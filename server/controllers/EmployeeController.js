@@ -1,6 +1,7 @@
 const Employee = require('../models/EmployeeModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const userFromToken = require('../utils/UserFromToken');
 
 exports.register = async (req, res) => {
     try {
@@ -196,6 +197,33 @@ exports.deleteEmployee = async (req, res) => {
     } catch (err) {
         res.status(500).json({
             message: 'Internal server error',
+            error: err,
+        });
+    }
+};
+
+exports.getProfile = async (req, res) => {
+    try {
+        const userData = userFromToken(req);
+        if(userData){
+            const employee = await Employee.findById(userData.id);
+    
+            if (!employee) {
+                return res.status(404).json({
+                    message: 'Employee not found.',
+                });
+            }
+    
+            employee.password = undefined;
+    
+            res.status(200).json(employee);
+        }
+        else {
+            res.status(401).json({ message: 'Unauthorized: Missing or invalid token.' });
+        }
+    } catch (err) {
+        res.status(500).json({
+            message: 'Internal server Error',
             error: err,
         });
     }

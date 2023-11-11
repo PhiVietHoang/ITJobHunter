@@ -9,6 +9,7 @@ const {
   getCompanyById,
   updateCompany,
   deleteCompany,
+  getProfile,
 } = require('../controllers/CompanyController');
 
 const authMiddleware = require('../middlewares/AuthMiddleware');
@@ -20,5 +21,6 @@ router.get('/companies', getAllCompanies);
 router.get('/companies/:id', getCompanyById);
 router.put('/companies/:id', authMiddleware, updateCompany);
 router.delete('/companies/:id', authMiddleware, deleteCompany);
+router.get('/profile',authMiddleware, getProfile);
 
 module.exports = router;

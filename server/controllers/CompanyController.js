@@ -1,6 +1,7 @@
 const Company = require('../models/CompanyModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const userFromToken = require('../utils/UserFromToken');
 
 exports.register = async (req, res) => {
     try {
@@ -192,6 +193,33 @@ exports.deleteCompany = async (req, res) => {
     } catch (err) {
         res.status(500).json({
             message: 'Internal server error',
+            error: err,
+        });
+    }
+};
+
+exports.getProfile = async (req, res) => {
+    try {
+        const userData = userFromToken(req);
+        if(userData){
+            const company = await Company.findById(userData.id);
+    
+            if (!company) {
+                return res.status(404).json({
+                    message: 'Company not found.',
+                });
+            }
+    
+            company.password = undefined;
+    
+            res.status(200).json(company);
+        }
+        else {
+            res.status(401).json({ message: 'Unauthorized: Missing or invalid token.' });
+        }
+    } catch (err) {
+        res.status(500).json({
+            message: 'Internal server Error',
             error: err,
         });
     }
