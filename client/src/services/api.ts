@@ -29,6 +29,17 @@ export const login = async (requestBody: { email: string; password: string }) =>
     }
 }
 
+export const getCurrentEmployee = async (token: string) => {
+    try {
+        const response = await api.get('employee/profile', {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 export const employerRegister = async (requestBody: { companyName: string; email: string; password: string }) => {
     try {
         const { companyName, email, password } = requestBody
