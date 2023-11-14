@@ -7,14 +7,14 @@ export interface RootState {
     employeeAuth: {
         employeeToken: string
         employee: {
-            id: string
+            _id: string
             avatar: string
         }
     }
     employerAuth: {
         employerToken: string
         company: {
-            id: string
+            _id: string
             avatar: string
         }
     }
