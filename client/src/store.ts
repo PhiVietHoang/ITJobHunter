@@ -8,7 +8,22 @@ export interface RootState {
         employeeToken: string
         employee: {
             _id: string
+            name: string
+            description: string
             avatar: string
+            email: string
+            phoneNumber: string
+            address: {
+                country: string
+            }
+            experience: string
+            skill: {
+                technical: string[]
+                soft: string[]
+            }
+            education: string[]
+            certificates: string[]
+            joinDate: Date
         }
     }
     employerAuth: {
