@@ -20,7 +20,9 @@ const Navbar = () => {
     return (
         <nav className='py-4 flex justify-between items-center'>
             <div className='flex items-center gap-12'>
-                <h1 className='text-xl text-cyan-600 font-bold font-serif'>ITJobHunter</h1>
+                <Link to='/'>
+                    <h1 className='text-xl text-cyan-600 font-bold font-serif'>ITJobHunter</h1>
+                </Link>
                 <Button variant='ghost' className='text-md  text-gray-500 hover:text-gray-900 hover:bg-white'>
                     Jobs
                 </Button>
@@ -50,10 +52,12 @@ const Navbar = () => {
                     </Link>
                 )}
                 {token && (
-                    <Avatar>
-                        <AvatarImage src={employee?.avatar} alt='Profile Picture' />
-                        <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
+                    <Link to={`profile/${employee?._id}`}>
+                        <Avatar>
+                            <AvatarImage src={employee?.avatar} alt='Profile Picture' />
+                            <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                    </Link>
                 )}
                 {token && (
                     <Button
