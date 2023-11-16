@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -73,4 +74,81 @@
   body {
     @apply bg-background text-foreground bg-gradient-to-r from-gray-100 to-gray-50;
   }
+}
+
+@layer components {
+  .card {
+    background-color: theme("colors.white");
+    border-radius: theme("borderRadius.xl");
+    padding: theme("spacing.6");
+    border: 1px solid #e7e7f1;
+  }
+  .PhoneNumber {
+    -moz-appearance: textfield;
+  }
+  .PhoneNumber::-webkit-inner-spin-button,
+  .PhoneNumber::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .input-number input[type="number"]::-webkit-inner-spin-button,
+  .input-number input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 0;
+  margin: 0;
+  background: #f8f9f8;
+}
+:root,
+body,
+html {
+  box-sizing: border-box;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span,
+small,
+i,
+img,
+div,
+header,
+html,
+label,
+li,
+nav,
+p,
+ul {
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+.snaps-inline {
+  scroll-snap-type: inline mandatory;
+  scroll-padding-inline: 16px;
+}
+
+.snaps-inline > * {
+  scroll-snap-align: start;
 }
