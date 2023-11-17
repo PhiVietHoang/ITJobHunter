@@ -1,6 +1,13 @@
 import axios, { AxiosError } from "axios";
+import { ThunkDispatch, ThunkAction } from 'redux-thunk';
+import { AnyAction } from 'redux';
 // const BASE_URL = "http://localhost:8080/api/v1";
 const BASE_URL = "https://crm-backend-system-employee-hiring.onrender.com/api/v1";
+
+interface UserDetails {
+   name: string;
+   email: string;
+  }
 
 import {
    LOGIN_REQUEST,
@@ -41,7 +48,7 @@ export const clearErrors = () => async (dispatch: any) => {
 };
 
 // LoadUser
-export const LoadUser = () => async (dispatch: any) => {
+export const LoadUser = (): ThunkAction<void, {}, {}, AnyAction> => async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
    try {
       // Dispatch request
       dispatch({ type: LOAD_USER_REQUEST });
@@ -175,7 +182,7 @@ export const userLogout = () => async (dispatch: any) => {
 };
 
 // Update use Details
-export const UpdateUserDetails = (userDetails: string) => async (dispatch: any) => {
+export const UpdateUserDetails = (userDetails: UserDetails) => async (dispatch: any) => {
    try {
       // Requesting registration for company
       dispatch({ type: UPDATE_USER_REQUEST });
@@ -215,7 +222,7 @@ export const getAllStudentsInfo = () => async (dispatch: any) => {
    }
 }
 
-export const getAllEngineersInfo = () => async (dispatch: any) => {
+export const getAllEngineersInfo = (): ThunkAction<void, {}, {}, AnyAction> => async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
    try {
 
       // Requesting registration for company
@@ -278,7 +285,7 @@ export const deleteEngineer = (engineer_id: string) => async (dispatch: any) => 
 
 
 // Update ENGINEER Details
-export const UpdateEngineerStatus = (engineerDetails: string) => async (dispatch: any) => {
+export const UpdateEngineerStatus = (engineerDetails: string): ThunkAction<void, {}, {}, AnyAction> => async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
    try {
       // Requesting registration for company
       dispatch({ type: UPDATE_ENGINEER_REQUEST });

@@ -1,4 +1,6 @@
 import axios, { AxiosError } from "axios";
+import { ThunkDispatch, ThunkAction } from 'redux-thunk';
+import { AnyAction } from 'redux';
 // const BASE_URL = "http://localhost:8080/api/v1";
 const BASE_URL = "https://crm-backend-system-employee-hiring.onrender.com/api/v1";
 
@@ -49,7 +51,7 @@ export const updateCompanyDetails = (companyDetails: any) => async (dispatch: an
 };
 
 // Load Companies
-export const LoadCompanies = () => async (dispatch: any) => {
+export const LoadCompanies = (): ThunkAction<void, {}, {}, AnyAction> => async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
    try {
       // Dispatch request
       dispatch({ type: LOAD_COMPANIES_REQUEST });
@@ -118,7 +120,7 @@ export const getCompanyDetails = (company_id: string) => async (dispatch: any) =
    }
 };
 
-export const filterCompaniesCategories = (category: string) => async (dispatch: any) => {
+export const filterCompaniesCategories = (category: string): ThunkAction<void, {}, {}, AnyAction> => async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
    try {
       // Dispatch request
       dispatch({ type: FILTER_COMPANIES_REQUEST });
