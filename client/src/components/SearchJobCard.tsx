@@ -11,7 +11,7 @@ interface SearchJobCardProps {
     companyLogo: string
     workingTime: string
     location: string
-    experience: string
+    yearsOfExp: string
     description: string
     startDate: string
     endDate: string
@@ -22,7 +22,7 @@ interface SearchJobCardProps {
 
 const SearchJobCard = (props: SearchJobCardProps) => {
     return (
-        <div className='py-4 px-6 min-w-min bg-white rounded-lg cursor-pointer hover:shadow-md'>
+        <div className='py-4 px-6 min-w-min w-full bg-white rounded-lg cursor-pointer hover:shadow-md'>
             <div className='flex justify-between items-center'>
                 <div>
                     <p className='font-bold'>{props.title}</p>
@@ -30,13 +30,15 @@ const SearchJobCard = (props: SearchJobCardProps) => {
                 </div>
                 <Avatar className='w-12 h-12 rounded-xl'>
                     <AvatarImage src={props.companyLogo} />
-                    <AvatarFallback>CN</AvatarFallback>
+                    <AvatarFallback>
+                        <span className='text-xs'>Avatar</span>
+                    </AvatarFallback>
                 </Avatar>
             </div>
             <div className='my-2 flex items-center gap-2 lg:gap-4'>
                 <p className='flex items-center gap-1 '>
                     <Briefcase className='w-5' />
-                    <span>{props.experience}</span>
+                    <span>{props.yearsOfExp}</span>
                 </p>
                 |
                 <p className='flex items-center gap-1 '>
@@ -57,14 +59,18 @@ const SearchJobCard = (props: SearchJobCardProps) => {
             <div className='grid grid-cols-5 gap-y-2 overflow-hidden'>
                 <span className='w-min text-sm font-semibold'>Category:</span>
                 <div className='col-span-4 flex items-center gap-2'>
-                    {props.categories.map((category) => (
-                        <Badge variant='secondary'>{category}</Badge>
+                    {props.categories.map((category, index) => (
+                        <Badge key={index} variant='secondary'>
+                            {category}
+                        </Badge>
                     ))}
                 </div>
                 <span className='w-min text-sm font-semibold'>Required skills:</span>
                 <div className='col-span-4 flex items-center gap-2'>
-                    {props.requiredSkills.map((skill) => (
-                        <Badge variant='secondary'>{skill}</Badge>
+                    {props.requiredSkills.map((skill, index) => (
+                        <Badge key={index} variant='secondary'>
+                            {skill}
+                        </Badge>
                     ))}
                 </div>
             </div>
@@ -74,8 +80,8 @@ const SearchJobCard = (props: SearchJobCardProps) => {
             <div className='my-2 flex items-center gap-4'>
                 <span className='text-sm'>Number of positions: {props.maxPositions}</span>|
                 <span className='text-sm'>
-                    Hiring date: {format(new Date(props.startDate), 'dd/MM/yyyy')} to{' '}
-                    {format(new Date(props.endDate), 'dd/MM/yyyy')}
+                    Hiring date: {props.startDate && format(new Date(props.startDate), 'dd/MM/yyyy')}
+                    {props.endDate && ` to ${format(new Date(props.endDate), 'dd/MM/yyyy')}`}
                 </span>
             </div>
         </div>
