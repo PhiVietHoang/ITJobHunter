@@ -144,10 +144,13 @@ exports.filterAndPaginateJobs = async (req, res) => {
             maxYearsOfExp,
             minSalary,
             maxSalary,
-            page = 1,
+            page = 0,
             pageSize = 10,
         } = req.body;
 
+        //Check pagesize from front end
+        const requestedPageSize = req.body.pageSize ? req.body.pageSize : pageSize;
+        
         // Build the filter object based on the provided criteria
         const filter = {};
 
@@ -156,15 +159,15 @@ exports.filterAndPaginateJobs = async (req, res) => {
         }
 
         if (categories && categories.length > 0) {
-            filter.categories = { $in: categories };
+            filter.categories = { $regex: new RegExp(categories, 'i') };
         }
-
+        
         if (level) {
-            filter.level = level;
+            filter.level = { $regex: new RegExp(level, 'i') };
         }
 
         if (requiredSkills && requiredSkills.length > 0) {
-            filter.requiredSkills = { $all: requiredSkills };
+            filter.requiredSkills = { $regex: new RegExp(requiredSkills, 'i') };
         }
 
         if (minYearsOfExp || maxYearsOfExp) {
@@ -188,13 +191,19 @@ exports.filterAndPaginateJobs = async (req, res) => {
         }
 
         // Paginate using skip and limit
-        const skip = (page - 1) * pageSize;
+        const skip = page * requestedPageSize;
         const jobs = await Job.find(filter)
-            .populate('companyID', 'name')
+            .populate({
+                path: 'companyID',
+                select: '_id companyName companyLogo companyLocations',
+            })
             .skip(skip)
-            .limit(pageSize);
+            .limit(requestedPageSize);
 
-        res.status(200).json(jobs);
+        const totalJobs = await Job.countDocuments(filter);
+        const totalPages = Math.ceil(totalJobs / requestedPageSize);
+
+        res.status(200).json({jobs, totalPages});
     } catch (err) {
         res.status(500).json({ message: 'Internal server error', error: err });
     }
