@@ -40,6 +40,16 @@ export const getCurrentEmployee = async (token: string) => {
     }
 }
 
+export const searchJobs = async (requestBody: { title: string; page: number }) => {
+    try {
+        const { title, page } = requestBody
+        const response = await api.post('job/jobs/filtered-jobs/', { title, page })
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 export const employerRegister = async (requestBody: { companyName: string; email: string; password: string }) => {
     try {
         const { companyName, email, password } = requestBody
