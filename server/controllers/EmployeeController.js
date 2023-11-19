@@ -159,7 +159,6 @@ exports.updateEmployee = async (req, res) => {
             },
             { new: true }
         );
-        console.log("hello");
         if (!updatedEmployee) {
             return res.status(404).json({
                 message: 'Employee not found.',
