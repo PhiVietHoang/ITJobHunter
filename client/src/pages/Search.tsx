@@ -9,11 +9,10 @@ import { Input } from '~/components/ui/input'
 import Pagination from '~/components/Pagination'
 import { searchJobs } from '~/services/api'
 
-interface SearchResult {
+interface JobData {
+    _id: string
     title: string
     categories: string[]
-    companyName: string
-    companyLogo: string
     workingTime: string
     location: string
     yearsOfExp: string
@@ -23,18 +22,25 @@ interface SearchResult {
     maxPositions: number
     offerSalary: string
     requiredSkills: string[]
+    companyID: {
+        _id: string
+        companyLogo: string
+        companyName: string
+        companyLocations: string[]
+    }
 }
 
 const Search = () => {
-    const location = useLocation()
-    const [searchResults, setSearchResults] = useState(location.state as SearchResult[])
+    const { state } = useLocation()
+    const [searchResults, setSearchResults] = useState(state.jobs as JobData[])
+    const totalPages = state.totalPages
 
     const [currentPage, setCurrentPage] = useState(0)
 
     const handlePageChange = async (page: number) => {
-        const response = await searchJobs({ title: '', page })
+        const response = await searchJobs({ title: state.searchTitle, page })
         if (response?.status === 200) {
-            setSearchResults(response.data)
+            setSearchResults(response.data.jobs)
             setCurrentPage(page)
             window.scrollTo(0, 0)
         } else {
@@ -75,12 +81,12 @@ const Search = () => {
                     </div>
                 </div>
                 <div className='min-w-min flex flex-col gap-4 grow'>
-                    {searchResults.map((result, index) => (
-                        <SearchJobCard key={index} {...result} />
+                    {searchResults.map((result) => (
+                        <SearchJobCard key={result._id} {...result} />
                     ))}
                 </div>
             </div>
-            <Pagination currentPage={currentPage} totalPages={10} handlePageChange={handlePageChange} />
+            <Pagination currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
         </div>
     )
 }

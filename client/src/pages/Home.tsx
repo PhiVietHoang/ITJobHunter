@@ -8,7 +8,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~
 import CategoryCard from '~/components/CategoryCard'
 import { searchJobs } from '~/services/api'
 
-
 const Home = () => {
     const navigate = useNavigate()
     const [searchTitle, setSearchTitle] = useState('')
@@ -28,9 +27,11 @@ const Home = () => {
     }
 
     const handleSearch = async () => {
-        const response = await searchJobs({ title: searchTitle, page: 1 })
+        const response = await searchJobs({ title: searchTitle, page: 0 })
         if (response?.status === 200) {
-            navigate('/search', { state: response.data })
+            const data = response.data
+            const state = { ...data, searchTitle, searchExperience, searchLocation }
+            navigate('/search', { state })
         } else {
             console.log(response)
         }

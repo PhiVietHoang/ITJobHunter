@@ -4,11 +4,10 @@ import { Briefcase, DollarSign, MapPin, Timer } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 import { Badge } from '~/components/ui/badge'
 
-interface SearchJobCardProps {
+interface JobData {
+    _id: string
     title: string
     categories: string[]
-    companyName: string
-    companyLogo: string
     workingTime: string
     location: string
     yearsOfExp: string
@@ -18,18 +17,24 @@ interface SearchJobCardProps {
     maxPositions: number
     offerSalary: string
     requiredSkills: string[]
+    companyID: {
+        _id: string
+        companyLogo: string
+        companyName: string
+        companyLocations: string[]
+    }
 }
 
-const SearchJobCard = (props: SearchJobCardProps) => {
+const SearchJobCard = (props: JobData) => {
     return (
         <div className='py-4 px-6 min-w-min w-full bg-white rounded-lg cursor-pointer hover:shadow-md'>
             <div className='flex justify-between items-center'>
                 <div>
                     <p className='font-bold'>{props.title}</p>
-                    <p className='text-sm font-semibold'>{props.companyName}</p>
+                    <p className='text-sm font-semibold'>{props.companyID.companyName}</p>
                 </div>
                 <Avatar className='w-12 h-12 rounded-xl'>
-                    <AvatarImage src={props.companyLogo} />
+                    <AvatarImage src={props.companyID.companyLogo}/>
                     <AvatarFallback>
                         <span className='text-xs'>Avatar</span>
                     </AvatarFallback>
