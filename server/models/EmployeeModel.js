@@ -41,8 +41,8 @@ const employeeSchema = new mongoose.Schema({
     },
     experience: {
         type: String, 
-        enum: ["Fresher", "1 year", "2 years", "3 years", "4 years", "More than 4 years"], 
-        default: null,
+        enum: ["Fresher", "1 year", "2 years", "3 years", "4 years", "More than 4 years", "None"],
+        default: "None", 
     },
     address:{
         city: {
@@ -118,8 +118,8 @@ const employeeSchema = new mongoose.Schema({
     },
     gender:{
         type: String,
-        enum: ["Male", "Female"],
-        default: null,
+        enum: ["Male", "Female", "None"],
+        default: "None",
     },
     education:[{
         nameSchool: String,
