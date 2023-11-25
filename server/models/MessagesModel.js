@@ -11,7 +11,7 @@ const messageSchema = new mongoose.Schema({
     },
     message: {
         type: String,
-        required: true,
+        required: [true, "Please send a message"],
         trim: true,
     },
     time: {
@@ -25,7 +25,7 @@ const messageSchema = new mongoose.Schema({
     senderIsCompany: {
         type: Boolean,
     },
-});
+},{"timestamp": true});
 
 const Message = mongoose.model('Message', messageSchema);
 
