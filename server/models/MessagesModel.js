@@ -3,10 +3,12 @@ const mongoose = require('mongoose');
 const messageSchema = new mongoose.Schema({
     employeeId: {
         type: mongoose.Schema.Types.ObjectId,
+        required: true,
         ref: 'Employee',
     },
     companyId: {
         type: mongoose.Schema.Types.ObjectId,
+        required: true,
         ref: 'Company',
     },
     message: {
@@ -24,6 +26,7 @@ const messageSchema = new mongoose.Schema({
     },
     senderIsCompany: {
         type: Boolean,
+        default: false,
     },
 },{"timestamp": true});
 

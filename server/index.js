@@ -7,6 +7,7 @@ const EmployeeRoute = require('./routes/EmployeeRoute');
 const CompanyRoute = require('./routes/CompanyRoute');
 const JobApplicationRoute = require('./routes/JobApplicationRoute');
 const JobRoute = require('./routes/JobRoute');
+const MessageRoute = require('./routes/MessageRoute');
 require('dotenv').config();
 
 // connect with database
@@ -21,6 +22,7 @@ app.use('/employee', EmployeeRoute);
 app.use('/company', CompanyRoute);
 app.use('/jobApplication', JobApplicationRoute);
 app.use('/job', JobRoute);
+app.use('/message', MessageRoute);
 
 const PORT = process.env.PORT;
 
