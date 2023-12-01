@@ -16,6 +16,7 @@ import EmployerLoginForm from './components/EmployerLoginForm.tsx'
 import EmployerRegisterForm from './components/EmployerRegisterForm.tsx'
 import Search from './pages/Search.tsx'
 import EmployeeProfileEdit from './pages/EmployeeProfileEdit.tsx'
+import EmployeeProfileEditEducation from './pages/EmployeeProfileEditEducation.tsx'
 
 const router = createBrowserRouter([
     {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
             {
                 path: '/profile/:id/edit',
                 element: <EmployeeProfileEdit />
+            },
+            {
+                path: '/profile/:id/edit/education',
+                element: <EmployeeProfileEditEducation />
             },
             {
                 path: '/search',

@@ -21,8 +21,19 @@ export interface RootState {
                 technical: string[]
                 soft: string[]
             }
-            education: string[]
-            certificates: string[]
+            education: {
+                _id: string
+                nameSchool: string
+                degree: string
+                completeDate: string
+            }[]
+            certificates: {
+                _id: string
+                name: string
+                issuedBy: string
+                from: string
+                to: string
+            }[]
             joinDate: Date
         }
     }

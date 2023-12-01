@@ -89,6 +89,7 @@ const EmployeeProfile = () => {
                 <ProfileSection
                     title='Education'
                     description='Please mention your education details. You can add details about your school, college and degree. This will increase your profile strength.'
+                    editLink='edit/education'
                 >
                     {employee.education.length > 0
                         ? employee.education.map((education, index) => (
