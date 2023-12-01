@@ -15,12 +15,11 @@ const EmployeeProfile = () => {
     if (!employee) return null
 
     return (
-        <div className='mt-12 mx-auto w-[70%] flex flex-col gap-4'>
+        <div className='mt-12 mx-auto w-2/3 min-w-min flex flex-col gap-4'>
             <div className='p-12 bg-white rounded-3xl shadow-sm'>
-                <div className='flex items-center gap-20'>
+                <div className='flex items-center gap-12 lg:gap-20'>
                     <div className='relative'>
-                        <div className='absolute left-[50%] -translate-x-[50%] top-[50%] -translate-y-[50%] w-[180px] h-[180px] border-4 border-gray-300 rounded-full'></div>
-                        <div className='w-40 h-40 rounded-full overflow-hidden'>
+                        <div className='w-32 h-32 lg:w-40 lg:h-40 rounded-full overflow-hidden outline-offset-4 outline-gray-200 outline'>
                             <img src={employee.avatar} alt='Profile Picture' />
                         </div>
                     </div>
@@ -31,36 +30,28 @@ const EmployeeProfile = () => {
                                 <Pencil className='w-5' />
                             </button>
                         </div>
-                        <div className='flex justify-start items-start gap-4'>
-                            <div className='pr-12 border-r'>
-                                <ul className='text-[#474d6a]'>
-                                    <li className='flex justify-start items-center gap-4'>
-                                        <MapPin className='w-4' />
-                                        {employee.address.country || 'Empty'}
-                                    </li>
-                                    <li className='flex justify-start items-center gap-4'>
-                                        <Briefcase className='w-4' />
-                                        {employee.experience || 'Empty'}
-                                    </li>
-                                    <li className='flex justify-start items-center gap-4'>
-                                        <CalendarDays className='w-4' />
-                                        {employee.joinDate.toString()}
-                                    </li>
-                                </ul>
-                            </div>
-                            <div>
-                                <ul className='text-[#474d6a]'>
-                                    <li className='flex justify-start items-center gap-4'>
-                                        <Phone className='w-4' />
-                                        {employee.phoneNumber || 'Empty'}
-                                    </li>
-                                    <li className='flex justify-start items-center gap-4'>
-                                        <Mail className='w-4' />
-                                        {employee.email || 'Empty'}
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                        <ul className='text-[#474d6a] min-w-max grid grid-cols-2 gap-x-4 gap-y-2'>
+                            <li className='flex justify-start items-center gap-4'>
+                                <MapPin className='w-4' />
+                                {employee.address.country || 'Empty'}
+                            </li>
+                            <li className='flex justify-start items-center gap-4'>
+                                <Briefcase className='w-4' />
+                                {employee.experience || 'Empty'}
+                            </li>
+                            <li className='flex justify-start items-center gap-4'>
+                                <CalendarDays className='w-4' />
+                                {employee.joinDate.toString()}
+                            </li>
+                            <li className='flex justify-start items-center gap-4'>
+                                <Phone className='w-4' />
+                                {employee.phoneNumber || 'Empty'}
+                            </li>
+                            <li className='flex justify-start items-center gap-4'>
+                                <Mail className='w-4' />
+                                {employee.email || 'Empty'}
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
