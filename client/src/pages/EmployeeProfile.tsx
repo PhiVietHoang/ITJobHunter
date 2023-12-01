@@ -102,6 +102,7 @@ const EmployeeProfile = () => {
                 <ProfileSection
                     title='Certifications'
                     description='Add details of certifications you have achieved/completed.'
+                    editLink='edit/certification'
                 >
                     {employee.certificates.length > 0
                         ? employee.certificates.map((cert, index) => (
