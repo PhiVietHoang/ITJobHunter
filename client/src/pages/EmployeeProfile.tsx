@@ -6,8 +6,10 @@ import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
 import { Badge } from '~/components/ui/badge'
 import { RootState } from '~/store'
+import { useNavigate } from 'react-router-dom'
 
 const EmployeeProfile = () => {
+    const navigate = useNavigate()
     const employee = useSelector((state: RootState) => state.employeeAuth.employee)
 
     if (!employee) return null
@@ -25,7 +27,7 @@ const EmployeeProfile = () => {
                     <div className='grow flex flex-col gap-4'>
                         <div className='flex justify-start items-center gap-4 pb-4 text-2xl font-semibold border-b'>
                             {employee.name}{' '}
-                            <button className='px-2 hover:text-gray-600'>
+                            <button className='px-2 hover:text-gray-600' onClick={() => navigate('edit')}>
                                 <Pencil className='w-5' />
                             </button>
                         </div>
@@ -100,7 +102,7 @@ const EmployeeProfile = () => {
                     {employee.education.length > 0
                         ? employee.education.map((education, index) => (
                               <Badge key={index} variant='outline'>
-                                  {education}
+                                  {education.nameSchool}
                               </Badge>
                           ))
                         : null}
@@ -112,7 +114,7 @@ const EmployeeProfile = () => {
                     {employee.certificates.length > 0
                         ? employee.certificates.map((cert, index) => (
                               <Badge key={index} variant='outline'>
-                                  {cert}
+                                  {cert.name}
                               </Badge>
                           ))
                         : null}

@@ -2,8 +2,11 @@ import axios from 'axios'
 
 const API_URL = import.meta.env.VITE_API_URL
 
+const token = localStorage.getItem('employeeToken')
+
 const api = axios.create({
     baseURL: API_URL,
+    headers: { Authorization: `Bearer ${token}` },
     validateStatus: function (status) {
         return status >= 200 && status < 500 // Accepts responses with status code in the range 200-499
     }
@@ -34,6 +37,15 @@ export const getCurrentEmployee = async (token: string) => {
         const response = await api.get('employee/profile', {
             headers: { Authorization: `Bearer ${token}` }
         })
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const updateEmployee = async (id: string, requestBody: any) => {
+    try {
+        const response = await api.put(`employee/employees/${id}`, requestBody)
         return response
     } catch (error) {
         console.error(error)
