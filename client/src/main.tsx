@@ -18,6 +18,7 @@ import Search from './pages/Search.tsx'
 import EmployeeProfileEdit from './pages/EmployeeProfileEdit.tsx'
 import EmployeeProfileEditEducation from './pages/EmployeeProfileEditEducation.tsx'
 import EmployeeProfileEditCertification from './pages/EmployeeProfileEditCertification.tsx'
+import EmployeeProfileEditSkills from './pages/EmployeeProfileEditSkills.tsx'
 
 const router = createBrowserRouter([
     {
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
             {
                 path: '/profile/:id/edit/certification',
                 element: <EmployeeProfileEditCertification />
+            },
+            {
+                path: '/profile/:id/edit/skills',
+                element: <EmployeeProfileEditSkills />
             },
             {
                 path: '/search',

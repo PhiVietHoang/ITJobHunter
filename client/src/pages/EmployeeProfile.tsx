@@ -66,6 +66,7 @@ const EmployeeProfile = () => {
                     title='Skills'
                     description='Tell recruiters what you know or what you are known for e.g. Direct Marketing, Oracle, Java etc.
                         We will send you job recommendations based on these skills. each skill is separated by a comma.'
+                    editLink='edit/skills'
                 >
                     {employee.skill.technical.length + employee.skill.soft.length > 0 ? (
                         <div>

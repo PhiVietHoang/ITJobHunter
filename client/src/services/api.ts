@@ -45,7 +45,9 @@ export const getCurrentEmployee = async (token: string) => {
 
 export const updateEmployee = async (id: string, requestBody: any) => {
     try {
-        const response = await api.put(`employee/employees/${id}`, requestBody)
+        const response = await api.put(`employee/employees/${id}`, requestBody, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
         return response
     } catch (error) {
         console.error(error)
