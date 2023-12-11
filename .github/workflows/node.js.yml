@@ -30,7 +30,7 @@ jobs:
         npm install
         npm run dev
       env:
-        PORT: ${{ secrets.CLIENT_PORT }}
+        # PORT: ${{ secrets.CLIENT_PORT }}
         DB_URL: ${{ secrets.DB_URL }}
         JWT_SECRET: ${{ secrets.JWT_SECRET }}
         JWT_EXPIRY: ${{ secrets.JWT_EXPIRY }}
@@ -46,4 +46,4 @@ jobs:
         npm install
         npm run dev
       env:
-        VITE_API_URL: ${{ secrets.VITE_API_URL }}
+        # VITE_API_URL: ${{ secrets.VITE_API_URL }}
