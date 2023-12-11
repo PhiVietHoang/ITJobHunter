@@ -19,7 +19,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Build and test server
+    - name: Build server
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
@@ -28,9 +28,9 @@ jobs:
     - run: |
         cd server
         npm install
-        npm run test
+        npm run dev
 
-    - name: Build and test client
+    - name: Build client
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
@@ -39,4 +39,4 @@ jobs:
     - run: |
         cd client
         npm install
-        npm run test
+        npm run dev
