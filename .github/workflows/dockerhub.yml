@@ -13,7 +13,7 @@ jobs:
       
     steps:
     - uses: actions/checkout@v3
-    - run: docker build . -t anhnd1223/it_job_hunter
+    - run: docker build . -t ITJobHunter
     - run: echo "dckr_pat_EFPz3dYo2-e_5GNLhuWto60bubE" | docker login -u anhnd1223 --password-stdin
     - run: docker push anhnd1223/it_job_hunter
       
