@@ -2,9 +2,9 @@ name: dockerhub CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "dev_cicd_2" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "dev_cicd_2" ]
 
 jobs:
   deploy:
