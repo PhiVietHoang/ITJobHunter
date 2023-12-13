@@ -19,6 +19,7 @@ import EmployeeProfileEdit from './pages/EmployeeProfileEdit.tsx'
 import EmployeeProfileEditEducation from './pages/EmployeeProfileEditEducation.tsx'
 import EmployeeProfileEditCertification from './pages/EmployeeProfileEditCertification.tsx'
 import EmployeeProfileEditSkills from './pages/EmployeeProfileEditSkills.tsx'
+import EmployeeJobDetail from './pages/EmployeeJobDetail.tsx'
 
 const router = createBrowserRouter([
     {
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
             {
                 path: '/search',
                 element: <Search />
+            },
+            {
+                path: '/job/:id',
+                element: <EmployeeJobDetail />
             }
         ]
     },

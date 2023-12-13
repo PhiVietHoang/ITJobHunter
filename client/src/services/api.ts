@@ -64,6 +64,21 @@ export const searchJobs = async (requestBody: { title: string; page: number }) =
     }
 }
 
+export const createJobApplication = async (requestBody: {
+    jobId: string
+    employeeId: string
+    cv: string
+    status: string
+}) => {
+    try {
+        const { jobId, employeeId, cv, status } = requestBody
+        const response = await api.post('jobApplication/jobApplications/', { jobId, employeeId, cv, status })
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 export const employerRegister = async (requestBody: { companyName: string; email: string; password: string }) => {
     try {
         const { companyName, email, password } = requestBody
