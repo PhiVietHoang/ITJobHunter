@@ -69,3 +69,56 @@ export const employerLogin = async (requestBody: { email: string; password: stri
         console.error(error)
     }
 }
+
+export const getChatData = async (data: { employeeId: string; companyId: string }, token: string) => {
+    const { employeeId, companyId } = data
+    try {
+        const res = await api.get(`message/get-message?employeeId=${employeeId}&companyId=${companyId}`, {
+            method: 'GET',
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        const data = await res.data
+        return data
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const send_message = async (
+    requestBody: { employeeId: string; companyId: string; message: string },
+    token: string
+) => {
+    try {
+        const { employeeId, companyId, message } = requestBody
+        const res = await api.post(
+            `message/send-message`,
+            { employeeId, companyId, message },
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        )
+        const data = await res.data
+        return data
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const get_all_users = async (id: unknown, token: string) => {
+    try {
+        const res = await api.get(`message/get-all-users?id=${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            }
+        })
+        return res
+    } catch (error) {
+        console.error(error)
+    }
+}

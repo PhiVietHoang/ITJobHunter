@@ -15,6 +15,7 @@ import EmployerAuth from './pages/EmployerAuth.tsx'
 import EmployerLoginForm from './components/EmployerLoginForm.tsx'
 import EmployerRegisterForm from './components/EmployerRegisterForm.tsx'
 import Search from './pages/Search.tsx'
+import EmployeeChat from './pages/EmployeeChat.tsx'
 
 const router = createBrowserRouter([
     {
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
                 element: <EmployerRegisterForm />
             }
         ]
+    },
+    {
+        path: '/employee/chat',
+        element: <EmployeeChat />
     }
 ])
 

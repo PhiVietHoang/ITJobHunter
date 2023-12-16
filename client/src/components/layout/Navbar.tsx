@@ -29,6 +29,13 @@ const Navbar = () => {
                 <Button variant='ghost' className='text-md text-gray-500 hover:text-gray-900 hover:bg-white'>
                     Companies
                 </Button>
+                {employee && (
+                    <Link to='/employee/chat'>
+                        <Button variant='ghost' className='text-md text-gray-500 hover:text-gray-900 hover:bg-white'>
+                            Chat
+                        </Button>
+                    </Link>
+                )}
             </div>
             <div className='flex items-center gap-4'>
                 {!token && (

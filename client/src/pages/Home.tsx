@@ -40,7 +40,7 @@ const Home = () => {
     return (
         <div className='my-16 flex flex-col gap-12'>
             <div className='flex flex-col justify-center items-center gap-4'>
-                <h1 className='text-5xl font-bold'>Find your dream job now</h1>
+                <h1 className='text-5xl font-bold'>Find your dream IT job now</h1>
                 <p className='text-lg font-semibold'>1000+ jobs for you to explore</p>
             </div>
             <div>
@@ -70,7 +70,7 @@ const Home = () => {
                         </Select>
                         <Input
                             type='text'
-                            placeholder='Enter location'
+                            placeholder='Location'
                             className='w-1/4 placeholder-gray-500 text-xl border-none focus:border-none focus-visible:ring-0 focus-visible:ring-offset-0'
                             value={searchLocation}
                             onChange={handleSearchLocationChange}

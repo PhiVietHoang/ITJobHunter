@@ -34,7 +34,7 @@ const SearchJobCard = (props: JobData) => {
                     <p className='text-sm font-semibold'>{props.companyID.companyName}</p>
                 </div>
                 <Avatar className='w-12 h-12 rounded-xl'>
-                    <AvatarImage src={props.companyID.companyLogo}/>
+                    <AvatarImage src={props.companyID.companyLogo} />
                     <AvatarFallback>
                         <span className='text-xs'>Avatar</span>
                     </AvatarFallback>

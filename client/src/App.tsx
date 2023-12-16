@@ -2,12 +2,22 @@ import { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { AxiosResponse } from 'axios'
-
 import { getCurrentEmployee } from './services/api'
 import { setToken, setEmployee } from '~/features/auth/employeeAuthSlice'
 import Navbar from './components/layout/Navbar'
+import { io } from 'socket.io-client'
+import { RootState } from './store'
+import { useSelector } from 'react-redux'
+
+export const socket = io('http://localhost:3000')
 
 const App = () => {
+    const user = useSelector((state: RootState) => state.employeeAuth.employee || state.employerAuth.company)
+
+    useEffect(() => {
+        socket.emit('userOnline', user?._id)
+    }, [user])
+
     const dispatch = useDispatch()
 
     useEffect(() => {
