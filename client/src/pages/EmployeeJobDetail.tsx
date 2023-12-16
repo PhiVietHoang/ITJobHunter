@@ -25,6 +25,7 @@ const EmployeeJobDetail = () => {
     const { state } = useLocation()
     const employee = useSelector((state: RootState) => state.employeeAuth.employee)
     const [cv, setCv] = useState<string>('')
+    const [error, setError] = useState<string>('')
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
@@ -32,7 +33,6 @@ const EmployeeJobDetail = () => {
             const reader = new FileReader()
 
             reader.onloadend = () => {
-                // reader.result contains the base64 string
                 const base64String = reader.result
                 setCv(base64String as string)
             }
@@ -41,9 +41,11 @@ const EmployeeJobDetail = () => {
         }
     }
 
-    const handleApply = () => {
-        createJobApplication({ jobId: state._id, employeeId: employee._id, cv, status: 'Pending' })
-        navigate('/job-applications')
+    const handleApply = async () => {
+        const res = await createJobApplication({ jobId: state._id, employeeId: employee._id, cv, status: 'Pending' })
+        if (res?.status === 201) navigate('/job-applications')
+        else if (res?.status === 413) setError('File too large')
+        else setError('Something went wrong')
     }
 
     return (
@@ -67,6 +69,7 @@ const EmployeeJobDetail = () => {
                                     className='cursor-pointer'
                                     onChange={handleFileChange}
                                 />
+                                {error && <p className='text-red-500 text-center'>{error}</p>}
                             </div>
                             <DialogFooter className='sm:justify-start'>
                                 <DialogClose asChild>

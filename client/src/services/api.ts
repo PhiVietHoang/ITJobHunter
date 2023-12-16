@@ -79,6 +79,26 @@ export const createJobApplication = async (requestBody: {
     }
 }
 
+export const getJobApplicationsByEmployee = async (employeeId: string) => {
+    try {
+        const response = await api.get(`jobApplication/jobApplications/employee/${employeeId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const deleteJobApplication = async (id: string) => {
+    try {
+        const response = await api.delete(`jobApplication/jobApplications/${id}`)
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 export const employerRegister = async (requestBody: { companyName: string; email: string; password: string }) => {
     try {
         const { companyName, email, password } = requestBody

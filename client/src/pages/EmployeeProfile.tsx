@@ -6,7 +6,7 @@ import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
 import { Badge } from '~/components/ui/badge'
 import { RootState } from '~/store'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const EmployeeProfile = () => {
     const navigate = useNavigate()
@@ -52,6 +52,9 @@ const EmployeeProfile = () => {
                                 {employee.email || 'Empty'}
                             </li>
                         </ul>
+                        <Link to='/job-applications'>
+                            <p className='text-sm underline'>My job applications</p>
+                        </Link>
                     </div>
                 </div>
             </div>
