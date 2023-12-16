@@ -53,3 +53,14 @@ exports.getMessage = async (req, res) => {
         res.status(500).json({ message: 'Internal server error', error: err })
     }
 }
+
+exports.getAllUsers = async (req, res) => {
+    const id = req.query.id;
+    if (id === 'undefined' || !id) return res.status(400).json({ success: false, message: 'id is required' })
+    try {
+        const getUsers = await Company.find({ _id: { $ne: id } });
+        return res.status(200).json({ data: getUsers, success: true });
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err })
+    }
+}

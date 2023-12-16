@@ -5,10 +5,12 @@ const authMiddleware = require('../middlewares/AuthMiddleware');
 
 const{
     getMessage, 
-    sendMessage
+    sendMessage,
+    getAllUsers
 } = require('../controllers/MessageController');
 
 router.post('/send-message', authMiddleware, sendMessage);
 router.get('/get-message', authMiddleware, getMessage);
+router.get('/get-all-users', authMiddleware,  getAllUsers)
 
 module.exports = router;

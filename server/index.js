@@ -8,22 +8,53 @@ const CompanyRoute = require('./routes/CompanyRoute');
 const JobApplicationRoute = require('./routes/JobApplicationRoute');
 const JobRoute = require('./routes/JobRoute');
 const MessageRoute = require('./routes/MessageRoute');
+const socket = require('socket.io');
+
 require('dotenv').config();
 
 // connect with database
 connectWithDB();
 
+// Middleware
 const app = express();
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 
+// Api routes
 app.use('/employee', EmployeeRoute);
 app.use('/company', CompanyRoute);
 app.use('/jobApplication', JobApplicationRoute);
 app.use('/job', JobRoute);
 app.use('/message', MessageRoute);
-
+// Start server
 const PORT = process.env.PORT;
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+const server = app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+
+// Connect to Socket.IO
+const io = socket(server, {
+    cors: {
+        origin: "http://localhost:5173",
+        methods: ["GET", "POST"],
+        credentials: true,
+    },
+});
+
+io.on("connection", (socket) => {
+  let userId
+
+  socket.on('sendMsg', async (payload) => {
+      io.emit('sendMsg', payload);
+  });
+
+  socket.on('userIsTyping', async (payload) => {
+      const { employeeId, companyId } = payload;
+      io.emit('userIsTyping', { employeeId, companyId });
+  })
+
+  socket.on('userStopTyping', async (payload) => {
+      const { employeeId, companyId } = payload;
+      io.emit('userStopTyping', { employeeId, companyId });
+  })
+});
