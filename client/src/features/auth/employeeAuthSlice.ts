@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+
 const initialState = {
     employeeToken: localStorage.getItem('employeeToken'),
     employee: null

@@ -1,5 +1,7 @@
 const JobApplication = require('../models/JobApplicationModel');
 const Employee = require('../models/EmployeeModel');
+const Company = require('../models/CompanyModel');
+const Job = require('../models/JobModel');
 
 // Create a new job application
 exports.createJobApplication = async (req, res) => {
@@ -92,6 +94,37 @@ exports.deleteJobApplication = async (req, res) => {
         }
 
         res.status(200).json({ message: 'Job application deleted successfully.' });
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err });
+    }
+};
+
+// Get job applications by employee id
+exports.getJobApplicationByEmployeeId = async (req, res) => {
+    const employeeId = req.params.employeeId;
+
+    try {
+        const jobApplications = await JobApplication.find({ employeeId })
+            .populate('jobId');
+
+        res.status(200).json(jobApplications);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err });
+    }
+};
+
+// Get job applications by company ID
+exports.getJobApplicationsByCompanyId = async (req, res) => {
+    const companyId = req.params.companyId;
+
+    try {
+        const jobs = await Job.find({ companyID: companyId });
+        const jobIds = jobs.map(job => job._id);
+        const jobApplications = await JobApplication.find({ jobId: { $in: jobIds } })
+            .populate('employeeId', 'name email phoneNumber')
+            .populate('jobId');
+        
+        res.status(200).json(jobApplications);
     } catch (err) {
         res.status(500).json({ message: 'Internal server error', error: err });
     }

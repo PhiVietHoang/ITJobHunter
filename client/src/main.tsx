@@ -15,6 +15,12 @@ import EmployerAuth from './pages/EmployerAuth.tsx'
 import EmployerLoginForm from './components/EmployerLoginForm.tsx'
 import EmployerRegisterForm from './components/EmployerRegisterForm.tsx'
 import Search from './pages/Search.tsx'
+import EmployeeProfileEdit from './pages/EmployeeProfileEdit.tsx'
+import EmployeeProfileEditEducation from './pages/EmployeeProfileEditEducation.tsx'
+import EmployeeProfileEditCertification from './pages/EmployeeProfileEditCertification.tsx'
+import EmployeeProfileEditSkills from './pages/EmployeeProfileEditSkills.tsx'
+import EmployeeJobDetail from './pages/EmployeeJobDetail.tsx'
+import EmployeeJobApplication from './pages/EmployeeJobApplication.tsx'
 import EmployeeChat from './pages/EmployeeChat.tsx'
 
 const router = createBrowserRouter([
@@ -31,8 +37,32 @@ const router = createBrowserRouter([
                 element: <EmployeeProfile />
             },
             {
+                path: '/profile/:id/edit',
+                element: <EmployeeProfileEdit />
+            },
+            {
+                path: '/profile/:id/edit/education',
+                element: <EmployeeProfileEditEducation />
+            },
+            {
+                path: '/profile/:id/edit/certification',
+                element: <EmployeeProfileEditCertification />
+            },
+            {
+                path: '/profile/:id/edit/skills',
+                element: <EmployeeProfileEditSkills />
+            },
+            {
                 path: '/search',
                 element: <Search />
+            },
+            {
+                path: '/job/:id',
+                element: <EmployeeJobDetail />
+            },
+            {
+                path: 'job-applications',
+                element: <EmployeeJobApplication />
             }
         ]
     },

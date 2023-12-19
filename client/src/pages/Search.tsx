@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Label } from '~/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
@@ -32,6 +32,7 @@ interface JobData {
 
 const Search = () => {
     const { state } = useLocation()
+    const navigate = useNavigate()
     const [searchResults, setSearchResults] = useState(state.jobs as JobData[])
     const totalPages = state.totalPages
 
@@ -46,6 +47,10 @@ const Search = () => {
         } else {
             console.log(response)
         }
+    }
+
+    const handleSeeJobDetail = (result: JobData) => {
+        navigate(`/job/${result._id}`, { state: result })
     }
 
     return (
@@ -82,7 +87,9 @@ const Search = () => {
                 </div>
                 <div className='min-w-min flex flex-col gap-4 grow'>
                     {searchResults.map((result) => (
-                        <SearchJobCard key={result._id} {...result} />
+                        <div key={result._id} onClick={() => handleSeeJobDetail(result)}>
+                            <SearchJobCard {...result} />
+                        </div>
                     ))}
                 </div>
             </div>
