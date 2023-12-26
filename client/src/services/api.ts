@@ -43,7 +43,7 @@ export const getCurrentEmployee = async (token: string) => {
     }
 }
 
-export const updateEmployee = async (id: string, requestBody: any) => {
+export const updateEmployee = async (id: string, requestBody: unknown, token: string) => {
     try {
         const response = await api.put(`employee/employees/${id}`, requestBody, {
             headers: { Authorization: `Bearer ${token}` }

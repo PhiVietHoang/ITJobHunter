@@ -11,6 +11,7 @@ import { updateEmployee } from '~/services/api'
 const EmployeeProfileEditCertification = () => {
     const dispatch = useDispatch()
     const employee = useSelector((state: RootState) => state.employeeAuth.employee)
+    const token = useSelector((state: RootState) => state.employeeAuth.employeeToken)
     const [certificate, setCertificate] = useState({
         name: '',
         issuedBy: '',
@@ -21,7 +22,11 @@ const EmployeeProfileEditCertification = () => {
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         console.log('body', { certificates: [...employee.certificates, certificate] })
-        const response = await updateEmployee(employee._id, { certificates: [...employee.certificates, certificate] })
+        const response = await updateEmployee(
+            employee._id,
+            { certificates: [...employee.certificates, certificate] },
+            token
+        )
         if (response?.status === 200) {
             dispatch(setEmployee(response.data))
         }
@@ -29,9 +34,13 @@ const EmployeeProfileEditCertification = () => {
 
     const handleDelete = async (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, id: string) => {
         e.preventDefault()
-        const response = await updateEmployee(employee._id, {
-            certificates: employee.certificates.filter((edu) => edu._id !== id)
-        })
+        const response = await updateEmployee(
+            employee._id,
+            {
+                certificates: employee.certificates.filter((edu) => edu._id !== id)
+            },
+            token
+        )
         if (response?.status === 200) {
             dispatch(setEmployee(response.data))
         }

@@ -64,14 +64,16 @@ const editableSelectFields = [
 ]
 
 const EmployeeProfileEdit = () => {
+    const token = useSelector((state: RootState) => state.employeeAuth.employeeToken)
     const navigate = useNavigate()
     const employee = useSelector((state: RootState) => state.employeeAuth.employee)
     const [employeeData, setEmployeeData] = useState(employee)
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        updateEmployee(employeeData._id, employeeData)
+        updateEmployee(employeeData._id, employeeData, token)
         navigate(`/profile/${employeeData._id}`)
+        window.location.reload()
     }
 
     return (

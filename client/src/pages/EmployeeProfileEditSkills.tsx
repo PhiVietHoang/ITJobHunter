@@ -51,6 +51,7 @@ const softSkillList = [
 ]
 
 const EmployeeProfileEditSkills = () => {
+    const token = useSelector((state: RootState) => state.employeeAuth.employeeToken)
     const dispatch = useDispatch()
     const employee = useSelector((state: RootState) => state.employeeAuth.employee)
     const [technicalSkill, setTechnicalSkill] = useState<string | undefined>(undefined)
@@ -60,20 +61,28 @@ const EmployeeProfileEditSkills = () => {
         e.preventDefault()
         let response
         if (technicalSkill) {
-            response = await updateEmployee(employee._id, {
-                skill: {
-                    technical: [...employee.skill.technical, technicalSkill],
-                    softSkill: [...employee.skill.soft]
-                }
-            })
+            response = await updateEmployee(
+                employee._id,
+                {
+                    skill: {
+                        technical: [...employee.skill.technical, technicalSkill],
+                        softSkill: [...employee.skill.soft]
+                    }
+                },
+                token
+            )
             setTechnicalSkill(undefined)
         } else if (softSkill) {
-            response = await updateEmployee(employee._id, {
-                skill: {
-                    technical: [...employee.skill.technical],
-                    soft: [...employee.skill.soft, softSkill]
-                }
-            })
+            response = await updateEmployee(
+                employee._id,
+                {
+                    skill: {
+                        technical: [...employee.skill.technical],
+                        soft: [...employee.skill.soft, softSkill]
+                    }
+                },
+                token
+            )
             setSoftSkill(undefined)
         }
         if (response?.status === 200) {
@@ -83,12 +92,16 @@ const EmployeeProfileEditSkills = () => {
 
     const handleDelete = async (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, id: string) => {
         e.preventDefault()
-        const response = await updateEmployee(employee._id, {
-            skill: {
-                technical: employee.skill.technical.filter((skill: string) => skill !== id),
-                soft: employee.skill.soft.filter((skill: string) => skill !== id)
-            }
-        })
+        const response = await updateEmployee(
+            employee._id,
+            {
+                skill: {
+                    technical: employee.skill.technical.filter((skill: string) => skill !== id),
+                    soft: employee.skill.soft.filter((skill: string) => skill !== id)
+                }
+            },
+            token
+        )
         if (response?.status === 200) {
             dispatch(setEmployee(response.data))
         }

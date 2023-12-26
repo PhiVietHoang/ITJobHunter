@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { updateEmployee } from '~/services/api'
 
 const EmployeeEducationEditForm = () => {
+    const token = useSelector((state: RootState) => state.employeeAuth.employeeToken)
     const dispatch = useDispatch()
     const employee = useSelector((state: RootState) => state.employeeAuth.employee)
     const [education, setEducation] = useState({
@@ -21,7 +22,7 @@ const EmployeeEducationEditForm = () => {
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         console.log('body', { education: [...employee.education, education] })
-        const response = await updateEmployee(employee._id, { education: [...employee.education, education] })
+        const response = await updateEmployee(employee._id, { education: [...employee.education, education] }, token)
         if (response?.status === 200) {
             dispatch(setEmployee(response.data))
         }
@@ -29,9 +30,13 @@ const EmployeeEducationEditForm = () => {
 
     const handleDelete = async (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, id: string) => {
         e.preventDefault()
-        const response = await updateEmployee(employee._id, {
-            education: employee.education.filter((edu) => edu._id !== id)
-        })
+        const response = await updateEmployee(
+            employee._id,
+            {
+                education: employee.education.filter((edu) => edu._id !== id)
+            },
+            token
+        )
         if (response?.status === 200) {
             dispatch(setEmployee(response.data))
         }
