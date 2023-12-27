@@ -5,6 +5,7 @@ import { RootState } from '~/store'
 import { Button } from '~/components/ui/button'
 import { Separator } from '~/components/ui/separator'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
+import { searchJobs } from '~/services/api'
 
 const Navbar = () => {
     const token = useSelector((state: RootState) => state.employeeAuth.employeeToken)
@@ -17,13 +18,30 @@ const Navbar = () => {
         window.location.reload()
     }
 
+    const searchTitle = ''
+
+    const handleSearch = async () => {
+        const response = await searchJobs({ title: searchTitle, page: 0 })
+        if (response?.status === 200) {
+            const data = response.data
+            const state = { ...data, searchTitle }
+            navigate('/search', { state })
+        } else {
+            console.log(response)
+        }
+    }
+
     return (
         <nav className='py-4 flex justify-between items-center'>
             <div className='flex items-center gap-12'>
                 <Link to='/'>
                     <h1 className='text-xl text-cyan-600 font-bold font-serif'>ITJobHunter</h1>
                 </Link>
-                <Button variant='ghost' className='text-md  text-gray-500 hover:text-gray-900 hover:bg-white'>
+                <Button
+                    variant='ghost'
+                    className='text-md  text-gray-500 hover:text-gray-900 hover:bg-white'
+                    onClick={handleSearch}
+                >
                     Jobs
                 </Button>
                 <Button variant='ghost' className='text-md text-gray-500 hover:text-gray-900 hover:bg-white'>

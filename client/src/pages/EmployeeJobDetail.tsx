@@ -21,6 +21,7 @@ import { createJobApplication } from '~/services/api'
 import { RootState } from '~/store'
 
 const EmployeeJobDetail = () => {
+    const token = useSelector((state: RootState) => state.employeeAuth.employeeToken)
     const navigate = useNavigate()
     const { state } = useLocation()
     const employee = useSelector((state: RootState) => state.employeeAuth.employee)
@@ -42,7 +43,10 @@ const EmployeeJobDetail = () => {
     }
 
     const handleApply = async () => {
-        const res = await createJobApplication({ jobId: state._id, employeeId: employee._id, cv, status: 'Pending' })
+        const res = await createJobApplication(
+            { jobId: state._id, employeeId: employee._id, cv, status: 'Pending' },
+            token
+        )
         if (res?.status === 201) navigate('/job-applications')
         else if (res?.status === 413) setError('File too large')
         else setError('Something went wrong')

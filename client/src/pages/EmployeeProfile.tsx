@@ -7,6 +7,7 @@ import { Label } from '~/components/ui/label'
 import { Badge } from '~/components/ui/badge'
 import { RootState } from '~/store'
 import { Link, useNavigate } from 'react-router-dom'
+import { PiGenderIntersex } from 'react-icons/pi'
 
 const EmployeeProfile = () => {
     const navigate = useNavigate()
@@ -41,7 +42,7 @@ const EmployeeProfile = () => {
                             </li>
                             <li className='flex justify-start items-center gap-4'>
                                 <CalendarDays className='w-4' />
-                                {employee.joinDate.toString()}
+                                {employee.joinDate.toString().slice(0,10)}
                             </li>
                             <li className='flex justify-start items-center gap-4'>
                                 <Phone className='w-4' />
@@ -50,6 +51,10 @@ const EmployeeProfile = () => {
                             <li className='flex justify-start items-center gap-4'>
                                 <Mail className='w-4' />
                                 {employee.email || 'Empty'}
+                            </li>
+                            <li className='flex justify-start items-center gap-4'>
+                                <PiGenderIntersex className='w-4' />
+                                {employee.gender || 'Empty'}
                             </li>
                         </ul>
                         <Link to='/job-applications'>

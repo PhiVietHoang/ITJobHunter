@@ -12,7 +12,7 @@ const Home = () => {
     const navigate = useNavigate()
     const [searchTitle, setSearchTitle] = useState('')
     const [searchLocation, setSearchLocation] = useState('')
-    const [searchExperience, setSearchExperience] = useState('fresher')
+    const [searchExperience, setSearchExperience] = useState('')
 
     const handleSearchTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTitle(e.target.value)
@@ -56,7 +56,7 @@ const Home = () => {
                         />
                         <Select defaultValue={searchExperience} onValueChange={(e) => handleSearchExperienceChange(e)}>
                             <SelectTrigger className='w-1/4 placeholder-gray-500 text-xl border-none focus:ring-0 focus:ring-ring focus:ring-offset-0'>
-                                <SelectValue placeholder='Fresher' />
+                                <SelectValue placeholder='Experience' />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value='fresher'>Fresher</SelectItem>
