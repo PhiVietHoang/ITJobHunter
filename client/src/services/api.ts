@@ -64,15 +64,22 @@ export const searchJobs = async (requestBody: { title: string; page: number }) =
     }
 }
 
-export const createJobApplication = async (requestBody: {
-    jobId: string
-    employeeId: string
-    cv: string
-    status: string
-}) => {
+export const createJobApplication = async (
+    requestBody: {
+        jobId: string
+        employeeId: string
+        cv: string
+        status: string
+    },
+    token: string
+) => {
     try {
         const { jobId, employeeId, cv, status } = requestBody
-        const response = await api.post('jobApplication/jobApplications/', { jobId, employeeId, cv, status })
+        const response = await api.post(
+            'jobApplication/jobApplications/',
+            { jobId, employeeId, cv, status },
+            { headers: { Authorization: `Bearer ${token}` } }
+        )
         return response
     } catch (error) {
         console.error(error)

@@ -13,6 +13,7 @@ export interface RootState {
             description: string
             avatar: string
             email: string
+            gender: string
             phoneNumber: string
             address: {
                 country: string

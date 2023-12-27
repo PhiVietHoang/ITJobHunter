@@ -16,6 +16,11 @@ const editableStringFields = [
         type: 'text'
     },
     {
+        name: 'email',
+        label: 'Email',
+        type: 'email'
+    },
+    {
         name: 'avatar',
         label: 'Avatar URL',
         type: 'text'
@@ -29,11 +34,6 @@ const editableStringFields = [
         name: 'phoneNumber',
         label: 'Phone Number',
         type: 'text'
-    },
-    {
-        name: 'email',
-        label: 'Email',
-        type: 'email'
     },
     {
         name: 'experience',
@@ -88,6 +88,7 @@ const EmployeeProfileEdit = () => {
                         id={index.toString()}
                         value={employeeData[field.name as keyof typeof employeeData]?.toString() || ''}
                         onChange={(e) => setEmployeeData({ ...employeeData, [field.name]: e.target.value })}
+                        readOnly={field.type === 'email'}
                     />
                 </div>
             ))}
@@ -98,7 +99,12 @@ const EmployeeProfileEdit = () => {
                     </Label>
                     <Select onValueChange={(value) => setEmployeeData({ ...employeeData, [field.name]: value })}>
                         <SelectTrigger id={`select-${index}`}>
-                            <SelectValue placeholder='Select your gender' />
+                            <SelectValue
+                                placeholder={
+                                    employeeData[field.name as keyof typeof employeeData]?.toString() ||
+                                    'Select your gender'
+                                }
+                            />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
