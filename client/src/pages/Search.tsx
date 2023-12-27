@@ -38,6 +38,21 @@ const Search = () => {
 
     const [currentPage, setCurrentPage] = useState(0)
 
+    const [searchLocation, setSearchLocation] = useState('')
+    
+    const [filteredLocation, setFilteredLocation] = useState(state.jobs as JobData[])
+
+    const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => { 
+        const searchLocation = e.target.value;
+        setSearchLocation(searchLocation)
+
+        const filteredLocation = searchResults.filter((searchResult) =>
+        searchResult.companyID.companyLocations.toString().toLowerCase().includes(searchLocation.toLowerCase())
+    );
+
+        setFilteredLocation(filteredLocation);
+    }
+
     const handlePageChange = async (page: number) => {
         const response = await searchJobs({ title: state.searchTitle, page })
         if (response?.status === 200) {
@@ -70,7 +85,7 @@ const Search = () => {
                         </div>
                         <div className='flex items-center space-x-2'>
                             <RadioGroupItem value='part-time' id='part-time' />
-                            <Label htmlFor='part-time'>Part-time</Label>
+                          <Label htmlFor='part-time'>Part-time</Label>
                         </div>
                     </RadioGroup>
                     <div className='my-6'>
@@ -82,7 +97,7 @@ const Search = () => {
                     </div>
                     <div className='my-6'>
                         <p className='my-2 font-semibold'>Location</p>
-                        <Input type='text' placeholder='Hanoi, Vietnam' />
+                        <Input type='text' placeholder='Hanoi, Vietnam' onChange={handleLocationChange} value={searchLocation}/>
                     </div>
                 </div>
                 <div className='min-w-min flex flex-col gap-4 grow'>
