@@ -42,7 +42,7 @@ const EmployeeProfile = () => {
                             </li>
                             <li className='flex justify-start items-center gap-4'>
                                 <CalendarDays className='w-4' />
-                                {employee.joinDate.toString().slice(0,10)}
+                                {employee.joinDate.toString().slice(0, 10)}
                             </li>
                             <li className='flex justify-start items-center gap-4'>
                                 <Phone className='w-4' />
