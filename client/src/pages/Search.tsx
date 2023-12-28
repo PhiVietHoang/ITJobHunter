@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Label } from '~/components/ui/label'
@@ -34,24 +34,50 @@ const Search = () => {
     const { state } = useLocation()
     const navigate = useNavigate()
     const [searchResults, setSearchResults] = useState(state.jobs as JobData[])
+    const [filteredResults, setFilteredResults] = useState(state.jobs as JobData[])
     const totalPages = state.totalPages
 
     const [currentPage, setCurrentPage] = useState(0)
 
     const [searchLocation, setSearchLocation] = useState('')
-    
-    const [filteredLocation, setFilteredLocation] = useState(state.jobs as JobData[])
+    // const [searchExperience, setSearchExperience] = useState('')
+    // const [searchSalary, setSearchSalary] = useState('')
 
-    const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => { 
-        const searchLocation = e.target.value;
-        setSearchLocation(searchLocation)
+    useEffect(() => {
+        let filteredResults = searchResults
+        filteredResults = locationFilter(filteredResults, searchLocation)
+        // filteredResults = experienceFilter(filteredResults, searchExperience)
+        // filteredResults = salaryFilter(filteredResults, searchSalary)
+        setFilteredResults(filteredResults)
+    }, [searchResults, searchLocation])
+    // Thêm vào array bên trên khi triển khai xong filter khác, ví dụ [searchResults, searchLocation, searchExperience, searchSalary]
 
-        const filteredLocation = searchResults.filter((searchResult) =>
-        searchResult.companyID.companyLocations.toString().toLowerCase().includes(searchLocation.toLowerCase())
-    );
-
-        setFilteredLocation(filteredLocation);
+    const locationFilter = (input: JobData[], filterString: string) => {
+        if (!filterString) {
+            return input
+        }
+        return input.filter((item) =>
+            item.companyID.companyLocations.toString().toLowerCase().includes(filterString.toLowerCase())
+        )
     }
+
+    // TODO
+    // const experienceFilter = (input: JobData[], filterString: string) => {
+    //     return input
+    // }
+
+    // const salaryFilter = (input: JobData[], filterString: string) => {
+    //     return input
+    // }
+
+    const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const searchLocation = e.target.value
+        setSearchLocation(searchLocation)
+    }
+
+    // TODO
+    // const handleExperienceChange = () => {}
+    // const handleSalaryChange = () => {}
 
     const handlePageChange = async (page: number) => {
         const response = await searchJobs({ title: state.searchTitle, page })
@@ -85,7 +111,7 @@ const Search = () => {
                         </div>
                         <div className='flex items-center space-x-2'>
                             <RadioGroupItem value='part-time' id='part-time' />
-                          <Label htmlFor='part-time'>Part-time</Label>
+                            <Label htmlFor='part-time'>Part-time</Label>
                         </div>
                     </RadioGroup>
                     <div className='my-6'>
@@ -97,11 +123,16 @@ const Search = () => {
                     </div>
                     <div className='my-6'>
                         <p className='my-2 font-semibold'>Location</p>
-                        <Input type='text' placeholder='Hanoi, Vietnam' onChange={handleLocationChange} value={searchLocation}/>
+                        <Input
+                            type='text'
+                            placeholder='Hanoi, Vietnam'
+                            onChange={handleLocationChange}
+                            value={searchLocation}
+                        />
                     </div>
                 </div>
                 <div className='min-w-min flex flex-col gap-4 grow'>
-                    {searchResults.map((result) => (
+                    {filteredResults.map((result) => (
                         <div key={result._id} onClick={() => handleSeeJobDetail(result)}>
                             <SearchJobCard {...result} />
                         </div>
