@@ -1,5 +1,5 @@
 const CompanyHome = () => {
-    return <div>CompanyHome</div>
+    return <div>Company Home</div>
 }
 
 export default CompanyHome
