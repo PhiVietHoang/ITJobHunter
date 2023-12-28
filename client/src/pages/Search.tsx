@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-import { Label } from '~/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
+// import { Label } from '~/components/ui/label'
+// import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
 import { Slider } from '~/components/ui/slider'
 import SearchJobCard from '~/components/SearchJobCard'
 import { Input } from '~/components/ui/input'
@@ -40,8 +40,9 @@ const Search = () => {
     const [currentPage, setCurrentPage] = useState(0)
 
     const [searchLocation, setSearchLocation] = useState('')
+    const [searchExperience, setSearchExperience] = useState('')
+    
     const [searchWorkingTime, setWorkingTime] = useState('')
-    const [searchSalary, setSearchSalary] = useState('')
     const [minSalary, setMinSalary] = useState('');
     const [maxSalary, setMaxSalary] = useState('');
 
@@ -50,9 +51,10 @@ const Search = () => {
         let filteredResults = searchResults;
         filteredResults = locationFilter(filteredResults, searchLocation);
         filteredResults = workingTimeFilter(filteredResults, searchWorkingTime);
+        filteredResults = experienceFilter(filteredResults, searchExperience)
         filteredResults = salaryFilter(filteredResults, minSalary, maxSalary);
         setFilteredResults(filteredResults);
-    }, [searchResults, searchLocation, searchWorkingTime, minSalary, maxSalary]);
+    }, [searchResults, searchLocation, searchWorkingTime, searchExperience, minSalary, maxSalary]);
     
     // Thêm vào array bên trên khi triển khai xong filter khác, ví dụ [searchResults, searchLocation, searchExperience, searchSalary]
 
@@ -65,7 +67,26 @@ const Search = () => {
         )
     }
 
+    
     // TODO
+    const experienceFilter = (input: JobData[], filterString: string) => {
+        if (!filterString) {
+            return input;
+        }
+    
+        const [minExp, maxExp] = filterString
+            .replace(/[^0-9.-]+/g, "")
+            .split("-")
+            .map(value => parseFloat(value));
+    
+        return input.filter((item) => {
+            const yearsOfExp = parseFloat(item.yearsOfExp);
+    
+            return !isNaN(yearsOfExp) && yearsOfExp >= minExp && (maxExp ? yearsOfExp <= maxExp : true);
+        });
+    };
+
+
     const workingTimeFilter = (input: JobData[], filterString: string) => {
         if (!filterString) {
             return input;
@@ -89,6 +110,9 @@ const Search = () => {
                     .map(value => parseFloat(value));
     
                 // Checking conditions based on user input
+                if (minSalary && maxSalary && parseFloat(minSalary) > parseFloat(maxSalary)) {
+                    return input;
+                }
                 if (minSalary && maxSalary) {
                     return minOffer <= parseFloat(minSalary) && maxOffer >= parseFloat(maxSalary);
                 } else if (minSalary) {
@@ -105,13 +129,18 @@ const Search = () => {
     };
     
     const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const searchLocation = e.target.value
-        setSearchLocation(searchLocation)
+        const searchLocation = e.target.value;
+        setSearchLocation(searchLocation);
     }
 
     // TODO
+
+    const handleExperienceChange = () => {}
+
     const handleWorkingTimeChange = (value: string) => {
-        setWorkingTime(value);
+        // If the selected value is already the current filter, reset to empty string
+        const newWorkingTime = searchWorkingTime === value ? '' : value;
+        setWorkingTime(newWorkingTime);
     };
     const handleSalaryChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'min' | 'max') => {
         const value = e.target.value;
@@ -146,23 +175,29 @@ const Search = () => {
                         <p className='my-2 font-semibold'>Experience</p>
                         <Slider defaultValue={[0]} max={10} step={1} />
                     </div>
-                    <RadioGroup defaultValue='full-time' className='my-6'>
+                    <div className='my-6'>
                         <p className='my-2 font-semibold'>Working Time</p>
-                        <div className='flex items-center space-x-2'>
-                            <RadioGroupItem value='full-time'
-                                            id='full-time'
-                                            onChange={() => handleWorkingTimeChange('full-time')}
-                                            checked={searchWorkingTime === 'full-time'} />
-                            <Label htmlFor='full-time'>Full-time</Label>
-                        </div>
-                        <div className='flex items-center space-x-2'>
-                            <RadioGroupItem value='part-time'
-                                            id='part-time'
-                                            onChange={() => handleWorkingTimeChange('part-time')}
-                                            checked={searchWorkingTime === 'part-time'}/>
-                            <Label htmlFor='part-time'>Part-time</Label>
-                        </div>
-                    </RadioGroup>
+                            <div className='flex items-center space-x-2'>
+                                <input
+                                    type='radio'
+                                    id='full-time'
+                                    value='full-time'
+                                    onChange={() => handleWorkingTimeChange('full-time')}
+                                    checked={searchWorkingTime === 'full-time'}
+                                />
+                            <label htmlFor='full-time'>Full-time</label>
+                            </div>
+                            <div className='flex items-center space-x-2'>
+                                <input
+                                    type='radio'
+                                    id='part-time'
+                                    value='part-time'
+                                    onChange={() => handleWorkingTimeChange('part-time')}
+                                    checked={searchWorkingTime === 'part-time'}
+                                />
+                            <label htmlFor='part-time'>Part-time</label>
+                            </div>
+                    </div>
                     <div className='my-6'>
                         <p className='my-2 font-semibold'>Salary</p>
                         <div className='grid grid-cols-2 gap-x-2'>
