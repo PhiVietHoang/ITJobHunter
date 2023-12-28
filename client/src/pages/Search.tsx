@@ -40,7 +40,7 @@ const Search = () => {
     const [currentPage, setCurrentPage] = useState(0)
 
     const [searchLocation, setSearchLocation] = useState('')
-    const [searchExperience, setSearchExperience] = useState('')
+    const [searchWorkingTime, setWorkingTime] = useState('')
     const [searchSalary, setSearchSalary] = useState('')
     const [minSalary, setMinSalary] = useState('');
     const [maxSalary, setMaxSalary] = useState('');
@@ -49,10 +49,10 @@ const Search = () => {
     useEffect(() => {
         let filteredResults = searchResults;
         filteredResults = locationFilter(filteredResults, searchLocation);
-        filteredResults = experienceFilter(filteredResults, searchExperience);
+        filteredResults = workingTimeFilter(filteredResults, searchWorkingTime);
         filteredResults = salaryFilter(filteredResults, minSalary, maxSalary);
         setFilteredResults(filteredResults);
-    }, [searchResults, searchLocation, searchExperience, minSalary, maxSalary]);
+    }, [searchResults, searchLocation, searchWorkingTime, minSalary, maxSalary]);
     
     // Thêm vào array bên trên khi triển khai xong filter khác, ví dụ [searchResults, searchLocation, searchExperience, searchSalary]
 
@@ -66,9 +66,12 @@ const Search = () => {
     }
 
     // TODO
-    const experienceFilter = (input: JobData[], filterString: string) => {
-         return input
-    }
+    const workingTimeFilter = (input: JobData[], filterString: string) => {
+        if (!filterString) {
+            return input;
+        }
+        return input.filter((item) => item.workingTime.toLowerCase() === filterString.toLowerCase());
+    };
 
     const salaryFilter = (input: JobData[], minSalary: string, maxSalary: string) => {
         if (!minSalary && !maxSalary) {
@@ -89,9 +92,9 @@ const Search = () => {
                 if (minSalary && maxSalary) {
                     return minOffer <= parseFloat(minSalary) && maxOffer >= parseFloat(maxSalary);
                 } else if (minSalary) {
-                    return minOffer <= parseFloat(minSalary);
+                    return minOffer <= parseFloat(minSalary) && maxOffer >= parseFloat(minSalary);
                 } else if (maxSalary) {
-                    return maxOffer >= parseFloat(maxSalary);
+                    return maxOffer >= parseFloat(maxSalary) && minOffer <= parseFloat(maxSalary);
                 }
             }
     
@@ -101,18 +104,15 @@ const Search = () => {
         return filteredResults;
     };
     
-    
-    
-    
-    
-
     const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const searchLocation = e.target.value
         setSearchLocation(searchLocation)
     }
 
     // TODO
-    const handleExperienceChange = () => {}
+    const handleWorkingTimeChange = (value: string) => {
+        setWorkingTime(value);
+    };
     const handleSalaryChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'min' | 'max') => {
         const value = e.target.value;
         if (type === 'min') {
@@ -149,11 +149,17 @@ const Search = () => {
                     <RadioGroup defaultValue='full-time' className='my-6'>
                         <p className='my-2 font-semibold'>Working Time</p>
                         <div className='flex items-center space-x-2'>
-                            <RadioGroupItem value='full-time' id='full-time' />
+                            <RadioGroupItem value='full-time'
+                                            id='full-time'
+                                            onChange={() => handleWorkingTimeChange('full-time')}
+                                            checked={searchWorkingTime === 'full-time'} />
                             <Label htmlFor='full-time'>Full-time</Label>
                         </div>
                         <div className='flex items-center space-x-2'>
-                            <RadioGroupItem value='part-time' id='part-time' />
+                            <RadioGroupItem value='part-time'
+                                            id='part-time'
+                                            onChange={() => handleWorkingTimeChange('part-time')}
+                                            checked={searchWorkingTime === 'part-time'}/>
                             <Label htmlFor='part-time'>Part-time</Label>
                         </div>
                     </RadioGroup>
