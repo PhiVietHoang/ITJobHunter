@@ -23,6 +23,12 @@ import EmployeeJobDetail from './pages/EmployeeJobDetail.tsx'
 import EmployeeJobApplication from './pages/EmployeeJobApplication.tsx'
 import EmployeeChat from './pages/EmployeeChat.tsx'
 
+import CompanyApp from './CompanyApp.tsx'
+import CompanyHome from './pages/CompanyHome.tsx'
+import CompanyJobs from './pages/CompanyJobs.tsx'
+import CompanyJobApplications from './pages/CompanyJobApplications.tsx'
+import CompanyProfile from './pages/CompanyProfile.tsx'
+
 const router = createBrowserRouter([
     {
         path: '/',
@@ -91,6 +97,28 @@ const router = createBrowserRouter([
             {
                 path: 'register',
                 element: <EmployerRegisterForm />
+            }
+        ]
+    },
+    {
+        path: 'employer',
+        element: <CompanyApp />,
+        children: [
+            {
+                path: '',
+                element: <CompanyHome />
+            },
+            {
+                path: 'profile/:id',
+                element: <CompanyProfile />
+            },
+            {
+                path: 'jobs',
+                element: <CompanyJobs />
+            },
+            {
+                path: 'jobApplications',
+                element: <CompanyJobApplications />
             }
         ]
     },
