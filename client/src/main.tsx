@@ -28,6 +28,7 @@ import CompanyHome from './pages/CompanyHome.tsx'
 import CompanyJobs from './pages/CompanyJobs.tsx'
 import CompanyJobApplications from './pages/CompanyJobApplications.tsx'
 import CompanyProfile from './pages/CompanyProfile.tsx'
+import JobEditForm from './components/JobEditForm.tsx'
 
 const router = createBrowserRouter([
     {
@@ -115,6 +116,10 @@ const router = createBrowserRouter([
             {
                 path: 'jobs',
                 element: <CompanyJobs />
+            },
+            {
+                path: 'jobs/:id/edit',
+                element: <JobEditForm />
             },
             {
                 path: 'jobApplications',
