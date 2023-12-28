@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Label } from '~/components/ui/label'
@@ -34,24 +34,93 @@ const Search = () => {
     const { state } = useLocation()
     const navigate = useNavigate()
     const [searchResults, setSearchResults] = useState(state.jobs as JobData[])
+    const [filteredResults, setFilteredResults] = useState(state.jobs as JobData[])
     const totalPages = state.totalPages
 
     const [currentPage, setCurrentPage] = useState(0)
 
     const [searchLocation, setSearchLocation] = useState('')
+    const [searchExperience, setSearchExperience] = useState('')
+    const [searchSalary, setSearchSalary] = useState('')
+    const [minSalary, setMinSalary] = useState('');
+    const [maxSalary, setMaxSalary] = useState('');
+
+
+    useEffect(() => {
+        let filteredResults = searchResults;
+        filteredResults = locationFilter(filteredResults, searchLocation);
+        filteredResults = experienceFilter(filteredResults, searchExperience);
+        filteredResults = salaryFilter(filteredResults, minSalary, maxSalary);
+        setFilteredResults(filteredResults);
+    }, [searchResults, searchLocation, searchExperience, minSalary, maxSalary]);
     
-    const [filteredLocation, setFilteredLocation] = useState(state.jobs as JobData[])
+    // Thêm vào array bên trên khi triển khai xong filter khác, ví dụ [searchResults, searchLocation, searchExperience, searchSalary]
 
-    const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => { 
-        const searchLocation = e.target.value;
-        setSearchLocation(searchLocation)
-
-        const filteredLocation = searchResults.filter((searchResult) =>
-        searchResult.companyID.companyLocations.toString().toLowerCase().includes(searchLocation.toLowerCase())
-    );
-
-        setFilteredLocation(filteredLocation);
+    const locationFilter = (input: JobData[], filterString: string) => {
+        if (!filterString) {
+            return input
+        }
+        return input.filter((item) =>
+            item.companyID.companyLocations.toString().toLowerCase().includes(filterString.toLowerCase())
+        )
     }
+
+    // TODO
+    const experienceFilter = (input: JobData[], filterString: string) => {
+         return input
+    }
+
+    const salaryFilter = (input: JobData[], minSalary: string, maxSalary: string) => {
+        if (!minSalary && !maxSalary) {
+            return input;
+        }
+    
+        const filteredResults = input.filter((item) => {
+            const offerSalary = item.offerSalary;
+    
+            if (offerSalary) {
+                // Extracting numeric values from the offerSalary string
+                const [minOffer, maxOffer] = offerSalary
+                    .replace(/[^0-9.-]+/g, "")
+                    .split("-")
+                    .map(value => parseFloat(value));
+    
+                // Checking conditions based on user input
+                if (minSalary && maxSalary) {
+                    return minOffer <= parseFloat(minSalary) && maxOffer >= parseFloat(maxSalary);
+                } else if (minSalary) {
+                    return minOffer <= parseFloat(minSalary);
+                } else if (maxSalary) {
+                    return maxOffer >= parseFloat(maxSalary);
+                }
+            }
+    
+            return false;
+        });
+    
+        return filteredResults;
+    };
+    
+    
+    
+    
+    
+
+    const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const searchLocation = e.target.value
+        setSearchLocation(searchLocation)
+    }
+
+    // TODO
+    const handleExperienceChange = () => {}
+    const handleSalaryChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'min' | 'max') => {
+        const value = e.target.value;
+        if (type === 'min') {
+            setMinSalary(value);
+        } else {
+            setMaxSalary(value);
+        }
+    };
 
     const handlePageChange = async (page: number) => {
         const response = await searchJobs({ title: state.searchTitle, page })
@@ -85,23 +154,35 @@ const Search = () => {
                         </div>
                         <div className='flex items-center space-x-2'>
                             <RadioGroupItem value='part-time' id='part-time' />
-                          <Label htmlFor='part-time'>Part-time</Label>
+                            <Label htmlFor='part-time'>Part-time</Label>
                         </div>
                     </RadioGroup>
                     <div className='my-6'>
                         <p className='my-2 font-semibold'>Salary</p>
                         <div className='grid grid-cols-2 gap-x-2'>
-                            <Input type='number' placeholder='Min' />
-                            <Input type='number' placeholder='Max' />
+                            <Input type='text'
+                                   placeholder='Min'
+                                   onChange={(e) => handleSalaryChange(e, 'min')}
+                                   value={minSalary}
+                                   />
+                            <Input type='text'
+                                   placeholder='Max'
+                                   onChange={(e) => handleSalaryChange(e, 'max')}
+                                   value={maxSalary}/>
                         </div>
                     </div>
                     <div className='my-6'>
                         <p className='my-2 font-semibold'>Location</p>
-                        <Input type='text' placeholder='Hanoi, Vietnam' onChange={handleLocationChange} value={searchLocation}/>
+                        <Input
+                            type='text'
+                            placeholder='Hanoi, Vietnam'
+                            onChange={handleLocationChange}
+                            value={searchLocation}
+                        />
                     </div>
                 </div>
                 <div className='min-w-min flex flex-col gap-4 grow'>
-                    {searchResults.map((result) => (
+                    {filteredResults.map((result) => (
                         <div key={result._id} onClick={() => handleSeeJobDetail(result)}>
                             <SearchJobCard {...result} />
                         </div>
