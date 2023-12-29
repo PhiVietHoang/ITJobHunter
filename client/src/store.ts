@@ -43,7 +43,16 @@ export interface RootState {
         employerToken: string
         company: {
             _id: string
-            avatar: string
+            email: string
+            password: string
+            phoneNumber: string | null
+            companyName: string
+            companyEmails: string[]
+            companyWebsites: string[]
+            companyPhoneNumbers: string[]
+            companyLocations: string[]
+            companyLogo: string | null
+            description: string | null
         }
     }
     chatState: {
