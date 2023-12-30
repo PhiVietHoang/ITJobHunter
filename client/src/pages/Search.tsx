@@ -48,6 +48,7 @@ const Search = () => {
 
 
     useEffect(() => {
+        
         let filteredResults = searchResults;
         filteredResults = locationFilter(filteredResults, searchLocation);
         filteredResults = workingTimeFilter(filteredResults, searchWorkingTime);
@@ -75,18 +76,17 @@ const Search = () => {
         }
     
         const [minExp, maxExp] = filterString
-            .replace(/[^0-9.-]+/g, "")
-            .split("-")
-            .map(value => parseFloat(value));
+            .toLowerCase()
+            .replace('+', '')
+            .split('-')
+            .map((value) => (value === '' ? Infinity : parseInt(value, 10)));
     
         return input.filter((item) => {
-            const yearsOfExp = parseFloat(item.yearsOfExp);
-    
-            return !isNaN(yearsOfExp) && yearsOfExp >= minExp && (maxExp ? yearsOfExp <= maxExp : true);
+            const yearsOfExp = parseInt(item.yearsOfExp, 10);
+            return !isNaN(yearsOfExp) && yearsOfExp >= minExp && (yearsOfExp <= maxExp || maxExp === Infinity);
         });
     };
-
-
+    
     const workingTimeFilter = (input: JobData[], filterString: string) => {
         if (!filterString) {
             return input;
@@ -103,22 +103,26 @@ const Search = () => {
             const offerSalary = item.offerSalary;
     
             if (offerSalary) {
-                // Extracting numeric values from the offerSalary string
-                const [minOffer, maxOffer] = offerSalary
-                    .replace(/[^0-9.-]+/g, "")
-                    .split("-")
-                    .map(value => parseFloat(value));
-    
-                // Checking conditions based on user input
-                if (minSalary && maxSalary && parseFloat(minSalary) > parseFloat(maxSalary)) {
-                    return input;
+                let minOffer, maxOffer;
+                    if (!offerSalary.includes('-')) {
+                    const numericValue = offerSalary.match(/\$([\d,]+)/);
+                    minOffer = numericValue ? parseFloat(numericValue[1].replace(/,/g, '')) : NaN;
+                    maxOffer = minOffer;
+                } else {
+                    [minOffer, maxOffer] = offerSalary
+                        .replace(/[^0-9.-]+/g, "")
+                        .split("-")
+                        .map(value => parseFloat(value));
                 }
-                if (minSalary && maxSalary) {
-                    return minOffer <= parseFloat(minSalary) && maxOffer >= parseFloat(maxSalary);
-                } else if (minSalary) {
-                    return minOffer <= parseFloat(minSalary) && maxOffer >= parseFloat(minSalary);
-                } else if (maxSalary) {
-                    return maxOffer >= parseFloat(maxSalary) && minOffer <= parseFloat(maxSalary);
+                if (!isNaN(minOffer) && !isNaN(maxOffer)) {
+                    if (minSalary && maxSalary) {
+                        return (minOffer >= parseFloat(minSalary) && minOffer <= parseFloat(maxSalary)) ||
+                               (maxOffer >= parseFloat(minSalary) && maxOffer <= parseFloat(maxSalary));
+                    } else if (minSalary) {
+                        return minOffer <= parseFloat(minSalary) && maxOffer >= parseFloat(minSalary);
+                    } else if (maxSalary) {
+                        return maxOffer >= parseFloat(maxSalary) && minOffer <= parseFloat(maxSalary);
+                    }
                 }
             }
     
@@ -135,7 +139,9 @@ const Search = () => {
 
     // TODO
 
-    const handleExperienceChange = () => {}
+    const handleExperienceChange = (values: number[]) => {
+        setSearchExperience(values.join('-'));
+      };
 
     const handleWorkingTimeChange = (value: string) => {
         // If the selected value is already the current filter, reset to empty string
@@ -152,15 +158,15 @@ const Search = () => {
     };
 
     const handlePageChange = async (page: number) => {
-        const response = await searchJobs({ title: state.searchTitle, page })
+        const response = await searchJobs({ title: state.searchTitle, page });
         if (response?.status === 200) {
-            setSearchResults(response.data.jobs)
-            setCurrentPage(page)
-            window.scrollTo(0, 0)
+            setSearchResults(response.data.jobs);
+            setCurrentPage(page);
+            window.scrollTo(0, 0);
         } else {
-            console.log(response)
+            console.log(response);
         }
-    }
+    };
 
     const handleSeeJobDetail = (result: JobData) => {
         navigate(`/job/${result._id}`, { state: result })
@@ -173,7 +179,11 @@ const Search = () => {
                     <h1 className='my-4 text-lg font-bold'>Filters</h1>
                     <div className='my-6'>
                         <p className='my-2 font-semibold'>Experience</p>
-                        <Slider defaultValue={[0]} max={10} step={1} />
+                        <Slider defaultValue={[0, 10]} // Set the default range (e.g., 0-10 years)
+                                max={10}
+                                step={1}
+                                onValueChange={(values) => handleExperienceChange(values)}
+                                />
                     </div>
                     <div className='my-6'>
                         <p className='my-2 font-semibold'>Working Time</p>
