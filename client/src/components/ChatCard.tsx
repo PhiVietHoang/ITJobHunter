@@ -74,11 +74,22 @@ const ChatCard = () => {
 
     return (
         <>
-            <div className={`w-full h-20 flex  items-center justify-between bg-white text-center`}>
+            <div className={`w-full h-20 flex items-center justify-between bg-white text-center`}>
                 <div className='flex'>
-                    <div className='avatar mx-4 placeholder'>
-                        <div className='bg-neutral-focus rounded-full w-12 h-12 flex items-center justify-center border border-gray-600 text-black -xl'>
-                            <span>{receiver?.companyName.substring(0, 1)}</span>
+                    <div className='mx-4 placeholder'>
+                        <div className='bg-white overflow-hidden rounded-full w-12 h-12 flex items-center justify-center border border-gray-200 text-black -xl'>
+                            {receiver.companyLogo && (
+                                <img
+                                    src={receiver.companyLogo}
+                                    alt='logo'
+                                    className='object-contain object-center w-full h-full bg-white'
+                                />
+                            )}
+                            {!receiver.companyLogo && (
+                                <div className='flex items-center justify-center'>
+                                    <span>{receiver.companyName.slice(0, 1)}</span>
+                                </div>
+                            )}
                         </div>
                     </div>
                     <div className='flex flex-col text-left py-2 '>
@@ -130,7 +141,11 @@ const ChatCard = () => {
                     placeholder='Type here'
                     className={`input bg-white text-black input-bordered w-full max-w-full border border-gray-500 rounded-md p-2`}
                 />
-                <button type='submit' className='btn btn-circle btn-primary mx-3 rounded-full p-2 hover:bg-blue-500'>
+                <button
+                    title='sumbitButton'
+                    type='submit'
+                    className='btn btn-circle btn-primary mx-3 rounded-full p-2 hover:bg-blue-500'
+                >
                     <AiOutlineSend className='text-xl' />
                 </button>
             </form>

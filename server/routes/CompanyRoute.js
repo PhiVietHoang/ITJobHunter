@@ -10,6 +10,7 @@ const {
   updateCompany,
   deleteCompany,
   getProfile,
+  filterAndPaginateCompany
 } = require('../controllers/CompanyController');
 
 const authMiddleware = require('../middlewares/AuthMiddleware');
@@ -22,5 +23,6 @@ router.get('/companies/:id', getCompanyById);
 router.put('/companies/:id', authMiddleware, updateCompany);
 router.delete('/companies/:id', authMiddleware, deleteCompany);
 router.get('/profile',authMiddleware, getProfile);
+router.post('/filter-companies', filterAndPaginateCompany)
 
 module.exports = router;

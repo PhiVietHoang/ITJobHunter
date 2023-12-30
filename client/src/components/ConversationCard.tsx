@@ -31,11 +31,18 @@ const ConversationCard = ({ user }: ConversationCardProps) => {
     return (
         <div
             onClick={handleClick}
-            className={`w-11/12 relative h-20 bg-white  hover:bg-gray-300 text-black my-2 flex items-center cursor-pointer rounded-2xl px-4 mx-4 justify-start transition-all duration-700`}
+            className={`w-11/12 relative h-20 bg-white  hover:bg-gray-300 text-black my-2 flex items-center cursor-pointer rounded-2xl px-2 mx-4 justify-start transition-all duration-700`}
         >
             <div className={`avatar ${user?.online ? 'online' : ''} mx-4 placeholder`}>
-                <div className='bg-neutral-focus text-neutral-content rounded-full w-8'>
-                    <span className='text-xs'>{user.companyName.substring(0, 4)}</span>
+                <div className='bg-neutral-focus text-neutral-content border border-gray-200 rounded-full w-12 h-12 overflow-hidden flex items-center justify-center'>
+                    {!user.companyLogo && (
+                        <div className='flex items-center justify-center'>
+                            <span className='text-xs flex'>{user.companyName.substring(0, 2)}</span>
+                        </div>
+                    )}
+                    {user.companyLogo && (
+                        <img src={user.companyLogo} alt="Logo" className='h-full w-full object-fit object-center'/>
+                    )}
                 </div>
             </div>
 

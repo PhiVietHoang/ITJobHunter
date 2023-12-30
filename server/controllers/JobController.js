@@ -132,6 +132,22 @@ exports.deleteJob = async (req, res) => {
     }
 };
 
+// Select jobs by companyId
+exports.findJobByCompanyId = async (req, res) => {
+    const { companyID } = req.query;
+
+    try {
+        const jobs = await Job.find( {companyID} ).populate({
+            path: 'companyID',
+            select: '_id companyName companyLogo companyLocations',
+        });
+
+        return res.status(200).json(jobs);
+    } catch (err) {
+        return res.status(500).json({ message: 'Internal server error', error: err})
+    }
+}
+
 // Filter and paginate jobs
 exports.filterAndPaginateJobs = async (req, res) => {
     try {

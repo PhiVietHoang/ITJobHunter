@@ -47,6 +47,7 @@ const softSkillList = [
     'Teamwork',
     'Writting',
     'Communication',
+    'Leading',
     'Other skills'
 ]
 
