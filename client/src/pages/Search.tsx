@@ -36,29 +36,40 @@ const Search = () => {
     const [searchResults, setSearchResults] = useState(state.jobs as JobData[])
     const [filteredResults, setFilteredResults] = useState(state.jobs as JobData[])
     const totalPages = state.totalPages
-
     const [currentPage, setCurrentPage] = useState(0)
-
     const [searchLocation, setSearchLocation] = useState('')
     const [searchExperience, setSearchExperience] = useState('')
-    
     const [searchWorkingTime, setWorkingTime] = useState('')
-    const [minSalary, setMinSalary] = useState('');
-    const [maxSalary, setMaxSalary] = useState('');
-
+    const [minSalary, setMinSalary] = useState('')
+    const [maxSalary, setMaxSalary] = useState('')
 
     useEffect(() => {
-        
+        console.log('useEffect triggered:', { searchResults, searchLocation, searchWorkingTime, searchExperience, minSalary, maxSalary, currentPage });
+
         let filteredResults = searchResults;
         filteredResults = locationFilter(filteredResults, searchLocation);
         filteredResults = workingTimeFilter(filteredResults, searchWorkingTime);
-        filteredResults = experienceFilter(filteredResults, searchExperience)
+        filteredResults = experienceFilter(filteredResults, searchExperience);
         filteredResults = salaryFilter(filteredResults, minSalary, maxSalary);
+
+        console.log('Filtered Results:', filteredResults);
         setFilteredResults(filteredResults);
+        console.log('Are searchResults and filteredResults different?', searchResults !== filteredResults);
     }, [searchResults, searchLocation, searchWorkingTime, searchExperience, minSalary, maxSalary]);
     
     // Thêm vào array bên trên khi triển khai xong filter khác, ví dụ [searchResults, searchLocation, searchExperience, searchSalary]
-
+    const handlePageChange = async (page: number) => {
+        console.log('Changing to page:', page);
+        const response = await searchJobs({ title: state.searchTitle, page });
+        if (response?.status === 200) {
+            setSearchResults(response.data.jobs);
+            setFilteredResults(response.data.jobs);
+            setCurrentPage(page);
+            window.scrollTo(0, 0);
+        } else {
+            console.log(response);
+        }
+    };
     const locationFilter = (input: JobData[], filterString: string) => {
         if (!filterString) {
             return input
@@ -72,20 +83,29 @@ const Search = () => {
     // TODO
     const experienceFilter = (input: JobData[], filterString: string) => {
         if (!filterString) {
-            return input;
+          return input;
         }
-    
-        const [minExp, maxExp] = filterString
-            .toLowerCase()
-            .replace('+', '')
-            .split('-')
-            .map((value) => (value === '' ? Infinity : parseInt(value, 10)));
-    
+      
+        const [minExp, maxExp] = filterString.split('-').map((value) => parseInt(value.trim(), 10));
+      
         return input.filter((item) => {
-            const yearsOfExp = parseInt(item.yearsOfExp, 10);
-            return !isNaN(yearsOfExp) && yearsOfExp >= minExp && (yearsOfExp <= maxExp || maxExp === Infinity);
+          const expRange = item.yearsOfExp.split('-').map((value) => parseInt(value.trim(), 10));
+      
+          if (expRange.length === 2) {
+            const [minOffer, maxOffer] = expRange;
+      
+            if (!isNaN(minOffer) && !isNaN(maxOffer)) {
+              return (
+                (minExp >= minOffer && minExp <= maxOffer) ||
+                (maxExp >= minOffer && maxExp <= maxOffer)
+              );
+            }
+          }
+      
+          return false;
         });
-    };
+      };
+      
     
     const workingTimeFilter = (input: JobData[], filterString: string) => {
         if (!filterString) {
@@ -140,14 +160,13 @@ const Search = () => {
     // TODO
 
     const handleExperienceChange = (values: number[]) => {
-        setSearchExperience(values.join('-'));
+        setSearchExperience(`${values[0]}-${values[1]}`);
       };
 
     const handleWorkingTimeChange = (value: string) => {
         // If the selected value is already the current filter, reset to empty string
         const newWorkingTime = searchWorkingTime === value ? '' : value;
-        setWorkingTime(newWorkingTime);
-    };
+        setWorkingTime(newWorkingTime);    };
     const handleSalaryChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'min' | 'max') => {
         const value = e.target.value;
         if (type === 'min') {
@@ -157,21 +176,9 @@ const Search = () => {
         }
     };
 
-    const handlePageChange = async (page: number) => {
-        const response = await searchJobs({ title: state.searchTitle, page });
-        if (response?.status === 200) {
-            setSearchResults(response.data.jobs);
-            setCurrentPage(page);
-            window.scrollTo(0, 0);
-        } else {
-            console.log(response);
-        }
-    };
-
     const handleSeeJobDetail = (result: JobData) => {
         navigate(`/job/${result._id}`, { state: result })
     }
-
     return (
         <div className='my-8'>
             <div className='my-8 flex items-start gap-4'>
@@ -184,6 +191,10 @@ const Search = () => {
                                 step={1}
                                 onValueChange={(values) => handleExperienceChange(values)}
                                 />
+                                <div className="flex justify-between mt-2 text-sm">
+                                <span>0 year</span>
+                                <span>10 years</span>
+                                </div>
                     </div>
                     <div className='my-6'>
                         <p className='my-2 font-semibold'>Working Time</p>
