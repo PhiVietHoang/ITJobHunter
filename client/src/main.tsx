@@ -23,6 +23,11 @@ import EmployeeJobDetail from './pages/EmployeeJobDetail.tsx'
 import EmployeeJobApplication from './pages/EmployeeJobApplication.tsx'
 import EmployeeChat from './pages/EmployeeChat.tsx'
 
+import AdminHome from './pages/AdminHome.tsx'
+import AdminCompanyList from './pages/AdminCompanyList.tsx'
+import AdminEmployeeList from './pages/AdminEmployeeList.tsx'
+import AdminDashboard from './pages/AdminDashboard.tsx'
+
 const router = createBrowserRouter([
     {
         path: '/',
@@ -63,6 +68,23 @@ const router = createBrowserRouter([
             {
                 path: 'job-applications',
                 element: <EmployeeJobApplication />
+            },
+
+            {
+                path: '/admin',
+                element: <AdminHome />
+            },
+            {
+                path: '/admin/company',
+                element: <AdminCompanyList />
+            },
+            {
+                path: '/admin/employee',
+                element: <AdminEmployeeList />
+            },
+            {
+                path: '/admin/dashboard',
+                element: <AdminDashboard />
             }
         ]
     },
