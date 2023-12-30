@@ -178,3 +178,31 @@ export const get_all_users = async (id: unknown, token: string) => {
         console.error(error)
     }
 }
+
+export const searchCompany = async (requestBody: { companyName: string; page: number }) => {
+    try {
+        const { companyName, page } = requestBody
+        const response = await api.post('company/filter-companies', { companyName, page })
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const getAllCompany = async () => {
+    try {
+        const response = await api.get('company/companies')
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const getJobByCompany = async (companyID: string) => {
+    try {
+        const response = await api.get(`job/jobsByCompany?companyID=${companyID}`)
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}

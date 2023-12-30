@@ -8,10 +8,13 @@ import Navbar from './components/layout/Navbar'
 import { io } from 'socket.io-client'
 import { RootState } from './store'
 import { useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 
 export const socket = io('http://localhost:3000')
 
 const App = () => {
+    const location = useLocation()
+    const isEmployeeCompanyDetail = location.pathname.includes('/companyAllDetail')
     const user = useSelector((state: RootState) => state.employeeAuth.employee || state.employerAuth.company)
 
     useEffect(() => {
@@ -40,7 +43,7 @@ const App = () => {
                     <Navbar />
                 </div>
             </div>
-            <div className='mx-auto w-2/3'>
+            <div className={`mx-auto ${isEmployeeCompanyDetail ? 'w-full' : 'w-2/3'}`}>
                 <Outlet />
             </div>
         </div>
