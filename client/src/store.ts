@@ -44,14 +44,14 @@ export interface RootState {
         company: {
             _id: string
             email: string
-            phoneNumber: string
+            phoneNumber: string | null
             companyName: string
             companyEmails: string[]
             companyWebsites: string[]
             companyPhoneNumbers: string[]
             companyLocations: string[]
             companyLogo: string
-            description: string
+            description: string | null
         }
     }
     chatState: {
