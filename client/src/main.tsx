@@ -31,6 +31,7 @@ import CompanyJobs from './pages/CompanyJobs.tsx'
 import CompanyJobApplications from './pages/CompanyJobApplications.tsx'
 import CompanyProfile from './pages/CompanyProfile.tsx'
 import JobEditForm from './components/JobEditForm.tsx'
+import EmployerChat from './pages/EmployerChat.tsx'
 
 const router = createBrowserRouter([
     {
@@ -140,6 +141,10 @@ const router = createBrowserRouter([
     {
         path: '/employee/chat',
         element: <EmployeeChat />
+    },
+    {
+        path: '/employer/chat',
+        element: <EmployerChat />
     }
 ])
 

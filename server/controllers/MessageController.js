@@ -6,7 +6,7 @@ const userFromToken = require('../utils/UserFromToken');
 exports.sendMessage = async (req, res) => {
     try {
         const userData = userFromToken(req);
-        const { employeeId, companyId, message } = req.body;
+        const { employeeId, companyId, message, senderIsCompany } = req.body;
         const employee = await Employee.findById(employeeId);
         const company = await Company.findById(companyId);
 
@@ -32,7 +32,7 @@ exports.sendMessage = async (req, res) => {
             res.status(401).json({ message: 'Unauthorized: Missing or invalid token.'});
         }
 
-        const newMessage = new Message({ employeeId: employeeId, companyId: companyId, message: message, senderIsCompany: isSendByCompany});
+        const newMessage = new Message({ employeeId: employeeId, companyId: companyId, message: message, senderIsCompany: senderIsCompany});
         await newMessage.save();
         return res.status(200).json({ success: true, message: 'Message sent successfully' });
     } catch (err) {
@@ -59,6 +59,17 @@ exports.getAllUsers = async (req, res) => {
     if (id === 'undefined' || !id) return res.status(400).json({ success: false, message: 'id is required' })
     try {
         const getUsers = await Company.find({ _id: { $ne: id } });
+        return res.status(200).json({ data: getUsers, success: true });
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err })
+    }
+}
+
+exports.getCompanyAllUsers = async (req, res) => {
+    const id = req.query.id;
+    if (id === 'undefined' || !id) return res.status(400).json({ success: false, message: 'id is required' })
+    try {
+        const getUsers = await Employee.find({ _id: { $ne: id } });
         return res.status(200).json({ data: getUsers, success: true });
     } catch (err) {
         res.status(500).json({ message: 'Internal server error', error: err })

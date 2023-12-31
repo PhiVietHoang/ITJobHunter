@@ -52,3 +52,18 @@ export const filterJobByCompany = async (requestBody: { title: string; companyID
         console.error(error)
     }
 }
+
+export const get_all_users = async (id: unknown, token: string) => {
+    try {
+        const res = await api.get(`message/get-company-all-users?id=${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            }
+        })
+        return res
+    } catch (error) {
+        console.error(error)
+    }
+}

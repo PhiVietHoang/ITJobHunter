@@ -141,7 +141,7 @@ export const getChatData = async (data: { employeeId: string; companyId: string 
 }
 
 export const send_message = async (
-    requestBody: { employeeId: string; companyId: string; message: string },
+    requestBody: { employeeId: string; companyId: string; message: string; senderIsCompany: boolean },
     token: string
 ) => {
     try {

@@ -43,11 +43,17 @@ const ChatCard = () => {
     const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         if (!sendMessage || !user || !receiver) return console.error('Please type something')
-        const messageData = { employeeId: user?._id, companyId: receiver?._id, message: sendMessage }
+        const messageData = {
+            employeeId: user?._id,
+            companyId: receiver?._id,
+            message: sendMessage,
+            senderIsCompany: false
+        }
 
         socket.emit('sendMsg', messageData)
 
         const res = await send_message(messageData, token)
+
         if (res?.success) {
             console.log('Send message successfully')
         } else {

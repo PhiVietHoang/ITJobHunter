@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 
 import { RootState } from '~/store'
@@ -6,8 +6,10 @@ import { Button } from '~/components/ui/button'
 import { Separator } from '~/components/ui/separator'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 import { searchJobs } from '~/services/api'
+import { setChatSelected } from '~/features/chatSlice'
 
 const Navbar = () => {
+    const dispatch = useDispatch()
     const token = useSelector((state: RootState) => state.employeeAuth.employeeToken)
     const employee = useSelector((state: RootState) => state.employeeAuth.employee)
     const navigate = useNavigate()
@@ -31,6 +33,11 @@ const Navbar = () => {
         }
     }
 
+    const solveOnClick = () => {
+        navigate('/employee/chat')
+        dispatch(setChatSelected(false))
+    }
+
     return (
         <nav className='py-4 flex justify-between items-center'>
             <div className='flex items-center gap-12'>
@@ -50,11 +57,13 @@ const Navbar = () => {
                     </Button>
                 </Link>
                 {employee && (
-                    <Link to='/employee/chat'>
-                        <Button variant='ghost' className='text-md text-gray-500 hover:text-gray-900 hover:bg-white'>
-                            Chat
-                        </Button>
-                    </Link>
+                    <Button
+                        variant='ghost'
+                        className='text-md text-gray-500 hover:text-gray-900 hover:bg-white'
+                        onClick={solveOnClick}
+                    >
+                        Chat
+                    </Button>
                 )}
             </div>
             <div className='flex items-center gap-4'>

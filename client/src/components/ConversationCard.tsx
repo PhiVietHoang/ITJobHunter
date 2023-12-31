@@ -41,7 +41,7 @@ const ConversationCard = ({ user }: ConversationCardProps) => {
                         </div>
                     )}
                     {user.companyLogo && (
-                        <img src={user.companyLogo} alt="Logo" className='h-full w-full object-fit object-center'/>
+                        <img src={user.companyLogo} alt='Logo' className='h-full w-full object-fit object-center' />
                     )}
                 </div>
             </div>
