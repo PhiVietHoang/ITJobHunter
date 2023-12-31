@@ -3,25 +3,26 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '~/store'
 import { useNavigate } from 'react-router-dom'
 import { setMessages, setTyperID, setTyping, setUserMessageLoading, setAllUserData } from '../features/chatSlice'
-import { getChatData, get_all_users } from '../services/api'
+import { getChatData } from '../services/api'
+import { get_all_users } from '~/services/companyApi'
 import { BiLogOut, BiSearch } from 'react-icons/bi'
 import { toast, ToastContainer } from 'react-toastify'
 import { PiChatsFill } from 'react-icons/pi'
 import { socket } from '../App'
-import ChatCard from '~/components/ChatCard'
+import CompanyChatCard from '~/components/CompanyChatCard'
 import Loading from '~/components/ui/Loading'
-import ConversationCard from '~/components/ConversationCard'
+import CompanyConversationCard from '~/components/CompanyConversationCard'
 import DummyChatCard from '~/components/ui/DummnyChatCard'
 
-const EmployeeChat = () => {
+const EmployerChat = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [showConversationBox, setShowConversationBox] = useState('basic')
     const [searchTerm, setSearchTerm] = useState('')
     const [showName, setShowName] = useState(false)
     const [typingTimeout, setTypingTimeout] = useState<number | null>(null)
-    const token = useSelector((state: RootState) => state.employeeAuth.employeeToken)
-    const userData = useSelector((state: RootState) => state.employeeAuth.employee)
+    const token = useSelector((state: RootState) => state.employerAuth.employerToken)
+    const userData = useSelector((state: RootState) => state.employerAuth.company)
     const chatSelected = useSelector((state: RootState) => state.chatState.chatSelected)
     const allUsers = useSelector((state: RootState) => state.chatState.allUsers)
     const receiver = useSelector((state: RootState) => state.chatState.receiverSelected)
@@ -51,11 +52,10 @@ const EmployeeChat = () => {
     const getChat = async () => {
         dispatch(setUserMessageLoading(true))
         if (!userData || !receiver) return dispatch(setUserMessageLoading(false))
-        const getMessages = { employeeId: userData?._id, companyId: receiver?._id }
+        const getMessages = { companyId: userData?._id, employeeId: receiver?._id }
         const res = await getChatData(getMessages, token)
         if (res?.success) {
             dispatch(setUserMessageLoading(false))
-            dispatch(setMessages([]))
             dispatch(setMessages(res?.data))
         } else {
             dispatch(setUserMessageLoading(false))
@@ -117,7 +117,7 @@ const EmployeeChat = () => {
 
     function filterItems(searchTerm: string) {
         if (showConversationBox === 'basic') {
-            return allUsers?.filter((user) => user.companyName.toLowerCase().includes(searchTerm.toLowerCase()))
+            return allUsers?.filter((user) => user.name.toLowerCase().includes(searchTerm.toLowerCase()))
         }
     }
 
@@ -132,9 +132,9 @@ const EmployeeChat = () => {
     useEffect(() => {
         const handleUserIsTyping = () => {
             if (someoneTyping) {
-                socket.emit('userIsTyping', { employeeId: userData?._id, companyId: receiver?._id })
+                socket.emit('userIsTyping', { companyId: userData?._id, employeeId: receiver?._id })
             } else {
-                socket.emit('userStopTyping', { employeeId: userData?._id, companyId: receiver?._id })
+                socket.emit('userStopTyping', { companyId: userData?._id, employeeId: receiver?._id })
             }
         }
 
@@ -147,7 +147,7 @@ const EmployeeChat = () => {
 
     useEffect(() => {
         const handleUserIsTyping = () => {
-            socket.emit('userIsTyping', { senderId: userData?._id, receiverId: receiver?._id })
+            socket.emit('userIsTyping', { companyId: userData?._id, employeeId: receiver?._id })
 
             if (typingTimeout) {
                 clearTimeout(typingTimeout)
@@ -202,7 +202,7 @@ const EmployeeChat = () => {
     return (
         <div className={`w-full min-h-screen bg-gray-50 flex items-center justify-center`}>
             <BiLogOut
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/employer')}
                 className={`lg:text-4xl z-50 text-xl cursor-pointer fixed   lg:top-6  left-5 top-3 text-black`}
             />
             {loading && <Loading />}
@@ -215,15 +215,15 @@ const EmployeeChat = () => {
                         onClick={() => setShowName(true)}
                         className='avatar placeholder tooltip tooltip-open tooltip-top'
                     >
-                        {userData.avatar === null && (
+                        {userData?.companyLogo === null && (
                             <div className='bg-neutral-focus rounded-full w-12 h-12 flex items-center justify-center border hover:bg-gray-200 hover:text-black'>
-                                <span>{userData?.name.substring(0, 1)}</span>
+                                <span>{userData?.companyName.substring(0, 1)}</span>
                             </div>
                         )}
-                        {userData.avatar != null && (
+                        {userData?.companyLogo != null && (
                             <div className='bg-neutral-focus rounded-full w-12 h-12 flex items-center justify-center border hover:bg-gray-200 hover:text-black'>
                                 <img
-                                    src={userData.avatar}
+                                    src={userData.companyLogo}
                                     alt='User Avatar'
                                     className='w-full h-full object-cover rounded-full'
                                 />
@@ -235,7 +235,7 @@ const EmployeeChat = () => {
                             ref={showNameRef}
                             className='absolute z-50  left-16 t op-10 text-center min-w-max chat-bubble bg-slate-900 text-white px-3 py-4'
                         >
-                            <p className='text-xl '>{userData?.name}</p>
+                            <p className='text-xl '>{userData?.companyName}</p>
                         </div>
                     )}
 
@@ -267,7 +267,7 @@ const EmployeeChat = () => {
                     <div className={`w-full h-full bg-gray-200 overflow-y-auto overflow-x-hidden py-2`}>
                         <>
                             {filterItems(searchTerm)?.map((user, index) => (
-                                <ConversationCard key={user?._id + index} user={user} />
+                                <CompanyConversationCard key={user?._id + index} user={user} />
                             ))}
                         </>
                     </div>
@@ -278,7 +278,7 @@ const EmployeeChat = () => {
                 <div
                     className={`${chatSelected ? 'flex w-full' : 'hidden'} w-8/12 rounded-xl h-full  lg:flex  flex-col`}
                 >
-                    {chatSelected === 'basic' ? <ChatCard /> : <DummyChatCard />}
+                    {chatSelected === 'basic' ? <CompanyChatCard /> : <DummyChatCard />}
                 </div>
                 {/* container to show chats */}
             </div>
@@ -288,4 +288,4 @@ const EmployeeChat = () => {
     )
 }
 
-export default EmployeeChat
+export default EmployerChat

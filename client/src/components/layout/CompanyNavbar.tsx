@@ -1,20 +1,27 @@
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 
 import { RootState } from '~/store'
 import { Button } from '~/components/ui/button'
 import { Separator } from '~/components/ui/separator'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
+import { setChatSelected } from '~/features/chatSlice'
 
 const CompanyNavbar = () => {
     const token = useSelector((state: RootState) => state.employerAuth.employerToken)
     const company = useSelector((state: RootState) => state.employerAuth.company)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const logout = () => {
         localStorage.removeItem('employerToken')
         navigate('/')
         window.location.reload()
+    }
+
+    const solveOnClick = () => {
+        navigate('/employer/chat')
+        dispatch(setChatSelected(false))
     }
 
     return (
@@ -34,11 +41,13 @@ const CompanyNavbar = () => {
                     </Button>
                 </Link>
                 {company && (
-                    <Link to='/employer/chat'>
-                        <Button variant='ghost' className='text-md text-gray-500 hover:text-gray-900 hover:bg-white'>
-                            Chat
-                        </Button>
-                    </Link>
+                    <Button
+                        variant='ghost'
+                        className='text-md text-gray-500 hover:text-gray-900 hover:bg-white'
+                        onClick={solveOnClick}
+                    >
+                        Chat
+                    </Button>
                 )}
             </div>
             <div className='flex items-center gap-4'>
