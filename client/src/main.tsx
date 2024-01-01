@@ -22,6 +22,8 @@ import EmployeeProfileEditSkills from './pages/EmployeeProfileEditSkills.tsx'
 import EmployeeJobDetail from './pages/EmployeeJobDetail.tsx'
 import EmployeeJobApplication from './pages/EmployeeJobApplication.tsx'
 import EmployeeChat from './pages/EmployeeChat.tsx'
+import EmployeeCompany from './pages/EmployeeCompany.tsx'
+import EmployeeCompanyDetail from './pages/EmployeeCompanyDetail.tsx'
 
 import AdminHome from './pages/AdminHome.tsx'
 import AdminCompanyList from './pages/AdminCompanyList.tsx'
@@ -62,6 +64,10 @@ const router = createBrowserRouter([
                 element: <Search />
             },
             {
+                path: '/companyAll',
+                element: <EmployeeCompany />
+            },
+            {
                 path: '/job/:id',
                 element: <EmployeeJobDetail />
             },
@@ -69,22 +75,9 @@ const router = createBrowserRouter([
                 path: 'job-applications',
                 element: <EmployeeJobApplication />
             },
-
             {
-                path: '/admin',
-                element: <AdminHome />
-            },
-            {
-                path: '/admin/company',
-                element: <AdminCompanyList />
-            },
-            {
-                path: '/admin/employee',
-                element: <AdminEmployeeList />
-            },
-            {
-                path: '/admin/dashboard',
-                element: <AdminDashboard />
+                path: '/companyAllDetail/:id',
+                element: <EmployeeCompanyDetail />
             }
         ]
     },

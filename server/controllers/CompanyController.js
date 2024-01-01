@@ -224,3 +224,36 @@ exports.getProfile = async (req, res) => {
         });
     }
 };
+
+exports.filterAndPaginateCompany = async (req, res) => {
+    try {
+        const {
+            companyName,
+            page = 0,
+            pageSize = 10,
+        } = req.body;
+
+        //Check pagesize from front end
+        const requestedPageSize = req.body.pageSize ? req.body.pageSize : pageSize;
+        
+        // Build the filter object based on the provided criteria
+        const filter = {};
+
+        if (companyName) {
+            filter.companyName = { $regex: new RegExp(companyName, 'i') };
+        }
+
+        // Paginate using skip and limit
+        const skip = page * requestedPageSize;
+        const companies = await Company.find(filter)
+            .skip(skip)
+            .limit(requestedPageSize);
+
+        const totalCompanies = await Company.countDocuments(filter);
+        const totalPages = Math.ceil(totalCompanies / requestedPageSize);
+
+        res.status(200).json({companies, totalPages});
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err });
+    }
+}

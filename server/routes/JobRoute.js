@@ -7,6 +7,7 @@ const {
   getJobById,
   updateJob,
   deleteJob,
+  findJobByCompanyId,
   filterAndPaginateJobs,
 } = require('../controllers/JobController');
 
@@ -18,5 +19,6 @@ router.get('/jobs/:id', getJobById); // Get a job by ID
 router.put('/jobs/:id', authMiddleware, updateJob); // Update a job by ID
 router.delete('/jobs/:id', authMiddleware, deleteJob); // Delete a job by ID
 router.post('/jobs/filtered-jobs', filterAndPaginateJobs); //search job
+router.get('/jobsByCompany', findJobByCompanyId); // Find job by companyId
 
 module.exports = router;

@@ -27,7 +27,7 @@ const EmployeeProfile = () => {
                     <div className='grow flex flex-col gap-4'>
                         <div className='flex justify-start items-center gap-4 pb-4 text-2xl font-semibold border-b'>
                             {employee.name}{' '}
-                            <button className='px-2 hover:text-gray-600' onClick={() => navigate('edit')}>
+                            <button title='edit' className='px-2 hover:text-gray-600' onClick={() => navigate('edit')}>
                                 <Pencil className='w-5' />
                             </button>
                         </div>

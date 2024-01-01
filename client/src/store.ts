@@ -43,7 +43,15 @@ export interface RootState {
         employerToken: string
         company: {
             _id: string
-            avatar: string
+            email: string
+            phoneNumber: string
+            companyName: string
+            companyEmails: string[]
+            companyWebsites: string[]
+            companyPhoneNumbers: string[]
+            companyLocations: string[]
+            companyLogo: string
+            description: string
         }
     }
     chatState: {
@@ -54,6 +62,7 @@ export interface RootState {
             email: string
             _id: string
             companyName: string
+            companyLogo: string
         }
         typerID: {
             employeeId: string
@@ -78,6 +87,7 @@ export interface RootState {
 export interface userData {
     email: string
     companyName: string
+    companyLogo: string
     phone: string
     online: boolean
     _id: string

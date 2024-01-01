@@ -44,9 +44,11 @@ const Navbar = () => {
                 >
                     Jobs
                 </Button>
-                <Button variant='ghost' className='text-md text-gray-500 hover:text-gray-900 hover:bg-white'>
-                    Companies
-                </Button>
+                <Link to='/companyAll'>
+                    <Button variant='ghost' className='text-md text-gray-500 hover:text-gray-900 hover:bg-white'>
+                        Companies
+                    </Button>
+                </Link>
                 {employee && (
                     <Link to='/employee/chat'>
                         <Button variant='ghost' className='text-md text-gray-500 hover:text-gray-900 hover:bg-white'>
