@@ -46,7 +46,7 @@ const EmployeeChat = () => {
             dispatch(setMessages([]))
             return
         }
-    }, [receiver])
+    }, [receiver, dispatch])
 
     const getChat = async () => {
         dispatch(setUserMessageLoading(true))
