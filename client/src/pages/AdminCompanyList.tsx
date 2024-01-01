@@ -7,7 +7,7 @@ import { useDebounce } from '~/lib/useDebounce'
 import { deleteCompanies, deleteCompany, getAllCompany, searchCompany } from '~/services/api'
 import { company } from './EmployeeCompany'
 
-export default function AdminCompany() {
+const AdminCompany = () => {
     const [totalPages, setTotalPages] = useState<number>(0)
     const [currentPage, setCurrentPage] = useState<number>(0)
     const [totalCompanies, setTotalCompanies] = useState<number>(0)
@@ -202,3 +202,4 @@ export default function AdminCompany() {
         </div>
     )
 }
+export default AdminCompany

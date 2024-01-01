@@ -7,7 +7,7 @@ interface ILink {
     quantity: number
 }
 
-export default function Admin() {
+const AdminDashboard = () => {
     const { totalCompany, totalEmployee, totalJob, totalJobApply } = useGetAdminTotal()
 
     const data: ILink[] = [
@@ -55,3 +55,4 @@ export default function Admin() {
         </div>
     )
 }
+export default AdminDashboard

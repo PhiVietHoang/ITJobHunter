@@ -11,14 +11,14 @@ interface IProps {
     handleCheckboxAll: () => void
 }
 
-export default function AdminTableCompany({
+const AdminTableCompany = ({
     data,
     selectedItems,
     handleDelete,
     totalCompanies,
     handleCheckbox,
     handleCheckboxAll
-}: IProps) {
+}: IProps) => {
     return (
         <>
             {data.length ? (
@@ -73,3 +73,4 @@ export default function AdminTableCompany({
         </>
     )
 }
+export default AdminTableCompany

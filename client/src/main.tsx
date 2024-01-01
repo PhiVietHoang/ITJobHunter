@@ -34,7 +34,6 @@ import EmployerChat from './pages/EmployerChat.tsx'
 import CompanyCreateJob from './pages/CompanyCreateJob.tsx'
 import CompanyEditJob from './pages/CompanyEditJob.tsx'
 
-//import AdminHome from './pages/AdminHome.tsx'
 import AdminCompanyList from './pages/AdminCompanyList.tsx'
 import AdminEmployeeList from './pages/AdminEmployeeList.tsx'
 import AdminDashboard from './pages/AdminDashboard.tsx'

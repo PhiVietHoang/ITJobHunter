@@ -27,7 +27,7 @@ const links: IAdminSidebar[] = [
     }
 ]
 
-export default function Sidebar() {
+const Sidebar = () => {
     const navigate = useNavigate()
 
     const logout = (): void => {
@@ -64,3 +64,4 @@ export default function Sidebar() {
         </div>
     )
 }
+export default Sidebar

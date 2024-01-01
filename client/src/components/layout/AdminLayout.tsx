@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import Sidebar from '../AdminSidebar'
 
-export default function AdminLayout() {
+const AdminLayout = () => {
     const navigate = useNavigate()
     const employeeToken = localStorage.getItem('employeeToken')
 
@@ -22,3 +22,4 @@ export default function AdminLayout() {
         </div>
     )
 }
+export default AdminLayout

@@ -8,7 +8,7 @@ import { userData } from '~/store'
 
 const ITEMS_PER_PAGE = 10
 
-export default function AdminEmployee() {
+const AdminEmployee = () => {
     const [currentPage, setCurrentPage] = useState<number>(0)
     const [selectedItems, setSelectedItems] = useState<string[]>([])
     const [originalEmployeeList, setOriginalEmployeeList] = useState<userData[]>([])
@@ -201,3 +201,4 @@ export default function AdminEmployee() {
         </div>
     )
 }
+export default AdminEmployee
