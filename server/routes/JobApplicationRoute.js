@@ -11,7 +11,8 @@ const {
   getJobApplicationsByCompanyId,
   getFilterJobApplicationByEmployeeId,
   getFilterJobApplicationsByCompanyId,
-  upload
+  upload,
+  getCV
 } = require('../controllers/JobApplicationController');
 
 const authMiddleware = require('../middlewares/AuthMiddleware');
@@ -25,5 +26,6 @@ router.get('/jobApplications/employee/:employeeId', authMiddleware, getJobApplic
 router.get('/jobApplications/company/:companyId', authMiddleware, getJobApplicationsByCompanyId);
 router.post('/jobApplications/employee/:employeeId', authMiddleware, getFilterJobApplicationByEmployeeId);
 router.post('/jobApplications/company/:companyId', authMiddleware, getFilterJobApplicationsByCompanyId);
+router.get('/download-cv/:jobApplicationId', authMiddleware, getCV);
 
 module.exports = router;

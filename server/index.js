@@ -18,7 +18,11 @@ connectWithDB();
 
 // Middleware
 const app = express();
-app.use(cors());
+const corsOptions = {
+    exposedHeaders: ['Content-Disposition'],
+};
+
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.json({
