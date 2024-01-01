@@ -129,3 +129,60 @@ exports.getJobApplicationsByCompanyId = async (req, res) => {
         res.status(500).json({ message: 'Internal server error', error: err });
     }
 };
+
+exports.getFilterJobApplicationByEmployeeId = async (req, res) => {
+    const employeeId = req.params.employeeId;
+    const { jobTitle, page = 0, pageSize = 10 } = req.body; // Thêm page và pageSize
+
+    try {
+        let filter = { employeeId };
+
+        if (jobTitle) {
+            const jobIds = await Job.find({ title: { $regex: new RegExp(jobTitle, 'i') } }).select('_id');
+            filter.jobId = { $in: jobIds.map(job => job._id) };
+        }
+
+        const skip = page * pageSize;
+        const jobApplications = await JobApplication.find(filter)
+            .populate('jobId')
+            .skip(skip)
+            .limit(pageSize);
+
+        const totalApplications = await JobApplication.countDocuments(filter);
+        const totalPages = Math.ceil(totalApplications / pageSize);
+
+        res.status(200).json({ jobApplications, totalApplications, totalPages });
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err });
+    }
+};
+
+
+
+exports.getFilterJobApplicationsByCompanyId = async (req, res) => {
+    const companyId = req.params.companyId;
+    const { jobTitle, page = 0, pageSize = 10 } = req.body; // Thêm page và pageSize
+
+    try {
+        let jobQuery = { companyID: companyId };
+        if (jobTitle) {
+            Object.assign(jobQuery, { title: { $regex: new RegExp(jobTitle, 'i') } });
+        }
+
+        const jobIds = await Job.find(jobQuery).select('_id');
+        const skip = page * pageSize;
+        const jobApplications = await JobApplication.find({ jobId: { $in: jobIds } })
+            .populate('employeeId', 'name email phoneNumber')
+            .populate('jobId')
+            .skip(skip)
+            .limit(pageSize);
+
+        const totalApplications = await JobApplication.countDocuments({ jobId: { $in: jobIds } });
+        const totalPages = Math.ceil(totalApplications / pageSize);
+
+        res.status(200).json({ jobApplications, totalApplications, totalPages });
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err });
+    }
+};
+
