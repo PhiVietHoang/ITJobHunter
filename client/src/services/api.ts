@@ -62,7 +62,7 @@ export const searchJobs = async (requestBody: {
 }) => {
     try {
         const { title, yearsOfExp, location, page } = requestBody
-        const response = await api.post('job/jobs/filtered-jobs/', { title, yearsOfExp, location, page })
+        const response = await api.post('job/jobs/filtered-jobs/', { title, minYearsOfExp: yearsOfExp, location, page })
         return response
     } catch (error) {
         console.error(error)
