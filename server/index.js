@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const connectWithDB = require('./config/mongoose.js');
 const cookieParser = require('cookie-parser');
@@ -20,7 +21,15 @@ const app = express();
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
+app.use(bodyParser.json({
+    limit: '200mb'
+}));
 
+app.use(bodyParser.urlencoded({
+    limit: '200mb',
+    parameterLimit: 100000,
+    extended: true 
+}));
 // Api routes
 app.use('/employee', EmployeeRoute);
 app.use('/company', CompanyRoute);
