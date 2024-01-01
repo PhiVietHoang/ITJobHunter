@@ -76,6 +76,8 @@ const EmployeeProfileEdit = () => {
         window.location.reload()
     }
 
+    if (!employee) return null
+
     return (
         <form className='my-12 mx-auto w-2/3' onSubmit={handleSubmit}>
             {editableStringFields.map((field, index) => (

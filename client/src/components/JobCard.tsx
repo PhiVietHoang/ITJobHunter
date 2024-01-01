@@ -1,9 +1,22 @@
 import { Briefcase, DollarSign, Timer } from 'lucide-react'
 import { Button } from './ui/button'
 import { useNavigate } from 'react-router-dom'
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger
+} from '~/components/ui/dialog'
+import { deleteJob } from '~/services/companyApi'
+import { useSelector } from 'react-redux'
+import { RootState } from '~/store'
 
 interface JobCardProps {
-    id: string
+    _id: string
     title: string
     categories: string[]
     level: string
@@ -18,10 +31,23 @@ interface JobCardProps {
 }
 
 const JobCard = (props: JobCardProps) => {
+    const token = useSelector((state: RootState) => state.employerAuth.employerToken)
     const navigate = useNavigate()
+
     const handleEdit = () => {
-        navigate(`${props.id}/edit`)
+        navigate(`${props._id}/edit`)
     }
+
+    const handleDelete = async () => {
+        const res = await deleteJob(props._id, token)
+        if (res?.status === 200) {
+            navigate('/employer/jobs')
+            window.location.reload()
+        } else {
+            console.log(res)
+        }
+    }
+
     return (
         <div className='p-4 w-full min-w-max flex justify-between items-start bg-white rounded-md shadow-sm'>
             <div>
@@ -54,7 +80,27 @@ const JobCard = (props: JobCardProps) => {
                 <Button variant='secondary' onClick={handleEdit}>
                     Edit
                 </Button>
-                <Button variant='destructive'>Delete</Button>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button variant='destructive'>Delete</Button>
+                    </DialogTrigger>
+                    <DialogContent className='sm:max-w-md'>
+                        <DialogHeader>
+                            <DialogTitle>Delete this job?</DialogTitle>
+                            <DialogDescription>
+                                Are you sure to delete this job? All job application related will be deleted also
+                            </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter className='sm:justify-center px-10'>
+                            <DialogClose asChild>
+                                <Button type='button' variant='secondary'>
+                                    Close
+                                </Button>
+                            </DialogClose>
+                            <Button onClick={handleDelete}>Delete</Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
             </div>
         </div>
     )

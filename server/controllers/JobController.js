@@ -1,5 +1,6 @@
 const { default: mongoose } = require('mongoose');
 const Job = require('../models/JobModel');
+const JobApplication = require('../models/JobApplicationModel')
 
 // Create a new job
 exports.createJob = async (req, res) => {
@@ -121,6 +122,20 @@ exports.deleteJob = async (req, res) => {
     const jobId = req.params.id;
 
     try {
+        const job = await Job.findById(jobId);
+
+        if (!job) {
+            console.log('error here');
+            return res.status(404).json({ message: 'Job no info '});
+        }
+
+        const deletedJobApplication = await JobApplication.deleteMany({ jobId : job._id });
+
+        if (!deletedJobApplication) {
+            console.log('error here 2');
+            return res.status(404).json({ message: 'Job application not found '});
+        }
+
         const deletedJob = await Job.findByIdAndDelete(jobId);
 
         if (!deletedJob) {

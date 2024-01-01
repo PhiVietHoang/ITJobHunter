@@ -8,7 +8,7 @@ import { RootState } from '~/store'
 import { useEffect } from 'react'
 
 interface JobCardProps {
-    id: string
+    _id: string
     title: string
     categories: string[]
     level: string
@@ -25,13 +25,13 @@ interface JobCardProps {
 const CompanyJobs = () => {
     const [allJob, setAllJob] = useState<JobCardProps[]>()
     const [totalPages, setTotalPages] = useState(0)
-    const companyID = useSelector((state: RootState) => state.employerAuth.company._id)
+    const companyID = useSelector((state: RootState) => state.employerAuth.company)
 
     const [currentPage, setCurrentPage] = useState(0)
 
     const handlePageChange = async (page: number) => {
         const response = await filterJobByCompany({
-            companyID: companyID,
+            companyID: companyID._id,
             page,
             title: ''
         })
@@ -46,7 +46,7 @@ const CompanyJobs = () => {
 
     const getData = async (page: number) => {
         const response = await filterJobByCompany({
-            companyID: companyID,
+            companyID: companyID._id,
             page,
             title: ''
         })
@@ -61,6 +61,9 @@ const CompanyJobs = () => {
     useEffect(() => {
         getData(currentPage)
     }, [currentPage])
+
+    if (!companyID) return null
+    console.log(companyID)
 
     return (
         <div className='my-4 p-4 grid grid-cols-[minmax(max-content,_1fr)_3fr] gap-x-4'>

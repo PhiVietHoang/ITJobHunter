@@ -67,3 +67,14 @@ export const get_all_users = async (id: unknown, token: string) => {
         console.error(error)
     }
 }
+
+export const deleteJob = async (id: string, token: string) => {
+    try {
+        const response = await api.delete(`/job/jobs/${id}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
