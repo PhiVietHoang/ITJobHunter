@@ -2,7 +2,7 @@ import { useState } from 'react'
 import JobCard from '~/components/JobCard'
 import Pagination from '~/components/Pagination'
 import { Input } from '~/components/ui/input'
-import { Button } from "~/components/ui/button"
+import { Button } from '~/components/ui/button'
 import { filterJobByCompany } from '~/services/companyApi'
 import { useSelector } from 'react-redux/es/hooks/useSelector'
 import { RootState } from '~/store'
@@ -10,7 +10,7 @@ import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 interface JobCardProps {
-    id: string
+    _id: string
     title: string
     categories: string[]
     level: string
@@ -27,33 +27,34 @@ interface JobCardProps {
 const CompanyJobs = () => {
     const [allJob, setAllJob] = useState<JobCardProps[]>()
     const [totalPages, setTotalPages] = useState(0)
-    const companyID = useSelector((state: RootState) => state.employerAuth.company._id)
+    const companyID = useSelector((state: RootState) => state.employerAuth.company)
 
     const [currentPage, setCurrentPage] = useState(0)
 
-    const handlePageChange = async (page: number) => {
+    // const handlePageChange = async (page: number) => {
+    //     const response = await filterJobByCompany({
+    //         companyID: companyID._id,
+    //         page,
+    //         title: ''
+    //     })
+    //     if (response?.status === 200) {
+    //         setAllJob(response.data.jobs)
+    //         setCurrentPage(page)
+    //         window.scrollTo(0, 0)
+    //     } else {
+    //         console.log(response)
+    //     }
+    // }
+
+    const getData = async (page: number) => {
         const response = await filterJobByCompany({
-            companyID: companyID,
+            companyID: companyID._id,
             page,
             title: ''
         })
         if (response?.status === 200) {
             setAllJob(response.data.jobs)
             setCurrentPage(page)
-            window.scrollTo(0, 0)
-        } else {
-            console.log(response)
-        }
-    }
-
-    const getData = async (page: number) => {
-        const response = await filterJobByCompany({
-            companyID: companyID,
-            page,
-            title: ''
-        })
-        if (response?.status === 200) {
-            setAllJob(response.data.jobs)
             setTotalPages(response.data.totalPages)
         } else {
             console.log(response)
@@ -62,7 +63,8 @@ const CompanyJobs = () => {
 
     useEffect(() => {
         getData(currentPage)
-    }, [currentPage])
+        window.scrollTo(0, 0)
+    }, [currentPage, companyID])
 
     return (
         <div className='my-4 p-4 grid grid-cols-[minmax(max-content,_1fr)_3fr] gap-x-4'>
@@ -82,7 +84,7 @@ const CompanyJobs = () => {
                 ))}
             </div>
             <div className='my-4 col-span-2'>
-                <Pagination currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
+                <Pagination currentPage={currentPage} totalPages={totalPages} handlePageChange={getData} />
             </div>
         </div>
     )
