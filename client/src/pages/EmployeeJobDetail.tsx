@@ -25,31 +25,35 @@ const EmployeeJobDetail = () => {
     const navigate = useNavigate()
     const { state } = useLocation()
     const employee = useSelector((state: RootState) => state.employeeAuth.employee)
-    const [cv, setCv] = useState<string>('')
-    const [error, setError] = useState<string>('')
+    const [cvFile, setCvFile] = useState<File | null>(null)
+    const [error, setError] = useState('')
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
-            const file = event.target.files[0]
-            const reader = new FileReader()
-
-            reader.onloadend = () => {
-                const base64String = reader.result
-                setCv(base64String as string)
-            }
-
-            reader.readAsDataURL(file)
+            setCvFile(event.target.files[0])
         }
     }
 
     const handleApply = async () => {
-        const res = await createJobApplication(
-            { jobId: state._id, employeeId: employee._id, cv, status: 'Pending' },
-            token
-        )
-        if (res?.status === 201) navigate('/job-applications')
-        else if (res?.status === 413) setError('File too large')
-        else setError('Something went wrong')
+        if (!cvFile) {
+            setError('Please select a CV file to upload.')
+            return
+        }
+
+        try {
+            await createJobApplication(
+                {
+                    jobId: state._id,
+                    employeeId: employee._id,
+                    cv: cvFile,
+                    status: 'Pending'
+                },
+                token
+            )
+            navigate('/job-applications')
+        } catch (error) {
+            setError('Failed to apply for the job.')
+        }
     }
 
     return (
