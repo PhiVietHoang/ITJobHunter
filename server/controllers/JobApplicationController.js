@@ -80,12 +80,12 @@ exports.getJobApplicationById = async (req, res) => {
 // Update a job application by ID
 exports.updateJobApplication = async (req, res) => {
     const jobApplicationId = req.params.id;
-    const { cv, status } = req.body;
+    const { status } = req.body;
 
     try {
         const updatedJobApplication = await JobApplication.findByIdAndUpdate(
             jobApplicationId,
-            { cv, status },
+            { status },
             { new: true }
         );
 
@@ -178,7 +178,7 @@ exports.getFilterJobApplicationByEmployeeId = async (req, res) => {
 
 exports.getFilterJobApplicationsByCompanyId = async (req, res) => {
     const companyId = req.params.companyId;
-    const { jobTitle, page = 0, pageSize = 10 } = req.body; // Thêm page và pageSize
+    const { jobTitle, page = 0, pageSize = 5 } = req.body; // Thêm page và pageSize
 
     try {
         let jobQuery = { companyID: companyId };

@@ -53,7 +53,7 @@ const CompanyProfile = () => {
                     <Button variant='outline'>Manage job applications</Button>
                 </Link>
             </div>
-            <h1 className='my-4 text-center text-xl font-semibold'>Compnay Insight</h1>
+            <h1 className='my-4 text-center text-xl font-semibold'>Company Insight</h1>
             <div className='my-4 p-4 grid grid-cols-[1fr_2fr_2fr_2fr] border rounded-lg'>
                 <p className='font-semibold'></p>
                 <p className='font-semibold'>My jobs</p>

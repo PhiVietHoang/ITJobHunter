@@ -134,3 +134,39 @@ export const deleteJob = async (id: string, token: string) => {
         console.error(error)
     }
 }
+
+export const searchJobApplicationByCompanyId = async (
+    requestBody: { jobTitle: string; page: number },
+    companyID: string,
+    token: string
+) => {
+    try {
+        const { jobTitle, page } = requestBody
+        const response = await api.post(
+            `/jobApplication/jobApplications/company/${companyID}`,
+            { jobTitle: jobTitle, page: page },
+            { headers: { Authorization: `Bearer ${token}` } }
+        )
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const updateJobApplicationStatus = async (
+    requestBody: { status: string },
+    jobApplicationId: string,
+    token: string
+) => {
+    try {
+        const { status } = requestBody
+        const response = await api.put(
+            `/jobApplication/jobApplications/${jobApplicationId}`,
+            { status: status },
+            { headers: { Authorization: `Bearer ${token}` } }
+        )
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}

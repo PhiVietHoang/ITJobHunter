@@ -28,7 +28,7 @@ const CompanyJobs = () => {
     const [allJob, setAllJob] = useState<JobCardProps[]>()
     const [totalPages, setTotalPages] = useState(0)
     const companyID = useSelector((state: RootState) => state.employerAuth.company)
-
+    const [jobTitle, setJobTitle] = useState('')
     const [currentPage, setCurrentPage] = useState(0)
 
     // const handlePageChange = async (page: number) => {
@@ -50,7 +50,7 @@ const CompanyJobs = () => {
         const response = await filterJobByCompany({
             companyID: companyID._id,
             page,
-            title: ''
+            title: jobTitle
         })
         if (response?.status === 200) {
             setAllJob(response.data.jobs)
@@ -61,10 +61,19 @@ const CompanyJobs = () => {
         }
     }
 
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setJobTitle(e.target.value)
+    }
+
     useEffect(() => {
         getData(currentPage)
         window.scrollTo(0, 0)
     }, [currentPage, companyID])
+
+    useEffect(() => {
+        getData(0)
+        window.scrollTo(0, 0)
+    }, [jobTitle])
 
     return (
         <div className='my-4 p-4 grid grid-cols-[minmax(max-content,_1fr)_3fr] gap-x-4'>
@@ -74,7 +83,7 @@ const CompanyJobs = () => {
                     <Button>Create Job</Button>
                 </Link>
                 <h1 className='my-4 font-semibold'>Job Filter</h1>
-                <Input type='email' placeholder='Search' className='my-4' />
+                <Input type='text' placeholder='Search' className='my-4' value={jobTitle} onChange={handleSearch} />
             </div>
             <div className='grid grid-cols-1 gap-y-2'>
                 {allJob?.map((result, id) => (
