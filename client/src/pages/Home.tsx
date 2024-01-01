@@ -38,18 +38,20 @@ const Home = () => {
     }
 
     return (
-        <div className='my-16 flex flex-col gap-12'>
-            <div className='flex flex-col justify-center items-center gap-4'>
-                <h1 className='text-5xl font-bold'>Find your dream IT job now</h1>
-                <p className='text-lg font-semibold'>1000+ jobs for you to explore</p>
+        <div className='flex flex-col'>
+            <div
+                className={`flex flex-col justify-center items-center gap-4 pt pt-32 pb-44 bg-[url('/home.jpeg')] bg-cover bg-center bg-opacity-75`}
+            >
+                <h1 className='text-6xl font-black'>Find your dream IT job now</h1>
+                <p className='text-3xl text-gray-900 font-extrabold'>1000+ jobs for you to explore</p>
             </div>
-            <div>
-                <div className='mx-auto w-3/4 h-20 flex justify-center items-center bg-white rounded-full shadow-md'>
+            <div className='w-2/3 mx-auto absolute relative -top-10'>
+                <div className='mx-auto w-3/4 p-4 h-full flex justify-center items-center bg-white rounded-full shadow-md'>
                     <div className='px-4 w-full flex items-center'>
                         <Search className='w-1/12' />
                         <Input
                             type='text'
-                            placeholder='Enter skills / designations / companies'
+                            placeholder='Enter job title'
                             className='w-2/3 placeholder-gray-500 text-xl border-none focus-visible:ring-0 focus-visible:ring-offset-0'
                             value={searchTitle}
                             onChange={handleSearchTitleChange}
@@ -84,7 +86,7 @@ const Home = () => {
                     </div>
                 </div>
             </div>
-            <div className='my-12 flex justify-center items-center gap-4 flex-wrap'>
+            <div className='w-2/3 my-8 mx-auto flex justify-center items-center gap-4 flex-wrap'>
                 <CategoryCard name='Remote' />
                 <CategoryCard name='Backend Developer' />
                 <CategoryCard name='Frontend Developer' />
