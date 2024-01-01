@@ -215,10 +215,11 @@ const EmployeeCompanyDetail = () => {
                     {activeTab === 'jobs' && (
                         <div className='mt-4 p-4 rounded w-full'>
                             {jobByCompany?.map((result, index) => (
-                                <div key={index} className={`mb-${index === jobByCompany.length - 1 ? '0' : '5'}`}>
+                                <div key={index} className={`mb-${index === jobByCompany.length - 1 ? '0' : '5'} pb-3`}>
                                     <SearchJobCard {...result} />
                                 </div>
                             ))}
+                            <div className='h-7'> </div>
                         </div>
                     )}
                 </div>

@@ -5,58 +5,42 @@ import { RootState } from '~/store'
 import { Button } from '~/components/ui/button'
 import { Separator } from '~/components/ui/separator'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
-import { searchJobs } from '~/services/api'
 import { setChatSelected } from '~/features/chatSlice'
 
-const Navbar = () => {
-    const dispatch = useDispatch()
-    const token = useSelector((state: RootState) => state.employeeAuth.employeeToken)
-    const employee = useSelector((state: RootState) => state.employeeAuth.employee)
+const CompanyNavbar = () => {
+    const token = useSelector((state: RootState) => state.employerAuth.employerToken)
+    const company = useSelector((state: RootState) => state.employerAuth.company)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const logout = () => {
-        localStorage.removeItem('employeeToken')
+        localStorage.removeItem('employerToken')
         navigate('/')
         window.location.reload()
     }
 
-    const searchTitle = ''
-
-    const handleSearch = async () => {
-        const response = await searchJobs({ title: searchTitle, page: 0 })
-        if (response?.status === 200) {
-            const data = response.data
-            const state = { ...data, searchTitle }
-            navigate('/search', { state })
-        } else {
-            console.log(response)
-        }
-    }
-
     const solveOnClick = () => {
-        navigate('/employee/chat')
+        navigate('/employer/chat')
         dispatch(setChatSelected(false))
     }
 
     return (
         <nav className='py-4 flex justify-between items-center'>
             <div className='flex items-center gap-12'>
-                <Link to='/'>
+                <Link to='/employer'>
                     <h1 className='text-xl text-cyan-600 font-bold font-serif'>ITJobHunter</h1>
                 </Link>
-                <Button
-                    variant='ghost'
-                    className='text-md  text-gray-500 hover:text-gray-900 hover:bg-white'
-                    onClick={handleSearch}
-                >
-                    Jobs
-                </Button>
-                <Link to='/companyAll'>
+                <Link to='/employer/jobs'>
                     <Button variant='ghost' className='text-md text-gray-500 hover:text-gray-900 hover:bg-white'>
-                        Companies
+                        Jobs
                     </Button>
                 </Link>
-                {employee && (
+                <Link to='/employer/jobApplications'>
+                    <Button variant='ghost' className='text-md  text-gray-500 hover:text-gray-900 hover:bg-white'>
+                        Job Applications
+                    </Button>
+                </Link>
+                {company && (
                     <Button
                         variant='ghost'
                         className='text-md text-gray-500 hover:text-gray-900 hover:bg-white'
@@ -88,9 +72,9 @@ const Navbar = () => {
                     </Link>
                 )}
                 {token && (
-                    <Link to={`profile/${employee?._id}`}>
+                    <Link to={`profile/${company?._id}`}>
                         <Avatar>
-                            <AvatarImage src={employee?.avatar} alt='Profile Picture' />
+                            <AvatarImage src={company?.companyLogo} alt='Profile Picture' />
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                     </Link>
@@ -117,4 +101,4 @@ const Navbar = () => {
     )
 }
 
-export default Navbar
+export default CompanyNavbar

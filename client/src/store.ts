@@ -44,14 +44,14 @@ export interface RootState {
         company: {
             _id: string
             email: string
-            phoneNumber: string
+            phoneNumber: string | null
             companyName: string
             companyEmails: string[]
             companyWebsites: string[]
             companyPhoneNumbers: string[]
             companyLocations: string[]
             companyLogo: string
-            description: string
+            description: string | null
         }
     }
     chatState: {
@@ -63,6 +63,8 @@ export interface RootState {
             _id: string
             companyName: string
             companyLogo: string
+            name: string
+            avatar: string
         }
         typerID: {
             employeeId: string
@@ -88,7 +90,8 @@ export interface userData {
     email: string
     companyName: string
     companyLogo: string
-    phone: string
+    name: string
+    avatar: string
     online: boolean
     _id: string
     users: userData[]

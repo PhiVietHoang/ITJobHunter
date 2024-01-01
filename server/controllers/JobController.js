@@ -1,3 +1,4 @@
+const { default: mongoose } = require('mongoose');
 const Job = require('../models/JobModel');
 
 // Create a new job
@@ -219,6 +220,45 @@ exports.filterAndPaginateJobs = async (req, res) => {
         const totalJobs = await Job.countDocuments(filter);
         const totalPages = Math.ceil(totalJobs / requestedPageSize);
 
+        res.status(200).json({jobs, totalPages});
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err });
+    }
+}
+
+exports.filterAndPaginateJobsByCompany = async (req, res) => {
+    try {
+        const {
+            title,
+            companyID,
+            page = 0,
+            pageSize = 5,
+        } = req.body;
+
+        //Check pagesize from front end
+        const requestedPageSize = req.body.pageSize ? req.body.pageSize : pageSize;
+        
+        // Build the filter object based on the provided criteria
+        const filter = {};
+
+        filter.companyID = companyID;
+
+        if (title) {
+            filter.title = { $regex: new RegExp(title, 'i') };
+        }
+
+        // Paginate using skip and limit
+        const skip = page * requestedPageSize;
+        const jobs = await Job.find(filter)
+            .populate({
+                path: 'companyID',
+                select: '_id companyName companyLogo companyLocations',
+            })
+            .skip(skip)
+            .limit(requestedPageSize);
+
+        const totalJobs = await Job.countDocuments(filter);
+        const totalPages = Math.ceil(totalJobs / requestedPageSize);
         res.status(200).json({jobs, totalPages});
     } catch (err) {
         res.status(500).json({ message: 'Internal server error', error: err });

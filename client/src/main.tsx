@@ -25,6 +25,15 @@ import EmployeeChat from './pages/EmployeeChat.tsx'
 import EmployeeCompany from './pages/EmployeeCompany.tsx'
 import EmployeeCompanyDetail from './pages/EmployeeCompanyDetail.tsx'
 
+import CompanyApp from './CompanyApp.tsx'
+import CompanyHome from './pages/CompanyHome.tsx'
+import CompanyJobs from './pages/CompanyJobs.tsx'
+import CompanyJobApplications from './pages/CompanyJobApplications.tsx'
+import CompanyProfile from './pages/CompanyProfile.tsx'
+import JobEditForm from './components/JobEditForm.tsx'
+import EmployerChat from './pages/EmployerChat.tsx'
+import CompanyCreateJob from './pages/CompanyCreateJob.tsx'
+
 import AdminHome from './pages/AdminHome.tsx'
 import AdminCompanyList from './pages/AdminCompanyList.tsx'
 import AdminEmployeeList from './pages/AdminEmployeeList.tsx'
@@ -78,6 +87,23 @@ const router = createBrowserRouter([
             {
                 path: '/companyAllDetail/:id',
                 element: <EmployeeCompanyDetail />
+            },
+
+            {
+                path: '/admin',
+                element: <AdminHome />
+            },
+            {
+                path: '/admin/company',
+                element: <AdminCompanyList />
+            },
+            {
+                path: '/admin/employee',
+                element: <AdminEmployeeList />
+            },
+            {
+                path: '/admin/dashboard',
+                element: <AdminDashboard />
             }
         ]
     },
@@ -110,8 +136,42 @@ const router = createBrowserRouter([
         ]
     },
     {
+        path: 'employer',
+        element: <CompanyApp />,
+        children: [
+            {
+                path: '',
+                element: <CompanyHome />
+            },
+            {
+                path: 'profile/:id',
+                element: <CompanyProfile />
+            },
+            {
+                path: 'jobs',
+                element: <CompanyJobs />
+            },
+            {
+                path: 'jobs/create',
+                element: <CompanyCreateJob />
+            },
+            {
+                path: 'jobs/:id/edit',
+                element: <JobEditForm />
+            },
+            {
+                path: 'jobApplications',
+                element: <CompanyJobApplications />
+            }
+        ]
+    },
+    {
         path: '/employee/chat',
         element: <EmployeeChat />
+    },
+    {
+        path: '/employer/chat',
+        element: <EmployerChat />
     }
 ])
 

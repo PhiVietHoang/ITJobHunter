@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = "http://localhost:3000"
+const API_URL = import.meta.env.VITE_API_URL
 
 const token = localStorage.getItem('employeeToken')
 
@@ -141,7 +141,7 @@ export const getChatData = async (data: { employeeId: string; companyId: string 
 }
 
 export const send_message = async (
-    requestBody: { employeeId: string; companyId: string; message: string },
+    requestBody: { employeeId: string; companyId: string; message: string; senderIsCompany: boolean },
     token: string
 ) => {
     try {
