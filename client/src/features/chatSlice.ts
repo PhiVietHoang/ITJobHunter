@@ -17,7 +17,7 @@ const initialState = {
             employeeId: '',
             companyId: '',
             message: '',
-            senderIsCompany: ''
+            senderIsCompany: false
         }
     ],
     someOneTyping: false,

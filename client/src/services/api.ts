@@ -145,10 +145,10 @@ export const send_message = async (
     token: string
 ) => {
     try {
-        const { employeeId, companyId, message } = requestBody
+        const { employeeId, companyId, message, senderIsCompany } = requestBody
         const res = await api.post(
             `message/send-message`,
-            { employeeId, companyId, message },
+            { employeeId, companyId, message, senderIsCompany },
             {
                 method: 'POST',
                 headers: {

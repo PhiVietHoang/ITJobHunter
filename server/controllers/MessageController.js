@@ -18,20 +18,6 @@ exports.sendMessage = async (req, res) => {
             return res.status(404).json({ message: 'Company not found.' });
         }
 
-        if(userData){
-            const company = await Company.findById(userData.id);
-            if (company) {
-                isSendByCompany = true
-            }
-            else{
-                isSendByCompany = false
-            }
-            
-        }
-        else {
-            res.status(401).json({ message: 'Unauthorized: Missing or invalid token.'});
-        }
-
         const newMessage = new Message({ employeeId: employeeId, companyId: companyId, message: message, senderIsCompany: senderIsCompany});
         await newMessage.save();
         return res.status(200).json({ success: true, message: 'Message sent successfully' });
