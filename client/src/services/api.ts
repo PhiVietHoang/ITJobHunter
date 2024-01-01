@@ -4,6 +4,13 @@ const API_URL = import.meta.env.VITE_API_URL
 
 const token = localStorage.getItem('employeeToken')
 
+interface JobApplicationRequestBody {
+    jobId: string
+    employeeId: string
+    cv: File
+    status: string
+}
+
 const api = axios.create({
     baseURL: API_URL,
     headers: { Authorization: `Bearer ${token}` },
@@ -64,26 +71,20 @@ export const searchJobs = async (requestBody: { title: string; page: number }) =
     }
 }
 
-export const createJobApplication = async (
-    requestBody: {
-        jobId: string
-        employeeId: string
-        cv: string
-        status: string
-    },
-    token: string
-) => {
-    try {
-        const { jobId, employeeId, cv, status } = requestBody
-        const response = await api.post(
-            'jobApplication/jobApplications/',
-            { jobId, employeeId, cv, status },
-            { headers: { Authorization: `Bearer ${token}` } }
-        )
-        return response
-    } catch (error) {
-        console.error(error)
-    }
+export const createJobApplication = async (requestBody: JobApplicationRequestBody, token: string) => {
+    const formData = new FormData()
+    formData.append('jobId', requestBody.jobId)
+    formData.append('employeeId', requestBody.employeeId)
+    formData.append('status', requestBody.status)
+    formData.append('cv', requestBody.cv)
+
+    const response = await api.post('jobApplication/jobApplications', formData, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+    return response.data
 }
 
 export const getJobApplicationsByEmployee = async (employeeId: string) => {

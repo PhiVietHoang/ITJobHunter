@@ -2,28 +2,45 @@ const JobApplication = require('../models/JobApplicationModel');
 const Employee = require('../models/EmployeeModel');
 const Company = require('../models/CompanyModel');
 const Job = require('../models/JobModel');
-
+const multer = require('multer');
+const fs = require('fs');
+const upload = multer({ dest: 'uploads/' });
+exports.upload = upload.single('cv');
 // Create a new job application
 exports.createJobApplication = async (req, res) => {
     try {
-        const { employeeId, jobId, cv, status } = req.body;
+        const { jobId, employeeId, status } = req.body;
+        const cvFile = req.file; // File tải lên từ multer
 
-        const employee = await Employee.findById(employeeId);
-        if (!employee) {
-            return res.status(404).json({ message: 'Employee not found.' });
+        // Kiểm tra xem file có tồn tại trong request không
+        if (!cvFile) {
+            return res.status(400).send({ message: "Please upload a CV." });
         }
 
+        // Đọc nội dung file (lưu ý: chỉ nên làm với file nhỏ)
+        const cvData = fs.readFileSync(cvFile.path);
+        const cvContentType = cvFile.mimetype;
+
+        // Tạo job application mới
         const jobApplication = new JobApplication({
             employeeId,
             jobId,
-            cv,
+            cv: { data: cvData, contentType: cvContentType },
             status,
         });
 
+        // Lưu job application vào MongoDB
         const savedJobApplication = await jobApplication.save();
 
+        // Xóa file tạm sau khi lưu vào cơ sở dữ liệu
+        fs.unlinkSync(cvFile.path);
+
+        // Trả về response thành công
         res.status(201).json(savedJobApplication);
     } catch (err) {
+        // Xóa file tạm nếu có lỗi xảy ra
+        if (req.file) fs.unlinkSync(req.file.path);
+
         res.status(500).json({ message: 'Internal server error', error: err });
     }
 };
@@ -185,4 +202,3 @@ exports.getFilterJobApplicationsByCompanyId = async (req, res) => {
         res.status(500).json({ message: 'Internal server error', error: err });
     }
 };
-

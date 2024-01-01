@@ -10,12 +10,13 @@ const {
   getJobApplicationByEmployeeId,
   getJobApplicationsByCompanyId,
   getFilterJobApplicationByEmployeeId,
-  getFilterJobApplicationsByCompanyId
+  getFilterJobApplicationsByCompanyId,
+  upload
 } = require('../controllers/JobApplicationController');
 
 const authMiddleware = require('../middlewares/AuthMiddleware');
 
-router.post('/jobApplications', authMiddleware, createJobApplication);
+router.post('/jobApplications', authMiddleware, upload, createJobApplication);
 router.get('/jobApplications', getAllJobApplications);
 router.get('/jobApplications/:id', getJobApplicationById);
 router.put('/jobApplications/:id', authMiddleware, updateJobApplication);
