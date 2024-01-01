@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { Label } from '~/components/ui/label'
@@ -76,7 +76,11 @@ const EmployeeProfileEdit = () => {
         window.location.reload()
     }
 
-    if (!employee) return null
+    useEffect(() => {
+        setEmployeeData(employee)
+    }, [employee])
+
+    if (!employeeData) return null
 
     return (
         <form className='my-12 mx-auto w-2/3' onSubmit={handleSubmit}>

@@ -71,8 +71,8 @@ const JobCard = (props: JobCardProps) => {
                 <p className='my-2 text-sm line-clamp-1'>{props.description}</p>
                 <p className='text-sm text-gray-500'>Received applications: 1000</p>
                 <div className='flex justify-start items-center gap-4'>
-                    <span className='text-sm text-gray-500'>Start date: {props.startDate?.toString()}</span>
-                    <span className='text-sm text-gray-500'>End date: {props.endDate?.toString()}</span>
+                    <span className='text-sm text-gray-500'>Start date: {new Date(props.startDate).toUTCString()}</span>
+                    <span className='text-sm text-gray-500'>End date: {new Date(props.endDate).toUTCString()}</span>
                 </div>
             </div>
 
@@ -88,16 +88,16 @@ const JobCard = (props: JobCardProps) => {
                         <DialogHeader>
                             <DialogTitle>Delete this job?</DialogTitle>
                             <DialogDescription>
-                                Are you sure to delete this job? All job application related will be deleted also
+                                Are you sure to delete this job? All job application related will be deleted also.
                             </DialogDescription>
                         </DialogHeader>
                         <DialogFooter className='sm:justify-center px-10'>
+                            <Button onClick={handleDelete}>Delete</Button>
                             <DialogClose asChild>
                                 <Button type='button' variant='secondary'>
                                     Close
                                 </Button>
                             </DialogClose>
-                            <Button onClick={handleDelete}>Delete</Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
