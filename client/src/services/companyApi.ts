@@ -66,6 +66,39 @@ export const createJob = async (requestBody: {
     }
 }
 
+export const getJob = async (id: string) => {
+    try {
+        const response = await api.get(`job/jobs/${id}`)
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const updateJob = async (
+    id: string,
+    requestBody: {
+        title: string
+        categories: string[]
+        level: string
+        requiredSkills: string[]
+        maxPositions: number
+        yearsOfExp: string
+        description: string
+        workingTime: string
+        offerSalary: string
+        startDate: string
+        endDate: string
+    }
+) => {
+    try {
+        const response = await api.put(`job/jobs/${id}`, requestBody)
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 export const filterJobByCompany = async (requestBody: { title: string; companyID: string; page: number }) => {
     try {
         const { title, companyID, page } = requestBody
@@ -86,6 +119,17 @@ export const get_all_users = async (id: unknown, token: string) => {
             }
         })
         return res
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const deleteJob = async (id: string, token: string) => {
+    try {
+        const response = await api.delete(`/job/jobs/${id}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        return response
     } catch (error) {
         console.error(error)
     }

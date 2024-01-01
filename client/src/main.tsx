@@ -30,9 +30,9 @@ import CompanyHome from './pages/CompanyHome.tsx'
 import CompanyJobs from './pages/CompanyJobs.tsx'
 import CompanyJobApplications from './pages/CompanyJobApplications.tsx'
 import CompanyProfile from './pages/CompanyProfile.tsx'
-import JobEditForm from './components/JobEditForm.tsx'
 import EmployerChat from './pages/EmployerChat.tsx'
 import CompanyCreateJob from './pages/CompanyCreateJob.tsx'
+import CompanyEditJob from './pages/CompanyEditJob.tsx'
 
 import AdminHome from './pages/AdminHome.tsx'
 import AdminCompanyList from './pages/AdminCompanyList.tsx'
@@ -157,7 +157,7 @@ const router = createBrowserRouter([
             },
             {
                 path: 'jobs/:id/edit',
-                element: <JobEditForm />
+                element: <CompanyEditJob />
             },
             {
                 path: 'jobApplications',

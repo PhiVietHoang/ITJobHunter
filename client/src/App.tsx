@@ -15,6 +15,7 @@ export const socket = io('http://localhost:3000')
 const App = () => {
     const location = useLocation()
     const isEmployeeCompanyDetail = location.pathname.includes('/companyAllDetail')
+    const isHome = location.pathname === '/'
     const user = useSelector((state: RootState) => state.employeeAuth.employee || state.employerAuth.company)
 
     useEffect(() => {
@@ -43,7 +44,7 @@ const App = () => {
                     <Navbar />
                 </div>
             </div>
-            <div className={`mx-auto ${isEmployeeCompanyDetail ? 'w-full' : 'w-2/3'}`}>
+            <div className={`mx-auto ${isEmployeeCompanyDetail ? 'w-full' : 'w-2/3'} ${isHome ? 'w-full' : 'w-2/3'}`}>
                 <Outlet />
             </div>
         </div>

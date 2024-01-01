@@ -46,7 +46,7 @@ const EmployeeChat = () => {
             dispatch(setMessages([]))
             return
         }
-    }, [receiver])
+    }, [receiver, dispatch])
 
     const getChat = async () => {
         dispatch(setUserMessageLoading(true))
@@ -215,15 +215,15 @@ const EmployeeChat = () => {
                         onClick={() => setShowName(true)}
                         className='avatar placeholder tooltip tooltip-open tooltip-top'
                     >
-                        {userData.avatar === null && (
+                        {userData?.avatar === null && (
                             <div className='bg-neutral-focus rounded-full w-12 h-12 flex items-center justify-center border hover:bg-gray-200 hover:text-black'>
                                 <span>{userData?.name.substring(0, 1)}</span>
                             </div>
                         )}
-                        {userData.avatar != null && (
+                        {userData?.avatar != null && (
                             <div className='bg-neutral-focus rounded-full w-12 h-12 flex items-center justify-center border hover:bg-gray-200 hover:text-black'>
                                 <img
-                                    src={userData.avatar}
+                                    src={userData?.avatar}
                                     alt='User Avatar'
                                     className='w-full h-full object-cover rounded-full'
                                 />

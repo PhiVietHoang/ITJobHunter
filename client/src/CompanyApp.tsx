@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { AxiosResponse } from 'axios'
 
@@ -8,7 +8,9 @@ import { setToken, setCompany } from './features/auth/employerAuthSlice'
 import { getCurrentCompany } from '~/services/companyApi'
 
 const CompanyApp = () => {
+    const location = useLocation()
     const dispatch = useDispatch()
+    const isEmployerHome = location.pathname === '/employer'
 
     useEffect(() => {
         const token = localStorage.getItem('employerToken')
@@ -23,14 +25,16 @@ const CompanyApp = () => {
         }
     }, [dispatch])
 
+    console.log(location.pathname)
+
     return (
-        <div>
+        <div className={`${isEmployerHome ? 'min-h-screen' : ''}`}>
             <div className='bg-white'>
                 <div className='mx-auto w-2/3'>
                     <CompanyNavbar />
                 </div>
             </div>
-            <div className='mx-auto w-2/3'>
+            <div className={`mx-auto ${isEmployerHome ? 'w-full' : 'w-2/3'}`}>
                 <Outlet />
             </div>
         </div>
