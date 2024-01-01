@@ -43,6 +43,29 @@ export const getCurrentCompany = async (token: string) => {
     }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const createJob = async (requestBody: {
+    title: string
+    categories: string[]
+    level: string
+    requiredSkills: string[]
+    maxPositions?: number
+    yearsOfExp: string
+    description: string
+    workingTime: string
+    offerSalary: string
+    startDate: string
+    endDate: string
+    companyID: string
+}) => {
+    try {
+        const response = await api.post('job/jobs', requestBody)
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 export const filterJobByCompany = async (requestBody: { title: string; companyID: string; page: number }) => {
     try {
         const { title, companyID, page } = requestBody
