@@ -34,10 +34,11 @@ import EmployerChat from './pages/EmployerChat.tsx'
 import CompanyCreateJob from './pages/CompanyCreateJob.tsx'
 import CompanyEditJob from './pages/CompanyEditJob.tsx'
 
-import AdminHome from './pages/AdminHome.tsx'
+//import AdminHome from './pages/AdminHome.tsx'
 import AdminCompanyList from './pages/AdminCompanyList.tsx'
 import AdminEmployeeList from './pages/AdminEmployeeList.tsx'
-import AdminDashboard from './pages/AdminDashboard.tsx'
+//import AdminDashboard from './pages/AdminDashboard.tsx'
+import AdminLayout from './components/layout/AdminLayout.tsx'
 
 const router = createBrowserRouter([
     {
@@ -87,23 +88,6 @@ const router = createBrowserRouter([
             {
                 path: '/companyAllDetail/:id',
                 element: <EmployeeCompanyDetail />
-            },
-
-            {
-                path: '/admin',
-                element: <AdminHome />
-            },
-            {
-                path: '/admin/company',
-                element: <AdminCompanyList />
-            },
-            {
-                path: '/admin/employee',
-                element: <AdminEmployeeList />
-            },
-            {
-                path: '/admin/dashboard',
-                element: <AdminDashboard />
             }
         ]
     },
@@ -172,6 +156,20 @@ const router = createBrowserRouter([
     {
         path: '/employer/chat',
         element: <EmployerChat />
+    },
+    {
+        path: '/admin',
+        element: <AdminLayout />,
+        children: [
+            {
+                path: 'company',
+                element: <AdminCompanyList />
+            },
+            {
+                path: 'employee',
+                element: <AdminEmployeeList />
+            }
+        ]
     }
 ])
 
