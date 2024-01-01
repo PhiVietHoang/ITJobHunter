@@ -88,16 +88,16 @@ const JobCard = (props: JobCardProps) => {
                         <DialogHeader>
                             <DialogTitle>Delete this job?</DialogTitle>
                             <DialogDescription>
-                                Are you sure to delete this job? All job application related will be deleted also
+                                Are you sure to delete this job? All job application related will be deleted also.
                             </DialogDescription>
                         </DialogHeader>
                         <DialogFooter className='sm:justify-center px-10'>
+                            <Button onClick={handleDelete}>Delete</Button>
                             <DialogClose asChild>
                                 <Button type='button' variant='secondary'>
                                     Close
                                 </Button>
                             </DialogClose>
-                            <Button onClick={handleDelete}>Delete</Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
