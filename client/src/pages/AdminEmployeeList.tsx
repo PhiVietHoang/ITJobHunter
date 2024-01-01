@@ -1,159 +1,203 @@
-//import TableAccount from "~/components/TableAccount"
-import AdminSideBar from "../components/AdminSidebar"
+import { Search } from 'lucide-react'
+import { useCallback, useEffect, useState } from 'react'
+import AdminTableEmployee from '~/components/AdminTableEmployee'
+import Pagination from '~/components/Pagination'
+import { Input } from '~/components/ui/input'
+import { deleteEmployee, deleteEmployees, getAllEmployee } from '~/services/api'
+import { userData } from '~/store'
 
-const AdminEmployeeList = () => {
-    
-        
-return(
-        <div>
-        <AdminSideBar></AdminSideBar>
-        <div className='mt-12 mx-auto w-2/3 min-w-min flex flex-col gap-4'>
-            
-        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <caption className="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
-            Employees
-        </caption>
-    <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
-        
-        <div>
-            <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction" className="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" type="button">
-                <span className="sr-only">Action button</span>
-                Action
-                <svg className="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                </svg>
-            </button>
-            <div id="dropdownAction" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                <ul className="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownActionButton">
-                    <li>
-                        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Block</a>
-                    </li>
-                    <li>
-                        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Unblock</a>
-                    </li>
-                </ul>
-                <div className="py-1">
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete User</a>
+const ITEMS_PER_PAGE = 10
+
+export default function AdminEmployee() {
+    const [currentPage, setCurrentPage] = useState<number>(0)
+    const [selectedItems, setSelectedItems] = useState<string[]>([])
+    const [originalEmployeeList, setOriginalEmployeeList] = useState<userData[]>([])
+    const [resultEmployee, setResultEmployee] = useState<userData[]>([])
+    const [searchEmployeeName, setSearchEmployeeName] = useState<string>('')
+
+    const totalPages = Math.ceil(
+        (searchEmployeeName ? resultEmployee?.length : originalEmployeeList?.length) / ITEMS_PER_PAGE
+    )
+
+    const getVisibleItems = useCallback(() => {
+        const startIndex = currentPage * ITEMS_PER_PAGE
+        const endIndex = startIndex + ITEMS_PER_PAGE
+
+        const sourceList = searchEmployeeName ? resultEmployee : originalEmployeeList
+        return sourceList.slice(startIndex, endIndex)
+    }, [currentPage, searchEmployeeName, resultEmployee, originalEmployeeList])
+
+    const visibleItems = getVisibleItems()
+
+    const handlePageChange = useCallback((newPage: number) => {
+        setCurrentPage(newPage)
+        window.scrollTo(0, 0)
+    }, [])
+
+    const onChangeSearch = useCallback(
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            const newSearchValue = e.target.value.toLowerCase()
+            setSearchEmployeeName(newSearchValue)
+
+            const newResultEmployee =
+                newSearchValue === ''
+                    ? originalEmployeeList
+                    : originalEmployeeList.filter((result) => result.name.toLowerCase().includes(newSearchValue))
+
+            setResultEmployee(newResultEmployee)
+        },
+        [originalEmployeeList]
+    )
+
+    const handleCheckbox = useCallback((itemId: string) => {
+        setSelectedItems((prevSelectedItems) =>
+            prevSelectedItems.includes(itemId)
+                ? prevSelectedItems.filter((id) => id !== itemId)
+                : [...prevSelectedItems, itemId]
+        )
+    }, [])
+
+    const handleCheckboxAll = useCallback(() => {
+        const allItemIds = originalEmployeeList?.map((result) => result._id)
+        setSelectedItems((prevSelectedItems) =>
+            prevSelectedItems.length === (allItemIds?.length || 0) ? [] : allItemIds || []
+        )
+    }, [originalEmployeeList])
+
+    const handleDelete = useCallback(async (id: string) => {
+        try {
+            await deleteEmployee(id)
+            setOriginalEmployeeList((prevList) => prevList.filter((result) => result._id !== id))
+            if (originalEmployeeList?.length === 1) {
+                setCurrentPage(currentPage - 1)
+                totalPages - 1
+            }
+        } catch (error) {
+            console.error(error)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    const handleDeleteChecked = useCallback(async () => {
+        try {
+            await deleteEmployees(selectedItems)
+            setOriginalEmployeeList((prevList) => prevList.filter((result) => !selectedItems.includes(result._id)))
+            setSelectedItems([])
+        } catch (error) {
+            console.error(error)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedItems])
+
+    const getTotalEmployee = async () => {
+        try {
+            const response = await getAllEmployee()
+            if (response?.status === 200) {
+                setOriginalEmployeeList(response.data)
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    useEffect(() => {
+        getTotalEmployee()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    return (
+        <div className='pr-64 mt-6'>
+            <div className='bg-white border border-black rounded-xl'>
+                <div className='flex justify-between mb-4'>
+                    <div className='flex gap-5'>
+                        <h1 className='h-full py-2.5 px-4 text-2xl font-bold bg-white border-b border-r border-black shadow-xl rounded-br-xl rounded-tl-xl'>
+                            Employee
+                        </h1>
+                        <select
+                            className='px-4 py-3 border border-b border-r border-black rounded-br-xl rounded-bl-xl '
+                            name=''
+                            id=''
+                        >
+                            <option value=''>All</option>
+                            <option value=''>Active</option>
+                            <option value=''>Block</option>
+                        </select>
+                        <button
+                            disabled={!selectedItems.length}
+                            onClick={() => handleDeleteChecked()}
+                            className={
+                                selectedItems.length
+                                    ? 'px-4 py-3 text-white bg-red-500 rounded-br-xl rounded-bl-xl'
+                                    : 'px-4 py-3 text-white bg-red-500 rounded-br-xl rounded-bl-xl opacity-50 cursor-not-allowed'
+                            }
+                        >
+                            Delete Checked
+                        </button>
+                    </div>
+                    <div className='flex items-center w-2/5 border-b border-l border-black shadow-2xl rounded-bl-xl'>
+                        <div className='flex items-center w-full px-4 py-2'>
+                            <Search className='flex w-1/12' />
+                            <Input
+                                type='text'
+                                placeholder='Enter employee name'
+                                className='flex w-full text-lg placeholder-gray-500 border-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                                value={searchEmployeeName}
+                                onChange={onChangeSearch}
+                            />
+                        </div>
+                    </div>
+                </div>
+                <p className='pl-4 mb-2'>
+                    Chooses <span className='font-bold'>{selectedItems.length}</span> selected
+                </p>
+
+                <AdminTableEmployee
+                    data={searchEmployeeName ? resultEmployee : visibleItems}
+                    selectedItems={selectedItems}
+                    handleDelete={handleDelete}
+                    handleCheckbox={handleCheckbox}
+                    handleCheckboxAll={handleCheckboxAll}
+                />
+                <div className='flex items-center justify-between p-2 bg-slate-500 rounded-bl-xl rounded-br-xl'>
+                    <span className='text-white'>
+                        Showing{' '}
+                        <span className='font-bold'>
+                            {searchEmployeeName ? resultEmployee?.length : visibleItems.length}
+                        </span>{' '}
+                        of
+                        <span className='ml-1.5 font-bold'>
+                            {searchEmployeeName ? resultEmployee.length : originalEmployeeList.length}
+                        </span>{' '}
+                        results
+                    </span>
+                    <div className='flex items-center space-x-2'>
+                        <button
+                            disabled={!currentPage}
+                            className={`${
+                                !currentPage && 'opacity-50 cursor-not-allowed'
+                            } p-2 text-white border border-gray-300 rounded-lg`}
+                            onClick={() => handlePageChange(currentPage - 1)}
+                        >
+                            Previous
+                        </button>
+
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            handlePageChange={handlePageChange}
+                        />
+                        <button
+                            disabled={currentPage === totalPages - 1}
+                            className={`${
+                                currentPage === totalPages - 1 && 'opacity-50 cursor-not-allowed'
+                            } px-4 py-2 text-white border border-gray-300 rounded-lg`}
+                            onClick={() => handlePageChange(currentPage + 1)}
+                        >
+                            Next
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-        <label htmlFor="table-search" className="sr-only">Search</label>
-        <div className="relative">
-            <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                </svg>
-            </div>
-            <input type="text" id="table-search-users" className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for employees"/>
-        </div>
-    </div>
-    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-                <th scope="col" className="p-4">
-                    <div className="flex items-center">
-                        <input id="checkbox-all-search" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label htmlFor="checkbox-all-search" className="sr-only">checkbox</label>
-                    </div>
-                </th>
-                <th scope="col" className="px-6 py-3">
-                    Name
-                </th>
-                <th scope="col" className="px-6 py-3">
-                    Phone
-                </th>
-                <th scope="col" className="px-6 py-3">
-                    Status
-                </th>
-                <th scope="col" className="px-6 py-3">
-                    Action
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <td className="w-4 p-4">
-                    <div className="flex items-center">
-                        <input id="checkbox-table-search-2" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label htmlFor="checkbox-table-search-2" className="sr-only">checkbox</label>
-                    </div>
-                </td>
-                <th scope="row" className="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    <img className="w-10 h-10 rounded-full" src="https://t4.ftcdn.net/jpg/04/08/24/43/360_F_408244382_Ex6k7k8XYzTbiXLNJgIL8gssebpLLBZQ.jpg" alt="Jese image"/>
-                    <div className="ps-3">
-                        <div className="text-base font-semibold">Nam Trinh</div>
-                        <div className="font-normal text-gray-500">nam@gmail.com</div>
-                    </div>
-                </th>
-                <td className="px-6 py-4">
-                    0123456789
-                </td>
-                <td className="px-6 py-4">
-                    <div className="flex items-center">
-                        <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div> Active
-                    </div>
-                </td>
-                <td className="px-6 py-4">
-                    <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete user</a>
-                </td>
-            </tr>
-            <tr className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <td className="w-4 p-4">
-                    <div className="flex items-center">
-                        <input id="checkbox-table-search-3" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label htmlFor="checkbox-table-search-3" className="sr-only">checkbox</label>
-                    </div>
-                </td>
-                <th scope="row" className="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    <img className="w-10 h-10 rounded-full" src="https://t4.ftcdn.net/jpg/04/08/24/43/360_F_408244382_Ex6k7k8XYzTbiXLNJgIL8gssebpLLBZQ.jpg" alt="Jese image"/>
-                    <div className="ps-3">
-                        <div className="text-base font-semibold">Leslie Livingston</div>
-                        <div className="font-normal text-gray-500">leslie@flowbite.com</div>
-                    </div>
-                </th>
-                <td className="px-6 py-4">
-                    +78 4835154
-                </td>
-                <td className="px-6 py-4">
-                    <div className="flex items-center">
-                        <div className="h-2.5 w-2.5 rounded-full bg-red-500 me-2"></div> Blocked
-                    </div>
-                </td>
-                <td className="px-6 py-4">
-                    <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete user</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <nav className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">
-        <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing <span className="font-semibold text-gray-900 dark:text-white">1-10</span> of <span className="font-semibold text-gray-900 dark:text-white">1000</span></span>
-        <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-            <li>
-                <a href="#" className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
-            </li>
-            <li>
-                <a href="#" className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
-            </li>
-            <li>
-                <a href="#" className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
-            </li>
-            <li>
-                <a href="#" aria-current="page" className="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
-            </li>
-            <li>
-                <a href="#" className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">4</a>
-            </li>
-            <li>
-                <a href="#" className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">5</a>
-            </li>
-            <li>
-        <a href="#" className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
-            </li>
-        </ul>
-    </nav>
-</div>
-</div>
-        </div>
-
-)}
-export default AdminEmployeeList
+    )
+}

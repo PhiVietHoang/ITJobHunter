@@ -1,159 +1,204 @@
-import AdminSideBar from "../components/AdminSidebar"
+import { Search } from 'lucide-react'
+import { useCallback, useEffect, useState } from 'react'
+import AdminTableCompany from '~/components/AdminTableCompany'
+import Pagination from '~/components/Pagination'
+import { Input } from '~/components/ui/input'
+import { useDebounce } from '~/lib/useDebounce'
+import { deleteCompanies, deleteCompany, getAllCompany, searchCompany } from '~/services/api'
+import { company } from './EmployeeCompany'
 
+export default function AdminCompany() {
+    const [totalPages, setTotalPages] = useState<number>(0)
+    const [currentPage, setCurrentPage] = useState<number>(0)
+    const [totalCompanies, setTotalCompanies] = useState<number>(0)
+    const [searchResults, setSearchResults] = useState<company[]>()
+    const [searchCompanyName, setSearchCompanyName] = useState<string>('')
+    const [selectedItems, setSelectedItems] = useState<string[]>([])
 
-const AdminCompanyList = () => {
-    
-        
-return(
-        <div>
-        <AdminSideBar></AdminSideBar>
-        <div className='mt-12 mx-auto w-2/3 min-w-min flex flex-col gap-4'>
-            
-        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <caption className="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
-            Companies
-        </caption>
-    <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
-        
-        <div>
-            <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction" className="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" type="button">
-                <span className="sr-only">Action button</span>
-                Action
-                <svg className="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                </svg>
-            </button>
-            <div id="dropdownAction" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                <ul className="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownActionButton">
-                    <li>
-                        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Block</a>
-                    </li>
-                    <li>
-                        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Unblock</a>
-                    </li>
-                </ul>
-                <div className="py-1">
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete User</a>
+    const handleCheckbox = useCallback((itemId: string) => {
+        setSelectedItems((prevSelectedItems) =>
+            prevSelectedItems.includes(itemId)
+                ? prevSelectedItems.filter((id) => id !== itemId)
+                : [...prevSelectedItems, itemId]
+        )
+    }, [])
+
+    const handleCheckboxAll = useCallback(() => {
+        const allItemIds = searchResults?.map((result) => result._id)
+        setSelectedItems((prevSelectedItems) =>
+            prevSelectedItems.length === (allItemIds?.length || 0) ? [] : allItemIds || []
+        )
+    }, [searchResults])
+
+    const handlePageChange = useCallback(
+        async (page: number) => {
+            const response = await searchCompany({ companyName: searchCompanyName, page })
+            if (response?.status === 200) {
+                setSearchResults(response.data.companies)
+                setCurrentPage(page)
+                window.scrollTo(0, 0)
+            } else {
+                console.log(response)
+            }
+        },
+        [searchCompanyName]
+    )
+
+    const getAllCompanyData = useCallback(async (page: number, searchCompanyName: string) => {
+        const response = await searchCompany({
+            page,
+            companyName: searchCompanyName
+        })
+        if (response?.status === 200) {
+            setSearchResults(response.data.companies)
+            setTotalPages(response.data.totalPages)
+        } else {
+            console.log(response)
+        }
+    }, [])
+
+    const handleDelete = useCallback(
+        async (id: string) => {
+            await deleteCompany(id)
+            setSearchResults(searchResults?.filter((result) => result._id !== id))
+            setTotalCompanies(totalCompanies - 1)
+
+            if (searchResults?.length === 1) {
+                setCurrentPage(currentPage - 1)
+                setTotalPages(totalPages - 1)
+            }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        },
+        [currentPage, searchResults, totalCompanies, totalPages]
+    )
+
+    const handleDeleteChecked = useCallback(async () => {
+        try {
+            await deleteCompanies(selectedItems)
+            setSearchResults((prevList) => prevList?.filter((result) => !selectedItems.includes(result._id)))
+            setTotalCompanies((prevTotal) => prevTotal - selectedItems.length)
+            setSelectedItems([])
+        } catch (error) {
+            console.error(error)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedItems])
+
+    useDebounce(
+        { currentPage, searchCompanyName },
+        100,
+        async (value) => {
+            getAllCompanyData(value?.currentPage || currentPage, value?.searchCompanyName || searchCompanyName)
+        },
+        [currentPage, searchCompanyName]
+    )
+
+    const getTotalCompany = async () => {
+        const response = await getAllCompany()
+        if (response?.status === 200) {
+            setTotalCompanies(response.data.length)
+        }
+    }
+
+    useEffect(() => {
+        getTotalCompany()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    useDebounce(
+        { currentPage, searchCompanyName },
+        100,
+        async (value) => {
+            getAllCompanyData(value?.currentPage || currentPage, value?.searchCompanyName || searchCompanyName)
+        },
+        [currentPage, searchCompanyName]
+    )
+
+    return (
+        <div className='pr-64 mt-6'>
+            <div className='bg-white border border-black rounded-xl'>
+                <div className='flex justify-between mb-4'>
+                    <div className='flex gap-5'>
+                        <h1 className='h-full py-2.5 px-4 text-2xl font-bold bg-white border-b border-r border-black shadow-xl rounded-br-xl rounded-tl-xl'>
+                            Company
+                        </h1>
+                        <select
+                            className='px-4 py-3 border border-b border-r border-black rounded-br-xl rounded-bl-xl '
+                            name=''
+                            id=''
+                        >
+                            <option value=''>All</option>
+                            <option value=''>Active</option>
+                            <option value=''>Block</option>
+                        </select>
+                        <button
+                            disabled={!selectedItems.length}
+                            onClick={() => handleDeleteChecked()}
+                            className={
+                                selectedItems.length
+                                    ? 'px-4 py-3 text-white bg-red-500 rounded-br-xl rounded-bl-xl'
+                                    : 'px-4 py-3 text-white bg-red-500 rounded-br-xl rounded-bl-xl opacity-50 cursor-not-allowed'
+                            }
+                        >
+                            Delete Checked
+                        </button>
+                    </div>
+                    <div className='flex items-center w-2/5 border-b border-l border-black shadow-2xl rounded-bl-xl'>
+                        <div className='flex items-center w-full px-4 py-2'>
+                            <Search className='flex w-1/12' />
+                            <Input
+                                type='text'
+                                placeholder='Enter company name'
+                                className='flex w-full text-lg placeholder-gray-500 border-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                                value={searchCompanyName}
+                                onChange={(e) => setSearchCompanyName(e.target.value)}
+                            />
+                        </div>
+                    </div>
+                </div>
+                <p className='pl-4 mb-2'>
+                    Chooses <span className='font-bold'>{selectedItems.length}</span> selected
+                </p>
+                <AdminTableCompany
+                    data={searchResults || []}
+                    selectedItems={selectedItems}
+                    totalCompanies={totalCompanies}
+                    handleDelete={handleDelete}
+                    handleCheckbox={handleCheckbox}
+                    handleCheckboxAll={handleCheckboxAll}
+                />
+                <div className='flex items-center justify-between p-2 bg-slate-500 rounded-bl-xl rounded-br-xl'>
+                    <span className='text-white'>
+                        Showing <span className='font-bold'>{searchResults?.length}</span> of
+                        <span className='ml-1.5 font-bold'>{totalCompanies}</span> results
+                    </span>
+                    <div className='flex items-center space-x-2'>
+                        <button
+                            disabled={!currentPage}
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            className={`${
+                                !currentPage && 'opacity-50 cursor-not-allowed'
+                            } p-2 text-white border border-gray-300 rounded-lg`}
+                        >
+                            Previous
+                        </button>
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            handlePageChange={handlePageChange}
+                        />
+                        <button
+                            disabled={currentPage === totalPages - 1}
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            className={`${
+                                currentPage === totalPages - 1 && 'opacity-50 cursor-not-allowed'
+                            } px-4 py-2 text-white border border-gray-300 rounded-lg`}
+                        >
+                            Next
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-        <label htmlFor="table-search" className="sr-only">Search</label>
-        <div className="relative">
-            <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                </svg>
-            </div>
-            <input type="text" id="table-search-users" className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for company"/>
-        </div>
-    </div>
-    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-                <th scope="col" className="p-4">
-                    <div className="flex items-center">
-                        <input id="checkbox-all-search" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label htmlFor="checkbox-all-search" className="sr-only">checkbox</label>
-                    </div>
-                </th>
-                <th scope="col" className="px-6 py-3">
-                    Name
-                </th>
-                <th scope="col" className="px-6 py-3">
-                    Phone
-                </th>
-                <th scope="col" className="px-6 py-3">
-                    Status
-                </th>
-                <th scope="col" className="px-6 py-3">
-                    Action
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <td className="w-4 p-4">
-                    <div className="flex items-center">
-                        <input id="checkbox-table-search-2" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label htmlFor="checkbox-table-search-2" className="sr-only">checkbox</label>
-                    </div>
-                </td>
-                <th scope="row" className="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    <img className="w-10 h-10 rounded-full" src="https://t4.ftcdn.net/jpg/04/08/24/43/360_F_408244382_Ex6k7k8XYzTbiXLNJgIL8gssebpLLBZQ.jpg" alt="Jese image"/>
-                    <div className="ps-3">
-                        <div className="text-base font-semibold">HUST</div>
-                        <div className="font-normal text-gray-500">hust@gmail</div>
-                    </div>
-                </th>
-                <td className="px-6 py-4">
-                    0969999961
-                </td>
-                <td className="px-6 py-4">
-                    <div className="flex items-center">
-                        <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div> Active
-                    </div>
-                </td>
-                <td className="px-6 py-4">
-                    <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete company</a>
-                </td>
-            </tr>
-            <tr className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <td className="w-4 p-4">
-                    <div className="flex items-center">
-                        <input id="checkbox-table-search-3" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label htmlFor="checkbox-table-search-3" className="sr-only">checkbox</label>
-                    </div>
-                </td>
-                <th scope="row" className="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    <img className="w-10 h-10 rounded-full" src="https://t4.ftcdn.net/jpg/04/08/24/43/360_F_408244382_Ex6k7k8XYzTbiXLNJgIL8gssebpLLBZQ.jpg" alt="Jese image"/>
-                    <div className="ps-3">
-                        <div className="text-base font-semibold">Leslie Corp</div>
-                        <div className="font-normal text-gray-500">leslie@flowbite.com</div>
-                    </div>
-                </th>
-                <td className="px-6 py-4">
-                    +123456789
-                </td>
-                <td className="px-6 py-4">
-                    <div className="flex items-center">
-                        <div className="h-2.5 w-2.5 rounded-full bg-red-500 me-2"></div> Blocked
-                    </div>
-                </td>
-                <td className="px-6 py-4">
-                    <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete company</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <nav className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">
-        <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing <span className="font-semibold text-gray-900 dark:text-white">1-10</span> of <span className="font-semibold text-gray-900 dark:text-white">1000</span></span>
-        <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-            <li>
-                <a href="#" className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
-            </li>
-            <li>
-                <a href="#" className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
-            </li>
-            <li>
-                <a href="#" className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
-            </li>
-            <li>
-                <a href="#" aria-current="page" className="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
-            </li>
-            <li>
-                <a href="#" className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">4</a>
-            </li>
-            <li>
-                <a href="#" className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">5</a>
-            </li>
-            <li>
-        <a href="#" className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
-            </li>
-        </ul>
-    </nav>
-</div>
-</div>
-        </div>
-
-)}
-export default AdminCompanyList
+    )
+}
