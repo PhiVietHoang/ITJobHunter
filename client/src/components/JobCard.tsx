@@ -71,8 +71,8 @@ const JobCard = (props: JobCardProps) => {
                 <p className='my-2 text-sm line-clamp-1'>{props.description}</p>
                 <p className='text-sm text-gray-500'>Received applications: 1000</p>
                 <div className='flex justify-start items-center gap-4'>
-                    <span className='text-sm text-gray-500'>Start date: {props.startDate?.toString()}</span>
-                    <span className='text-sm text-gray-500'>End date: {props.endDate?.toString()}</span>
+                    <span className='text-sm text-gray-500'>Start date: {new Date(props.startDate).toUTCString()}</span>
+                    <span className='text-sm text-gray-500'>End date: {new Date(props.endDate).toUTCString()}</span>
                 </div>
             </div>
 
