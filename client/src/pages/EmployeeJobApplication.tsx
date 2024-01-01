@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Button } from '~/components/ui/button'
-import { deleteJobApplication, getJobApplicationsByEmployee } from '~/services/api'
+import { deleteJobApplication, getJobApplicationsByEmployee, downloadCV } from '~/services/api'
 import { RootState } from '~/store'
 
 type JobApplication = {
@@ -23,7 +23,10 @@ type JobApplication = {
         endDate: string
         companyID: string
     }
-    cv: string
+    cv: {
+        data: string
+        contentType: string
+    }
     status: string
     applicationDate: string
 }
@@ -42,6 +45,7 @@ const EmployeeJobApplication = () => {
 
     const handleDelete = (id: string) => {
         deleteJobApplication(id)
+        window.location.reload()
     }
 
     if (!employee) return null
@@ -60,7 +64,9 @@ const EmployeeJobApplication = () => {
             <div className=' my-8 grid grid-cols-[1fr] gap-4'>
                 {jobApplications.map((jobApplication) => (
                     <div key={jobApplication._id} className='p-4 hover:bg-gray-50 rounded-lg flex gap-4'>
-                        <img src={jobApplication.cv} alt='CV' className='w-48 aspect-[19/6] object-scale' />
+                        <Button variant='default' onClick={() => downloadCV(jobApplication._id)}>
+                            Download CV
+                        </Button>
                         <div className='grow min-h-max'>
                             <div className='flex justify-between items-center'>
                                 <h1 className='text-lg font-semibold'>{jobApplication.jobId.title}</h1>

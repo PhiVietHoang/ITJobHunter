@@ -5,6 +5,8 @@ const Job = require('../models/JobModel');
 const multer = require('multer');
 const fs = require('fs');
 const upload = multer({ dest: 'uploads/' });
+const stream = require('stream');
+
 exports.upload = upload.single('cv');
 // Create a new job application
 exports.createJobApplication = async (req, res) => {
@@ -200,5 +202,44 @@ exports.getFilterJobApplicationsByCompanyId = async (req, res) => {
         res.status(200).json({ jobApplications, totalApplications, totalPages });
     } catch (err) {
         res.status(500).json({ message: 'Internal server error', error: err });
+    }
+};
+
+exports.getCV = async (req, res) => {
+    try {
+        const jobApplicationId = req.params.jobApplicationId;
+        const jobApplication = await JobApplication.findById(jobApplicationId).populate('employeeId', 'name');
+
+        if (!jobApplication || !jobApplication.cv || !jobApplication.cv.data) {
+            return res.status(404).send({ message: "CV not found." });
+        }
+
+        if (!jobApplication.employeeId || !jobApplication.employeeId.name) {
+            return res.status(404).send({ message: "Employee not found." });
+        }
+
+        // Infer the file extension from the contentType
+        let fileExtension = '';
+        switch (jobApplication.cv.contentType) {
+            case 'application/pdf':
+                fileExtension = '.pdf';
+                break;
+            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                fileExtension = '.docx';
+                break;
+            default:
+                return res.status(400).send({ message: "Unsupported file type." });
+        }
+
+        const fileName = `${jobApplication.employeeId.name}-cv${fileExtension}`;
+        // Set headers for file download
+        res.setHeader('Content-Type', jobApplication.cv.contentType);
+        res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+        // Convert the buffer to a readable stream and pipe it to the response
+        const readStream = new stream.PassThrough();
+        readStream.end(jobApplication.cv.data);
+        readStream.pipe(res);
+    } catch (error) {
+        res.status(500).send({ message: "Could not download the CV.", error: error.toString() });
     }
 };
