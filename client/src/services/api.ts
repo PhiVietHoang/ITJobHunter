@@ -61,10 +61,15 @@ export const updateEmployee = async (id: string, requestBody: unknown, token: st
     }
 }
 
-export const searchJobs = async (requestBody: { title: string; page: number }) => {
+export const searchJobs = async (requestBody: {
+    title: string
+    yearsOfExp: string
+    location: string
+    page: number
+}) => {
     try {
-        const { title, page } = requestBody
-        const response = await api.post('job/jobs/filtered-jobs/', { title, page })
+        const { title, yearsOfExp, location, page } = requestBody
+        const response = await api.post('job/jobs/filtered-jobs/', { title, minYearsOfExp: yearsOfExp, location, page })
         return response
     } catch (error) {
         console.error(error)
@@ -219,7 +224,7 @@ export const getAllEmployee = async () => {
 
 export const deleteEmployee = async (id: string) => {
     try {
-        const response = await api.delete(`employee/employees?${id}`)
+        const response = await api.delete(`employee/employees/${id}`)
         return response
     } catch (error) {
         console.error(error)

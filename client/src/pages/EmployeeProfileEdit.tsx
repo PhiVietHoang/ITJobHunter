@@ -76,6 +76,22 @@ const EmployeeProfileEdit = () => {
         window.location.reload()
     }
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const avatarFile = e.target.files?.[0]
+        if (avatarFile) {
+            const reader = new FileReader()
+            reader.onloadend = () => {
+                const base64String = reader.result as string
+                console.log(base64String)
+                setEmployeeData((prevState) => ({
+                    ...prevState,
+                    avatar: base64String
+                }))
+            }
+            reader.readAsDataURL(avatarFile)
+        }
+    }
+
     useEffect(() => {
         setEmployeeData(employee)
     }, [employee])
@@ -84,6 +100,15 @@ const EmployeeProfileEdit = () => {
 
     return (
         <form className='my-12 mx-auto w-2/3' onSubmit={handleSubmit}>
+            <Label htmlFor='avatar' className='text-md'>
+                Ảnh đại diện
+            </Label>
+            <div className='mx-auto w-min flex flex-col justify-center gap-2'>
+                <Input type='file' id='avatar' onChange={handleFileChange} />
+                <div className='w-64 aspect-square flex rounded-lg overflow-hidden'>
+                    {employeeData.avatar && <img src={employeeData.avatar} alt='Preview' />}
+                </div>
+            </div>
             {editableStringFields.map((field, index) => (
                 <div key={index} className='my-4 grid w-full items-center gap-1'>
                     <Label htmlFor={index.toString()} className='text-md'>

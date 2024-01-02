@@ -27,7 +27,12 @@ const Home = () => {
     }
 
     const handleSearch = async () => {
-        const response = await searchJobs({ title: searchTitle, page: 0 })
+        const response = await searchJobs({
+            title: searchTitle,
+            yearsOfExp: searchExperience,
+            location: searchLocation,
+            page: 0
+        })
         if (response?.status === 200) {
             const data = response.data
             const state = { ...data, searchTitle, searchExperience, searchLocation }
@@ -61,13 +66,13 @@ const Home = () => {
                                 <SelectValue placeholder='Experience' />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value='fresher'>Fresher</SelectItem>
-                                <SelectItem value='1y'>1 year</SelectItem>
-                                <SelectItem value='2y'>2 years</SelectItem>
-                                <SelectItem value='3y'>3 years</SelectItem>
-                                <SelectItem value='4y'>4 years</SelectItem>
-                                <SelectItem value='5y'>5 years</SelectItem>
-                                <SelectItem value='5y+'>5+ years</SelectItem>
+                                <SelectItem value='0'>Fresher</SelectItem>
+                                <SelectItem value='1'>1 year</SelectItem>
+                                <SelectItem value='2'>2 years</SelectItem>
+                                <SelectItem value='3'>3 years</SelectItem>
+                                <SelectItem value='4'>4 years</SelectItem>
+                                <SelectItem value='5'>5 years</SelectItem>
+                                <SelectItem value='5'>5+ years</SelectItem>
                             </SelectContent>
                         </Select>
                         <Input

@@ -8,11 +8,12 @@ const {
   getAllCompanies,
   getCompanyById,
   updateCompany,
+  deleteCompaniesChecked,
   deleteCompany,
   getProfile,
   filterAndPaginateCompany,
-  getCompanyInsight
-} = require('../controllers/CompanyController');
+  getCompanyInsight,
+} = require("../controllers/CompanyController");
 
 const authMiddleware = require('../middlewares/AuthMiddleware');
 
@@ -22,6 +23,7 @@ router.post('/logout', authMiddleware, logout);
 router.get('/companies', getAllCompanies);
 router.get('/companies/:id', getCompanyById);
 router.put('/companies/:id', authMiddleware, updateCompany);
+router.delete("/companies/checked", authMiddleware, deleteCompaniesChecked);
 router.delete('/companies/:id', authMiddleware, deleteCompany);
 router.get('/profile',authMiddleware, getProfile);
 router.post('/filter-companies', filterAndPaginateCompany);

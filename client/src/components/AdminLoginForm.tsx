@@ -12,7 +12,7 @@ const AdminLoginForm = () => {
         email: '',
         password: ''
     })
-    const [formMessage, setFormMessage] = useState({ type: '', message: '' })
+    const [formMessage, setFormMessage] = useState('')
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -23,13 +23,17 @@ const AdminLoginForm = () => {
         try {
             const response = await login(formData)
             if (response?.status === 200) {
+                if (!response.data.employee.isAdmin) {
+                    setFormMessage('Oops! You are in the wrong place.')
+                    return
+                }
                 dispatch(employeeLoginSuccess({ employeeToken: response.data.token, employee: response.data.employee }))
                 localStorage.setItem('employeeToken', response.data.token)
                 navigate('/admin/dashboard')
             } else if (response) {
-                setFormMessage({ type: 'error', message: 'Wrong password' })
+                setFormMessage('Wrong password')
             } else {
-                setFormMessage({ type: 'error', message: 'Something went wrong' })
+                setFormMessage('Something went wrong')
             }
         } catch (error) {
             console.log(error)
@@ -37,11 +41,7 @@ const AdminLoginForm = () => {
     }
 
     return (
-        <form className='flex flex-col gap-6 px-16 py-12 bg-white rounded-lg' onSubmit={onSubmit}>
-            <div className='mx-auto'>
-                <h1 className='font-serif text-4xl font-bold text-cyan-600'>ITJobHunter</h1>
-                <p className='font-semibold text-center text-md text-cyan-600'>Right place for admin!</p>
-            </div>
+        <form className='w-1/2 flex flex-col gap-6 px-16 py-12 bg-transparent rounded-lg' onSubmit={onSubmit}>
             <div className='flex flex-col gap-2'>
                 <label htmlFor='email' className='font-semibold'>
                     Email
@@ -52,7 +52,7 @@ const AdminLoginForm = () => {
                     name='email'
                     required
                     placeholder='Enter your email'
-                    className='py-3 px-4 rounded-2xl border-black border focus:outline-[#275df5]'
+                    className='py-1 px-2 rounded-sm border-black border-2 placeholder:text-black bg-transparent focus:outline-none'
                     value={formData.email}
                     onChange={handleChange}
                 />
@@ -67,23 +67,15 @@ const AdminLoginForm = () => {
                     name='password'
                     required
                     placeholder='Enter your password'
-                    className='py-3 px-4 rounded-2xl border-black border focus:outline-[#275df5]'
+                    className='py-1 px-2 rounded-sm border-black border-2 placeholder:text-black bg-transparent focus:outline-none'
                     value={formData.password}
                     onChange={handleChange}
                 />
             </div>
-            {formMessage && (
-                <p
-                    className={`${
-                        formMessage.type === 'error' ? 'text-red-500' : 'text-green-700'
-                    } font-semibold text-lg`}
-                >
-                    {formMessage.message}
-                </p>
-            )}
+            {formMessage && <p className='text-center font-semibold'>{formMessage}</p>}
             <button
                 type='submit'
-                className='py-4 w-full text-xl text-semibold text-white bg-[#275df5] hover:bg-[#275df5cc] rounded-[60px]'
+                className='py-4 w-full text-xl text-semibold rounded-sm border-black border-2 hover:bg-black hover:text-red-900'
             >
                 Login
             </button>

@@ -39,6 +39,7 @@ import AdminCompanyList from './pages/AdminCompanyList.tsx'
 import AdminEmployeeList from './pages/AdminEmployeeList.tsx'
 import AdminDashboard from './pages/AdminDashboard.tsx'
 import AdminLayout from './components/layout/AdminLayout.tsx'
+import CompanyProfileEdit from './pages/CompanyProfileEdit.tsx'
 
 const router = createBrowserRouter([
     {
@@ -130,6 +131,10 @@ const router = createBrowserRouter([
             {
                 path: 'profile/:id',
                 element: <CompanyProfile />
+            },
+            {
+                path: 'profile/edit',
+                element: <CompanyProfileEdit />
             },
             {
                 path: 'jobs',
