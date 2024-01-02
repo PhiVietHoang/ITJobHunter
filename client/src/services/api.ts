@@ -219,7 +219,7 @@ export const getAllEmployee = async () => {
 
 export const deleteEmployee = async (id: string) => {
     try {
-        const response = await api.delete(`employee/employees?${id}`)
+        const response = await api.delete(`employee/employees/${id}`)
         return response
     } catch (error) {
         console.error(error)
@@ -266,7 +266,7 @@ export const deleteCompanies = async (data: string[]) => {
     try {
         const response = await api.delete(`/company/companies/checked`, { data })
         return response
-      } catch (error) {
+    } catch (error) {
         console.error(error)
     }
 }
