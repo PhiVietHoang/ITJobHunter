@@ -47,7 +47,7 @@ exports.createJob = async (req, res) => {
 // Get all jobs
 exports.getAllJobs = async (req, res) => {
     try {
-        const jobs = await Job.find({}).populate('companyID', 'name'); // Populate company data
+        const jobs = await Job.find({}).populate('jobApplicationCount').populate('companyID', 'companyName'); // Populate company data
 
         res.status(200).json(jobs);
     } catch (err) {
@@ -243,7 +243,7 @@ exports.filterAndPaginateJobs = async (req, res) => {
 
         // Paginate using skip and limit
         const skip = page * requestedPageSize;
-        const jobs = await Job.find(filter)
+        const jobs = await Job.find(filter).populate('jobApplicationCount')
             .populate({
                 path: 'companyID',
                 select: '_id companyName companyLogo companyLocations',
@@ -284,7 +284,7 @@ exports.filterAndPaginateJobsByCompany = async (req, res) => {
 
         // Paginate using skip and limit
         const skip = page * requestedPageSize;
-        const jobs = await Job.find(filter)
+        const jobs = await Job.find(filter).populate('jobApplicationCount')
             .populate({
                 path: 'companyID',
                 select: '_id companyName companyLogo companyLocations',

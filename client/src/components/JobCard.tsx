@@ -28,6 +28,7 @@ interface JobCardProps {
     offerSalary: number
     startDate: Date
     endDate: Date
+    jobApplicationCount: number
 }
 
 const JobCard = (props: JobCardProps) => {
@@ -69,7 +70,7 @@ const JobCard = (props: JobCardProps) => {
                     </p>
                 </div>
                 <p className='my-2 text-sm line-clamp-1'>{props.description}</p>
-                <p className='text-sm text-gray-500'>Received applications: 1000</p>
+                <p className='text-sm text-gray-500'>Received applications: {props.jobApplicationCount}</p>
                 <div className='flex justify-start items-center gap-4'>
                     <span className='text-sm text-gray-500'>Start date: {new Date(props.startDate).toUTCString()}</span>
                     <span className='text-sm text-gray-500'>End date: {new Date(props.endDate).toUTCString()}</span>

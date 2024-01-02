@@ -23,6 +23,7 @@ interface JobData {
         companyName: string
         companyLocations: string[]
     }
+    jobApplicationCount: number
 }
 
 const SearchJobCard = (props: JobData) => {
@@ -84,6 +85,7 @@ const SearchJobCard = (props: JobData) => {
             </div>
             <div className='my-2 flex items-center gap-4'>
                 <span className='text-sm'>Number of positions: {props.maxPositions}</span>|
+                <span className='text-sm'>Total current application: {props.jobApplicationCount}</span>|
                 <span className='text-sm'>
                     Hiring date: {props.startDate && format(new Date(props.startDate), 'dd/MM/yyyy')}
                     {props.endDate && ` to ${format(new Date(props.endDate), 'dd/MM/yyyy')}`}

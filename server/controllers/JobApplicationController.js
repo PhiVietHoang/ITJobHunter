@@ -132,6 +132,17 @@ exports.getJobApplicationByEmployeeId = async (req, res) => {
     }
 };
 
+// Get job applications by employee id
+exports.getJobApplicationByJobId = async (req, res) => {
+    const jobId = req.params.jobId;
+    try {
+        const jobApplications = await JobApplication.countDocuments({jobId});
+        res.status(200).json(jobApplications);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err });
+    }
+};
+
 // Get job applications by company ID
 exports.getJobApplicationsByCompanyId = async (req, res) => {
     const companyId = req.params.companyId;

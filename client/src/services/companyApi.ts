@@ -171,6 +171,15 @@ export const updateJobApplicationStatus = async (
     }
 }
 
+export const getNumberOfApplication = async (jobId: string) => {
+    try {
+        const response = await api.get(`/jobApplication/jobApplications/job/${jobId}`)
+        return response.data
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 export const downloadCV = async (jobApplicationId: string) => {
     try {
         const response = await api.get(`jobApplication/download-cv/${jobApplicationId}`, {

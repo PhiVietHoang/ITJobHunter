@@ -9,6 +9,7 @@ const {
   deleteJobApplication,
   getJobApplicationByEmployeeId,
   getJobApplicationsByCompanyId,
+  getJobApplicationByJobId,
   getFilterJobApplicationByEmployeeId,
   getFilterJobApplicationsByCompanyId,
   upload,
@@ -20,6 +21,7 @@ const authMiddleware = require('../middlewares/AuthMiddleware');
 router.post('/jobApplications', authMiddleware, upload, createJobApplication);
 router.get('/jobApplications', getAllJobApplications);
 router.get('/jobApplications/:id', getJobApplicationById);
+router.get('/jobApplications/job/:jobId', getJobApplicationByJobId);
 router.put('/jobApplications/:id', authMiddleware, updateJobApplication);
 router.delete('/jobApplications/:id', authMiddleware, deleteJobApplication);
 router.get('/jobApplications/employee/:employeeId', authMiddleware, getJobApplicationByEmployeeId);

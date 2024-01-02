@@ -22,6 +22,7 @@ interface JobCardProps {
     offerSalary: number
     startDate: Date
     endDate: Date
+    jobApplicationCount: number
 }
 
 const CompanyJobs = () => {

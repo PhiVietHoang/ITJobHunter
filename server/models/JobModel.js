@@ -47,8 +47,14 @@ const jobSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company', 
     },
-});
+}, { toJSON: { virtuals: true } });
 
+jobSchema.virtual('jobApplicationCount', {
+    ref: 'JobApplication',
+    localField: '_id',
+    foreignField: 'jobId',
+    count: true,
+});
 const Job = mongoose.model('Job', jobSchema);
 
 module.exports = Job;
