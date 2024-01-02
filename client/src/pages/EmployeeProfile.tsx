@@ -2,8 +2,6 @@ import { Briefcase, CalendarDays, Mail, MapPin, Pencil, Phone } from 'lucide-rea
 import { useSelector } from 'react-redux'
 
 import ProfileSection from '~/components/ProfileSection'
-import { Input } from '~/components/ui/input'
-import { Label } from '~/components/ui/label'
 import { Badge } from '~/components/ui/badge'
 import { RootState } from '~/store'
 import { Link, useNavigate } from 'react-router-dom'
@@ -121,7 +119,7 @@ const EmployeeProfile = () => {
                           ))
                         : null}
                 </ProfileSection>
-                <div className='w-full p-8 bg-white rounded-3xl shadow-sm'>
+                {/* <div className='w-full p-8 bg-white rounded-3xl shadow-sm'>
                     <h3 className='font-semibold'>Resume</h3>
                     <p className='mt-4 text-sm text-gray-600'>
                         Resume is the most important document recruiters look for. Recruiters generally do not look at
@@ -141,7 +139,7 @@ const EmployeeProfile = () => {
                             <p className='text-sm text-gray-500'>Supported Formats: doc, docx, rtf, pdf, upto 2 MB</p>
                         </div>
                     </div>
-                </div>
+                </div> */}
             </div>
         </div>
     )

@@ -29,9 +29,12 @@ const Home = () => {
     const handleSearch = async () => {
         const response = await searchJobs({
             title: searchTitle,
-            yearsOfExp: searchExperience,
-            location: searchLocation,
-            page: 0
+            page: 0,
+            yearsOfExp: '',
+            minSalary: '',
+            maxSalary: '',
+            location: '',
+            workingTime: ''
         })
         if (response?.status === 200) {
             const data = response.data

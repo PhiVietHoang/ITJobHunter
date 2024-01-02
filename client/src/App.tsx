@@ -10,7 +10,7 @@ import { RootState } from './store'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 
-export const socket = io('http://localhost:3000')
+export const socket = io('https://itjobhunter.onrender.com')
 
 const App = () => {
     const location = useLocation()
