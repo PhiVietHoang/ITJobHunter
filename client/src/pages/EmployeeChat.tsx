@@ -37,7 +37,7 @@ const EmployeeChat = () => {
 
     useEffect(() => {
         getDataOfAllUsers()
-    })
+    }, [showConversationBox])
 
     useEffect(() => {
         if (receiver && Object.keys(receiver).length > 0 && userData) {
@@ -46,7 +46,7 @@ const EmployeeChat = () => {
             dispatch(setMessages([]))
             return
         }
-    }, [receiver, dispatch])
+    }, [receiver])
 
     const getChat = async () => {
         dispatch(setUserMessageLoading(true))

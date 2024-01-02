@@ -38,7 +38,7 @@ const EmployerChat = () => {
 
     useEffect(() => {
         getDataOfAllUsers()
-    })
+    }, [showConversationBox])
 
     useEffect(() => {
         if (receiver && Object.keys(receiver).length > 0 && userData) {
