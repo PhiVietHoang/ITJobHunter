@@ -175,6 +175,31 @@ exports.updateCompany = async (req, res) => {
     }
 };
 
+exports.deleteCompaniesChecked = async (req, res) => {
+    const companyIds = req.body;
+    console.log(companyIds);
+    try {
+        const deletedCompanies = await Company.deleteMany({
+          _id: { $in: companyIds },
+        });
+
+        if (!deletedCompanies) {
+          return res.status(404).json({
+            message: "Companies not found.",
+          });
+        }
+
+        res.status(200).json({
+          message: "Companies deleted successfully.",
+        });
+    } catch (err) {
+        res.status(500).json({
+            message: 'Internal server error',
+            error: err,
+        });
+    }
+}
+
 exports.deleteCompany = async (req, res) => {
     const companyId = req.params.id;
 

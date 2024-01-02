@@ -32,7 +32,7 @@ const Sidebar = () => {
 
     const logout = (): void => {
         localStorage.removeItem('employeeToken')
-        navigate('/')
+        navigate('/admin')
         window.location.reload()
     }
     return (
