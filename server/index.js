@@ -20,6 +20,7 @@ connectWithDB();
 const app = express();
 const corsOptions = {
     exposedHeaders: ['Content-Disposition'],
+    origin: [process.env.FE_URL],
 };
 
 app.use(cors(corsOptions));
