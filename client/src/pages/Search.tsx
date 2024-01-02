@@ -227,8 +227,8 @@ const Search = () => {
                                 type='radio'
                                 id='full-time'
                                 value='full-time'
-                                onChange={() => handleWorkingTimeChange('full-time')}
-                                checked={searchWorkingTime === 'full-time'}
+                                onChange={() => handleWorkingTimeChange('Full-time')}
+                                checked={searchWorkingTime === 'Full-time'}
                             />
                             <label htmlFor='full-time'>Full-time</label>
                         </div>
@@ -237,8 +237,8 @@ const Search = () => {
                                 type='radio'
                                 id='part-time'
                                 value='part-time'
-                                onChange={() => handleWorkingTimeChange('part-time')}
-                                checked={searchWorkingTime === 'part-time'}
+                                onChange={() => handleWorkingTimeChange('Part-time')}
+                                checked={searchWorkingTime === 'Part-time'}
                             />
                             <label htmlFor='part-time'>Part-time</label>
                         </div>
