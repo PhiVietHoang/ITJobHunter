@@ -48,7 +48,7 @@ const server = app.listen(PORT, () => console.log(`Server started on port ${PORT
 // Connect to Socket.IO
 const io = socket(server, {
     cors: {
-        origin: "http://localhost:5173",
+        origin: process.env.FE_URL,
         methods: ["GET", "POST"],
         credentials: true,
     },
