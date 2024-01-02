@@ -208,6 +208,69 @@ export const getJobByCompany = async (companyID: string) => {
     }
 }
 
+export const getAllEmployee = async () => {
+    try {
+        const response = await api.get('employee/employees')
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const deleteEmployee = async (id: string) => {
+    try {
+        const response = await api.delete(`employee/employees?${id}`)
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const getAllJob = async () => {
+    try {
+        const response = await api.get('job/jobs')
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const getAllJobApply = async () => {
+    try {
+        const response = await api.get('jobApplication/jobApplications')
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const deleteCompany = async (id: string) => {
+    try {
+        const response = await api.delete(`company/companies/${id}`)
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const deleteEmployees = async (data: string[]) => {
+    try {
+        const response = await api.delete(`/employee/employees/checked`, { data })
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const deleteCompanies = async (data: string[]) => {
+    try {
+        const response = await api.delete(`/company/companies/checked`, { data })
+        return response
+      } catch (error) {
+        console.error(error)
+    }
+}
+
 export const downloadCV = async (jobApplicationId: string) => {
     try {
         const response = await api.get(`jobApplication/download-cv/${jobApplicationId}`, {
