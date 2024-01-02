@@ -1,0 +1,47 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "dev_cicd-1" ]
+  pull_request:
+    branches: [ "dev_cicd-1" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Build server
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: server/package-lock.json
+    - run: |
+        cd server
+        npm ci
+      env:
+        # PORT: ${{ secrets.CLIENT_PORT }}
+        DB_URL: ${{ secrets.DB_URL }}
+        JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        JWT_EXPIRY: ${{ secrets.JWT_EXPIRY }}
+
+    - name: Build client
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: client/package-lock.json
+    - run: |
+        cd client
+        npm ci
+      # env:
+      #   VITE_API_URL: ${{ secrets.VITE_API_URL }}
