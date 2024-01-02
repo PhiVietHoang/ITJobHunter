@@ -43,6 +43,15 @@ export const getCurrentCompany = async (token: string) => {
     }
 }
 
+export const getCompanyInsight = async (id: string) => {
+    try {
+        const response = await api.get(`company/insight/${id}`)
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 export const updateCompany = async (
     id: string,
     requestBody: {
