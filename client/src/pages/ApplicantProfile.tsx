@@ -104,11 +104,7 @@ const ApplicantProfile = () => {
                 >
                     <p className='mt-4 text-md text-gray-800'>{employee?.description}</p>
                 </ProfileSection>
-                <ProfileSection
-                    title='Skills'
-                    description='Tell recruiters what you know or what you are known for e.g. Direct Marketing, Oracle, Java etc.
-                        We will send you job recommendations based on these skills. each skill is separated by a comma.'
-                >
+                <ProfileSection title='Skills' description='Not updated yet'>
                     {employee?.skill?.technical?.length + employee?.skill?.soft?.length > 0 ? (
                         <div>
                             <h3 className='text-md italic'>Technical skills</h3>
@@ -128,10 +124,7 @@ const ApplicantProfile = () => {
                         </div>
                     ) : null}
                 </ProfileSection>
-                <ProfileSection
-                    title='Education'
-                    description='Please mention your education details. You can add details about your school, college and degree. This will increase your profile strength.'
-                >
+                <ProfileSection title='Education' description='Not updated yet'>
                     {employee?.education?.length > 0
                         ? employee?.education?.map((education, index) => (
                               <Badge key={index} variant='outline'>
@@ -140,10 +133,7 @@ const ApplicantProfile = () => {
                           ))
                         : null}
                 </ProfileSection>
-                <ProfileSection
-                    title='Certifications'
-                    description='Add details of certifications you have achieved/completed.'
-                >
+                <ProfileSection title='Certifications' description='Not updated yet'>
                     {employee?.certificates?.length > 0
                         ? employee?.certificates?.map((cert, index) => (
                               <Badge key={index} variant='outline'>
