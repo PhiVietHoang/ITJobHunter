@@ -33,6 +33,7 @@ import CompanyProfile from './pages/CompanyProfile.tsx'
 import EmployerChat from './pages/EmployerChat.tsx'
 import CompanyCreateJob from './pages/CompanyCreateJob.tsx'
 import CompanyEditJob from './pages/CompanyEditJob.tsx'
+import CompanyProfileEdit from './pages/CompanyProfileEdit.tsx'
 
 const router = createBrowserRouter([
     {
@@ -124,6 +125,10 @@ const router = createBrowserRouter([
             {
                 path: 'profile/:id',
                 element: <CompanyProfile />
+            },
+            {
+                path: 'profile/edit',
+                element: <CompanyProfileEdit />
             },
             {
                 path: 'jobs',
