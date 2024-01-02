@@ -43,7 +43,31 @@ export const getCurrentCompany = async (token: string) => {
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const updateCompany = async (
+    id: string,
+    requestBody: {
+        _id: string
+        email: string
+        phoneNumber: string | null
+        companyName: string
+        companyEmails: string[]
+        companyWebsites: string[]
+        companyPhoneNumbers: string[]
+        companyLocations: string[]
+        companyLogo: string
+        description: string | null
+    }
+) => {
+    try {
+        const response = await api.put(`company/companies/${id}`, requestBody, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 export const createJob = async (requestBody: {
     title: string
     categories: string[]

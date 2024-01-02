@@ -1,10 +1,11 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import { RootState } from '~/store'
 import { Button } from '~/components/ui/button'
 
 const CompanyProfile = () => {
+    const navigate = useNavigate()
     const company = useSelector((state: RootState) => state.employerAuth.company)
 
     if (!company) return null
@@ -12,7 +13,11 @@ const CompanyProfile = () => {
     return (
         <div className='my-8 p-4 flex flex-col bg-white rounded-lg'>
             <div className='relative grid grid-cols-[20%_70%] gap-x-8 items-start'>
-                <Button variant='secondary' className='absolute top-0 right-0'>
+                <Button
+                    variant='secondary'
+                    className='absolute top-0 right-0'
+                    onClick={() => navigate('/employer/profile/edit')}
+                >
                     Edit profile
                 </Button>
                 <div className='aspect-square flex justify-center items-center overflow-hidden border rounded-lg'>
