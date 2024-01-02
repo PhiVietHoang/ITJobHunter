@@ -14,6 +14,7 @@ const CompanyProfileEdit = () => {
     const navigate = useNavigate()
     const company = useSelector((state: RootState) => state.employerAuth.company)
     const [companyData, setCompanyData] = useState(company)
+    const token = localStorage.getItem('employerToken')!
 
     useEffect(() => {
         setCompanyData(company)
@@ -47,9 +48,10 @@ const CompanyProfileEdit = () => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         console.log(companyData)
-        const res = await updateCompany(companyData._id, companyData)
+        const res = await updateCompany(companyData._id, companyData, token)
         if (res?.status === 200) {
             navigate(`/employer/profile/${companyData._id}`)
+            window.location.reload()
         }
     }
 

@@ -56,7 +56,8 @@ export const updateCompany = async (
         companyLocations: string[]
         companyLogo: string
         description: string | null
-    }
+    },
+    token: string
 ) => {
     try {
         const response = await api.put(`company/companies/${id}`, requestBody, {
