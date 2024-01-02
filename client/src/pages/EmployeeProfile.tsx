@@ -2,8 +2,6 @@ import { Briefcase, CalendarDays, Mail, MapPin, Pencil, Phone } from 'lucide-rea
 import { useSelector } from 'react-redux'
 
 import ProfileSection from '~/components/ProfileSection'
-import { Input } from '~/components/ui/input'
-import { Label } from '~/components/ui/label'
 import { Badge } from '~/components/ui/badge'
 import { RootState } from '~/store'
 import { Link, useNavigate } from 'react-router-dom'

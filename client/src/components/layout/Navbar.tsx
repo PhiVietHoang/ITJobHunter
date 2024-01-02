@@ -23,20 +23,24 @@ const Navbar = () => {
     const searchTitle = ''
 
     const handleSearch = async () => {
-        const response = await searchJobs({
+        const searchParams = {
             title: searchTitle,
             page: 0,
             yearsOfExp: '',
-            location: ''
-        })
-        if (response?.status === 200) {
-            const data = response.data
-            const state = { ...data, searchTitle }
-            navigate('/search', { state })
-        } else {
-            console.log(response)
+            minSalary: '',
+            maxSalary: '',
+            location: '',
+            workingTime: ''
         }
-    }
+        const response = await searchJobs(searchParams);
+        if (response?.status === 200) {
+            const data = response.data;
+            const state = { ...data, searchTitle };
+            navigate('/search', { state });
+        } else {
+            console.log(response);
+        }
+    };
 
     const solveOnClick = () => {
         navigate('/employee/chat')
