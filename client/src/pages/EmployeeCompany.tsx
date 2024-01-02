@@ -7,7 +7,7 @@ import Pagination from '~/components/Pagination'
 import { getAllCompany } from '~/services/api'
 import { useNavigate } from 'react-router-dom'
 
-interface company {
+export interface company {
     _id: string
     email: string
     phoneNumber: string
