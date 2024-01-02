@@ -23,7 +23,12 @@ const Navbar = () => {
     const searchTitle = ''
 
     const handleSearch = async () => {
-        const response = await searchJobs({ title: searchTitle, page: 0 })
+        const response = await searchJobs({
+            title: searchTitle,
+            page: 0,
+            yearsOfExp: '',
+            location: ''
+        })
         if (response?.status === 200) {
             const data = response.data
             const state = { ...data, searchTitle }
