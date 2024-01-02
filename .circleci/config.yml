@@ -1,0 +1,48 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@4.7.0
+
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - build-server
+      - build-client
+
+jobs:
+  build-server:
+    docker:
+      - image: cimg/node:18.0
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+          cache-path: server/node_modules
+          app-dir: server
+      - run:
+          name: Build Server
+          command: |
+            cd server
+            npm ci
+          environment:
+            DB_URL: $DB_URL
+            JWT_SECRET: $JWT_SECRET
+            JWT_EXPIRY: $JWT_EXPIRY
+
+  build-client:
+    docker:
+      - image: cimg/node:18.0
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+          cache-path: client/node_modules
+          app-dir: client
+      - run:
+          name: Build Client
+          command: |
+            cd client
+            npm ci
+          # environment:
+          #   VITE_API_URL: $VITE_API_URL
