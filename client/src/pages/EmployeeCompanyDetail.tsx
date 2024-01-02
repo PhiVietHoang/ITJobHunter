@@ -215,7 +215,11 @@ const EmployeeCompanyDetail = () => {
                     {activeTab === 'jobs' && (
                         <div className='mt-4 p-4 rounded w-full'>
                             {jobByCompany?.map((result, index) => (
-                                <div key={index} className={`mb-${index === jobByCompany.length - 1 ? '0' : '5'} pb-3`}>
+                                <div
+                                    key={index}
+                                    className={`mb-${index === jobByCompany.length - 1 ? '0' : '5'} pb-3`}
+                                    onClick={() => navigate(`/job/${result._id}`, { state: result as JobData })}
+                                >
                                     <SearchJobCard {...result} />
                                 </div>
                             ))}

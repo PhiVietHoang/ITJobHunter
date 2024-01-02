@@ -134,3 +134,69 @@ export const deleteJob = async (id: string, token: string) => {
         console.error(error)
     }
 }
+
+export const searchJobApplicationByCompanyId = async (
+    requestBody: { jobTitle: string; page: number },
+    companyID: string,
+    token: string
+) => {
+    try {
+        const { jobTitle, page } = requestBody
+        const response = await api.post(
+            `/jobApplication/jobApplications/company/${companyID}`,
+            { jobTitle: jobTitle, page: page },
+            { headers: { Authorization: `Bearer ${token}` } }
+        )
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const updateJobApplicationStatus = async (
+    requestBody: { status: string },
+    jobApplicationId: string,
+    token: string
+) => {
+    try {
+        const { status } = requestBody
+        const response = await api.put(
+            `/jobApplication/jobApplications/${jobApplicationId}`,
+            { status: status },
+            { headers: { Authorization: `Bearer ${token}` } }
+        )
+        return response
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const downloadCV = async (jobApplicationId: string) => {
+    try {
+        const response = await api.get(`jobApplication/download-cv/${jobApplicationId}`, {
+            responseType: 'blob'
+        })
+        const file = new Blob([response.data], { type: response.headers['content-type'] })
+        console.log('Headers:', response.headers)
+        const contentDisposition = response.headers['content-disposition']
+        let filename = 'download'
+        if (contentDisposition) {
+            const matches = /filename="([^"]+)"/.exec(contentDisposition)
+            if (matches && matches[1]) {
+                filename = matches[1]
+            }
+        }
+        const fileURL = URL.createObjectURL(file)
+        const fileLink = document.createElement('a')
+        fileLink.href = fileURL
+        fileLink.setAttribute('download', filename)
+        document.body.appendChild(fileLink)
+
+        fileLink.click()
+
+        document.body.removeChild(fileLink)
+        URL.revokeObjectURL(fileURL)
+    } catch (error) {
+        console.error(error)
+    }
+}

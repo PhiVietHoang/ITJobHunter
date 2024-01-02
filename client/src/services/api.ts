@@ -4,6 +4,13 @@ const API_URL = import.meta.env.VITE_API_URL
 
 const token = localStorage.getItem('employeeToken')
 
+interface JobApplicationRequestBody {
+    jobId: string
+    employeeId: string
+    cv: File
+    status: string
+}
+
 const api = axios.create({
     baseURL: API_URL,
     headers: { Authorization: `Bearer ${token}` },
@@ -64,29 +71,23 @@ export const searchJobs = async (requestBody: { title: string; page: number }) =
     }
 }
 
-export const createJobApplication = async (
-    requestBody: {
-        jobId: string
-        employeeId: string
-        cv: string
-        status: string
-    },
-    token: string
-) => {
-    try {
-        const { jobId, employeeId, cv, status } = requestBody
-        const response = await api.post(
-            'jobApplication/jobApplications/',
-            { jobId, employeeId, cv, status },
-            { headers: { Authorization: `Bearer ${token}` } }
-        )
-        return response
-    } catch (error) {
-        console.error(error)
-    }
+export const createJobApplication = async (requestBody: JobApplicationRequestBody, token: string) => {
+    const formData = new FormData()
+    formData.append('jobId', requestBody.jobId)
+    formData.append('employeeId', requestBody.employeeId)
+    formData.append('status', requestBody.status)
+    formData.append('cv', requestBody.cv)
+
+    const response = await api.post('jobApplication/jobApplications', formData, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+    return response.data
 }
 
-export const getJobApplicationsByEmployee = async (employeeId: string) => {
+export const getJobApplicationsByEmployee = async (employeeId: string, token: string) => {
     try {
         const response = await api.get(`jobApplication/jobApplications/employee/${employeeId}`, {
             headers: { Authorization: `Bearer ${token}` }
@@ -145,10 +146,10 @@ export const send_message = async (
     token: string
 ) => {
     try {
-        const { employeeId, companyId, message } = requestBody
+        const { employeeId, companyId, message, senderIsCompany } = requestBody
         const res = await api.post(
             `message/send-message`,
-            { employeeId, companyId, message },
+            { employeeId, companyId, message, senderIsCompany },
             {
                 method: 'POST',
                 headers: {
@@ -265,6 +266,36 @@ export const deleteCompanies = async (data: string[]) => {
     try {
         const response = await api.delete(`/company/companies/checked`, { data })
         return response
+      } catch (error) {
+        console.error(error)
+    }
+}
+
+export const downloadCV = async (jobApplicationId: string) => {
+    try {
+        const response = await api.get(`jobApplication/download-cv/${jobApplicationId}`, {
+            responseType: 'blob'
+        })
+        const file = new Blob([response.data], { type: response.headers['content-type'] })
+        console.log('Headers:', response.headers)
+        const contentDisposition = response.headers['content-disposition']
+        let filename = 'download'
+        if (contentDisposition) {
+            const matches = /filename="([^"]+)"/.exec(contentDisposition)
+            if (matches && matches[1]) {
+                filename = matches[1]
+            }
+        }
+        const fileURL = URL.createObjectURL(file)
+        const fileLink = document.createElement('a')
+        fileLink.href = fileURL
+        fileLink.setAttribute('download', filename)
+        document.body.appendChild(fileLink)
+
+        fileLink.click()
+
+        document.body.removeChild(fileLink)
+        URL.revokeObjectURL(fileURL)
     } catch (error) {
         console.error(error)
     }

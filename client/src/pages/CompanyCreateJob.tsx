@@ -10,10 +10,10 @@ import { useNavigate } from 'react-router-dom'
 
 type FormState = {
     title: string
-    categories: string[]
+    categories: string
     level: string
-    requiredSkills: string[]
-    maxPositions?: number
+    requiredSkills: string
+    maxPositions: number
     yearsOfExp: string
     description: string
     workingTime: string
@@ -28,8 +28,8 @@ const CompanyCreateJob = () => {
     const company = useSelector((state: RootState) => state.employerAuth.company)
     const [form, setForm] = useState<FormState>({
         title: '',
-        categories: [],
-        requiredSkills: [],
+        categories: '',
+        requiredSkills: '',
         description: '',
         level: '',
         yearsOfExp: '',
@@ -57,10 +57,19 @@ const CompanyCreateJob = () => {
         })
     }
 
+    const processFormData = (data: FormState) => {
+        const { categories, requiredSkills, ...rest } = data
+        return {
+            ...rest,
+            categories: categories.split(',').map((item) => item.trim()),
+            requiredSkills: requiredSkills.split(',').map((item) => item.trim())
+        }
+    }
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setSubmitDisabled(true)
-        const res = await createJob(form)
+        const res = await createJob(processFormData(form))
         if (res?.status === 201) {
             navigate('../jobs')
         }
@@ -91,7 +100,7 @@ const CompanyCreateJob = () => {
                 />
                 <label>Required skills</label>
                 <Input
-                    name='skills'
+                    name='requiredSkills'
                     value={form.requiredSkills}
                     onChange={handleChange}
                     type='text'
@@ -108,15 +117,15 @@ const CompanyCreateJob = () => {
                 <Input name='level' value={form.level} onChange={handleChange} type='text' placeholder='Job level' />
                 <label>YoE</label>
                 <Input
-                    name='yoe'
+                    name='yearsOfExp'
                     value={form.yearsOfExp}
                     onChange={handleChange}
-                    type='number'
+                    type='text'
                     placeholder='Years of experience'
                 />
                 <label>Salary</label>
                 <Input
-                    name='salary'
+                    name='offerSalary'
                     value={form.offerSalary}
                     onChange={handleChange}
                     type='string'
@@ -124,7 +133,7 @@ const CompanyCreateJob = () => {
                 />
                 <label>Max positions</label>
                 <Input
-                    name='positions'
+                    name='maxPositions'
                     value={form.maxPositions}
                     onChange={handleChange}
                     type='number'
@@ -133,18 +142,18 @@ const CompanyCreateJob = () => {
                 <label>Working time</label>
                 <Select onValueChange={(value) => setForm({ ...form, workingTime: value })}>
                     <SelectTrigger>
-                        <SelectValue placeholder='Choose working time' />
+                        <SelectValue placeholder={form.workingTime.replace('-', ' ').replace('T', 't')} />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value='full-time'>Full time</SelectItem>
-                        <SelectItem value='part-time'>Part time</SelectItem>
+                        <SelectItem value='Full-Time'>Full time</SelectItem>
+                        <SelectItem value='Part-Time'>Part time</SelectItem>
                     </SelectContent>
                 </Select>
                 <label>Hiring date</label>
                 <div className='grid grid-cols-[1fr_min-content_1fr] gap-x-4 items-center'>
-                    <Input name='hiringDateStart' value={form.startDate} onChange={handleChange} type='date' />
+                    <Input name='startDate' value={form.startDate} onChange={handleChange} type='date' />
                     <span>to</span>
-                    <Input name='hiringDateEnd' value={form.endDate} onChange={handleChange} type='date' />
+                    <Input name='endDate' value={form.endDate} onChange={handleChange} type='date' />
                 </div>
                 <Button type='submit' className='col-span-2 my-2 mx-auto' disabled={submitDisabled}>
                     Create Job

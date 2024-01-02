@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Button } from '~/components/ui/button'
-import { deleteJobApplication, getJobApplicationsByEmployee } from '~/services/api'
+import { deleteJobApplication, getJobApplicationsByEmployee, downloadCV } from '~/services/api'
 import { RootState } from '~/store'
 
 type JobApplication = {
@@ -23,7 +23,10 @@ type JobApplication = {
         endDate: string
         companyID: string
     }
-    cv: string
+    cv: {
+        data: string
+        contentType: string
+    }
     status: string
     applicationDate: string
 }
@@ -31,10 +34,11 @@ type JobApplication = {
 const EmployeeJobApplication = () => {
     const employee = useSelector((state: RootState) => state.employeeAuth.employee)
     const [jobApplications, setJobApplications] = useState<JobApplication[]>([])
+    const token = localStorage.getItem('employeeToken')!
 
     useEffect(() => {
         const fetchJobApplications = async () => {
-            const res = await getJobApplicationsByEmployee(employee._id)
+            const res = await getJobApplicationsByEmployee(employee._id, token)
             setJobApplications(res?.data)
         }
         fetchJobApplications()
@@ -42,6 +46,7 @@ const EmployeeJobApplication = () => {
 
     const handleDelete = (id: string) => {
         deleteJobApplication(id)
+        window.location.reload()
     }
 
     if (!employee) return null
@@ -56,21 +61,36 @@ const EmployeeJobApplication = () => {
         )
     return (
         <div className='my-8 mx-auto p-8 w-2/3 bg-white rounded-lg min-w-max'>
-            <h1 className='text-2xl font-bold'>Your Job Applications</h1>
+            <h1 className='text-3xl font-bold'>Your Job Applications</h1>
             <div className=' my-8 grid grid-cols-[1fr] gap-4'>
                 {jobApplications.map((jobApplication) => (
                     <div key={jobApplication._id} className='p-4 hover:bg-gray-50 rounded-lg flex gap-4'>
-                        <img src={jobApplication.cv} alt='CV' className='w-48 aspect-[19/6] object-scale' />
+                        {/* <Button variant='default' onClick={() => downloadCV(jobApplication._id)}>
+                            Download CV
+                        </Button> */}
                         <div className='grow min-h-max'>
                             <div className='flex justify-between items-center'>
-                                <h1 className='text-lg font-semibold'>{jobApplication.jobId.title}</h1>
-                                <Button variant='destructive' onClick={() => handleDelete(jobApplication._id)}>
-                                    Cancel
-                                </Button>
+                                <h1 className='text-xl font-semibold'>{jobApplication.jobId.title}</h1>
+                                {jobApplication.status === 'Pending' && (
+                                    <Button variant='destructive' onClick={() => handleDelete(jobApplication._id)}>
+                                        Cancel
+                                    </Button>
+                                )}
                             </div>
+
                             <p>
                                 <span className='font-semibold mr-4'>Status: </span>
-                                {jobApplication.status}
+                                <span
+                                    className={`${
+                                        jobApplication.status === 'Accepted'
+                                            ? 'text-red-500'
+                                            : jobApplication.status === 'Rejected'
+                                            ? 'text-lime-600'
+                                            : ''
+                                    }`}
+                                >
+                                    {jobApplication.status}
+                                </span>
                             </p>
                             <p>
                                 <span className='font-semibold mr-4'>Maximum positions: </span>
@@ -88,6 +108,13 @@ const EmployeeJobApplication = () => {
                                 <span className='font-semibold mr-4'>End Date: </span>
                                 {jobApplication.jobId.endDate.slice(0, 10)}
                             </p>
+                            <span className='font-semibold mr-4'>CV: </span>
+                            <a
+                                className='cursor-pointer hover:text-blue-500 underline'
+                                onClick={() => downloadCV(jobApplication._id)}
+                            >
+                                Download your CV here
+                            </a>
                         </div>
                     </div>
                 ))}

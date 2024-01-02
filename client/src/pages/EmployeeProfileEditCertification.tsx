@@ -10,14 +10,16 @@ import { updateEmployee } from '~/services/api'
 
 const EmployeeProfileEditCertification = () => {
     const dispatch = useDispatch()
-    const employee = useSelector((state: RootState) => state.employeeAuth.employee)
     const token = useSelector((state: RootState) => state.employeeAuth.employeeToken)
+    const employee = useSelector((state: RootState) => state.employeeAuth.employee)
     const [certificate, setCertificate] = useState({
         name: '',
         issuedBy: '',
         from: '',
         to: ''
     })
+
+    if (!employee) return null
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
