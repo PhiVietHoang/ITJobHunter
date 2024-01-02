@@ -1,47 +1,48 @@
 version: 2.1
 
-on:
-  push:
-    branches: [ "feature/backend" ]
-  pull_request:
-    branches: [ "feature/backend" ]
+orbs:
+  node: circleci/node@4.7.0
+
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - build-server
+      - build-client
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x]
-
+  build-server:
+    docker:
+      - image: cimg/node:18.0
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+          cache-path: server/node_modules
+          app-dir: server
+      - run:
+          name: Build Server
+          command: |
+            cd server
+            npm ci
+          environment:
+            DB_URL: $DB_URL
+            JWT_SECRET: $JWT_SECRET
+            JWT_EXPIRY: $JWT_EXPIRY
 
-    - name: Build server
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        cache-dependency-path: server/package-lock.json
-    - run: |
-        cd server
-        npm ci
-      env:
-        # PORT: ${{ secrets.CLIENT_PORT }}
-        DB_URL: ${{ secrets.DB_URL }}
-        JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        JWT_EXPIRY: ${{ secrets.JWT_EXPIRY }}
-
-    - name: Build client
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        cache-dependency-path: client/package-lock.json
-    - run: |
-        cd client
-        npm ci
-      # env:
-      #   VITE_API_URL: ${{ secrets.VITE_API_URL }}
+  build-client:
+    docker:
+      - image: cimg/node:18.0
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+          cache-path: client/node_modules
+          app-dir: client
+      - run:
+          name: Build Client
+          command: |
+            cd client
+            npm ci
+          # environment:
+          #   VITE_API_URL: $VITE_API_URL
