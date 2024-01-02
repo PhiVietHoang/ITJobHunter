@@ -1,0 +1,19 @@
+name: dockerhub CI
+
+on:
+  push:
+    branches: [ "dev_cicd_2" ]
+  pull_request:
+    branches: [ "dev_cicd_2" ]
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+      
+    steps:
+    - uses: actions/checkout@v3
+    - run: cd server | docker build . -t anhnd1223/it_job_hunter
+    - run: echo "dckr_pat_EFPz3dYo2-e_5GNLhuWto60bubE" | docker login -u anhnd1223 --password-stdin
+    - run: docker push anhnd1223/it_job_hunter
+      
