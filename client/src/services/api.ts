@@ -61,10 +61,15 @@ export const updateEmployee = async (id: string, requestBody: unknown, token: st
     }
 }
 
-export const searchJobs = async (requestBody: { title: string; page: number }) => {
+export const searchJobs = async (requestBody: {
+    title: string
+    yearsOfExp: string
+    location: string
+    page: number
+}) => {
     try {
-        const { title, page } = requestBody
-        const response = await api.post('job/jobs/filtered-jobs/', { title, page })
+        const { title, yearsOfExp, location, page } = requestBody
+        const response = await api.post('job/jobs/filtered-jobs/', { title, minYearsOfExp: yearsOfExp, location, page })
         return response
     } catch (error) {
         console.error(error)
