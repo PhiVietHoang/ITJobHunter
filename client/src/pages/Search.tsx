@@ -69,7 +69,12 @@ const Search = () => {
     // Thêm vào array bên trên khi triển khai xong filter khác, ví dụ [searchResults, searchLocation, searchExperience, searchSalary]
     const handlePageChange = async (page: number) => {
         console.log('Changing to page:', page)
-        const response = await searchJobs({ title: state.searchTitle, page })
+        const response = await searchJobs({
+            title: state.searchTitle,
+            yearsOfExp: state.searchExperience,
+            location: state.searchLocation,
+            page
+        })
         if (response?.status === 200) {
             setSearchResults(response.data.jobs)
             setFilteredResults(response.data.jobs)

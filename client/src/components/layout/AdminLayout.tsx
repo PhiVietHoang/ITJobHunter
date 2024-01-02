@@ -1,17 +1,24 @@
-import { useEffect } from 'react'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import Sidebar from '../AdminSidebar'
+import { RootState } from '~/store'
+import { useSelector } from 'react-redux'
+import AdminLoginForm from '../AdminLoginForm'
 
 const AdminLayout = () => {
-    const navigate = useNavigate()
-    const employeeToken = localStorage.getItem('employeeToken')
+    const employee = useSelector((state: RootState) => state.employeeAuth.employee)
 
-    useEffect(() => {
-        if (!employeeToken) {
-            navigate('/auth/admin/login')
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [employeeToken])
+    console.log(employee)
+
+    if (!employee || !employee.isAdmin) {
+        return (
+            <div className='bg-red-900'>
+                <div className='mx-auto w-fit h-screen flex flex-col justify-center items-center'>
+                    <h1 className='text-9xl font-bold'>Unauthorized</h1>
+                    <AdminLoginForm />
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className='flex'>

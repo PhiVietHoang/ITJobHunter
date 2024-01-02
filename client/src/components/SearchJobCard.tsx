@@ -32,7 +32,7 @@ const SearchJobCard = (props: JobData) => {
             <div className='flex justify-between items-center'>
                 <div>
                     <p className='font-bold'>{props.title}</p>
-                    <p className='text-sm font-semibold'>{props?.companyID?.companyName}</p>
+                    <p className='text-sm font-semibold'>{props.companyID?.companyName}</p>
                 </div>
                 <Avatar className='w-12 h-12 rounded-xl'>
                     <AvatarImage src={props.companyID?.companyLogo} />
