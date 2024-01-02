@@ -9,6 +9,7 @@ export interface RootState {
         employeeToken: string
         employee: {
             _id: string
+            isAdmin: boolean
             name: string
             description: string
             avatar: string
