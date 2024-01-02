@@ -170,3 +170,33 @@ export const updateJobApplicationStatus = async (
         console.error(error)
     }
 }
+
+export const downloadCV = async (jobApplicationId: string) => {
+    try {
+        const response = await api.get(`jobApplication/download-cv/${jobApplicationId}`, {
+            responseType: 'blob'
+        })
+        const file = new Blob([response.data], { type: response.headers['content-type'] })
+        console.log('Headers:', response.headers)
+        const contentDisposition = response.headers['content-disposition']
+        let filename = 'download'
+        if (contentDisposition) {
+            const matches = /filename="([^"]+)"/.exec(contentDisposition)
+            if (matches && matches[1]) {
+                filename = matches[1]
+            }
+        }
+        const fileURL = URL.createObjectURL(file)
+        const fileLink = document.createElement('a')
+        fileLink.href = fileURL
+        fileLink.setAttribute('download', filename)
+        document.body.appendChild(fileLink)
+
+        fileLink.click()
+
+        document.body.removeChild(fileLink)
+        URL.revokeObjectURL(fileURL)
+    } catch (error) {
+        console.error(error)
+    }
+}

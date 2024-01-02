@@ -30,7 +30,10 @@ interface JobApplicationCardProps {
         company: string
     }
     applicationDate: Date
-    cv: string
+    cv: {
+        data: string
+        contentType: string
+    }
     status: string
 }
 

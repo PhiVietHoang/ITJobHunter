@@ -60,7 +60,7 @@ const EmployeeJobDetail = () => {
         <div className='my-8 grid grid-cols-[3fr_1fr] gap-4'>
             <div className='p-8 bg-white rounded-lg'>
                 <div className='flex justify-between'>
-                    <h1 className='mb-8 text-3xl font-semibold'>{state.title}</h1>
+                    <h1 className='mb-8 text-3xl font-semibold'>{state?.title}</h1>
                     <Dialog>
                         <DialogTrigger asChild>
                             <Button variant='outline'>Apply now</Button>
@@ -93,17 +93,17 @@ const EmployeeJobDetail = () => {
                 <section className='my-4 flex items-center gap-4'>
                     <div className='flex items-center gap-1'>
                         <Briefcase className='w-5' />
-                        <span>{state.yearsOfExp}</span>
+                        <span>{state?.yearsOfExp}</span>
                     </div>
                     |
                     <div className='flex items-center gap-1'>
                         <DollarSign className='w-5' />
-                        <span>{state.offerSalary}</span>
+                        <span>{state?.offerSalary}</span>
                     </div>
                     |
                     <div className='flex items-center gap-1'>
                         <MapPin className='w-5' />
-                        <span>{state.location}</span>
+                        <span>{state?.location}</span>
                     </div>
                     |
                     <div className='flex items-center gap-1'>
@@ -114,7 +114,7 @@ const EmployeeJobDetail = () => {
                 <section className='my-8 grid grid-cols-[max-content_1fr] gap-x-4'>
                     <h3 className='text-md font-semibold'>Categories:</h3>
                     <div className='flex items-center'>
-                        {state.categories.map((category: string, index: number) => (
+                        {state?.categories.map((category: string, index: number) => (
                             <Badge key={index} variant='secondary'>
                                 {category}
                             </Badge>
@@ -122,7 +122,7 @@ const EmployeeJobDetail = () => {
                     </div>
                     <h3 className='text-md font-semibold'>Required Skills:</h3>
                     <div className='flex items-center'>
-                        {state.requiredSkills.map((skill: string, index: number) => (
+                        {state?.requiredSkills.map((skill: string, index: number) => (
                             <Badge key={index} variant='secondary'>
                                 {skill}
                             </Badge>
@@ -134,9 +134,9 @@ const EmployeeJobDetail = () => {
                     <span className='font-semibold'>Level:</span>
                     <span>{state.level}</span>
                     <span className='font-semibold'>Start date:</span>
-                    <span>{state.startDate.substring(0, 10)}</span>
+                    <span>{new Date(state.startDate).toUTCString()}</span>
                     <span className='font-semibold'>End date:</span>
-                    <span>{state.endDate.substring(0, 10)}</span>
+                    <span>{new Date(state.endDate).toUTCString()}</span>
                 </div>
             </div>
             <div className='p-8  bg-white rounded-lg h-min'>

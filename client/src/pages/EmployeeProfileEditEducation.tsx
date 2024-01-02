@@ -19,6 +19,8 @@ const EmployeeEducationEditForm = () => {
         completeDate: ''
     })
 
+    if (!employee) return null
+
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         console.log('body', { education: [...employee.education, education] })

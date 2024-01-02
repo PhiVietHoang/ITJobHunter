@@ -12,6 +12,7 @@ import {
     DialogTrigger
 } from './ui/dialog'
 import { useNavigate } from 'react-router-dom'
+import { downloadCV } from '~/services/companyApi'
 
 interface JobApplicationCardProps {
     _id: string
@@ -37,7 +38,10 @@ interface JobApplicationCardProps {
         company: string
     }
     applicationDate: Date
-    cv: string
+    cv: {
+        data: string
+        contentType: string
+    }
     status: string
 }
 
@@ -71,10 +75,11 @@ const JobApplicationCard = (props: JobApplicationCardProps) => {
                 <h1 className='text-2xl font-semibold '>{props.employeeId?.name}</h1>
                 <h1 className='text-md'>{props.jobId?.title}</h1>
                 <h1 className='text-md'>Status: {props.status}</h1>
-                <h1 className='text-md'>Date: {new Date(props.applicationDate).toUTCString()}</h1>
+                <h1 className='text-md'>Application Date: {new Date(props.applicationDate).toUTCString()}</h1>
                 <div className='my-4 w-full min-h-64 overflow-hidden'>
-                    <a href='' className='hover:text-blue-500'>
-                        CV: Click Here
+                    <span>CV: </span>
+                    <a className='cursor-pointer hover:text-blue-500 underline' onClick={() => downloadCV(props._id)}>
+                        Click Here
                     </a>
                 </div>
             </div>

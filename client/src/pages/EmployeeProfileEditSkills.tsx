@@ -58,6 +58,8 @@ const EmployeeProfileEditSkills = () => {
     const [technicalSkill, setTechnicalSkill] = useState<string | undefined>(undefined)
     const [softSkill, setSoftSkill] = useState<string | undefined>(undefined)
 
+    if (!employee) return null
+
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         let response

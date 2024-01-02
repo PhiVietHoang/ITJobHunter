@@ -87,7 +87,7 @@ export const createJobApplication = async (requestBody: JobApplicationRequestBod
     return response.data
 }
 
-export const getJobApplicationsByEmployee = async (employeeId: string) => {
+export const getJobApplicationsByEmployee = async (employeeId: string, token: string) => {
     try {
         const response = await api.get(`jobApplication/jobApplications/employee/${employeeId}`, {
             headers: { Authorization: `Bearer ${token}` }
