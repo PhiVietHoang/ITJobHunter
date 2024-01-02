@@ -154,7 +154,7 @@ exports.findJobByCompanyId = async (req, res) => {
     const { companyID } = req.query;
 
     try {
-        const jobs = await Job.find( {companyID} ).populate({
+        const jobs = await Job.find( {companyID} ).populate('jobApplicationCount').populate({
             path: 'companyID',
             select: '_id companyName companyLogo companyLocations',
         });

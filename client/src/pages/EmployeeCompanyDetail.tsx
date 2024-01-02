@@ -29,6 +29,7 @@ interface JobData {
         companyName: string
         companyLocations: string[]
     }
+    jobApplicationCount: number
 }
 
 const EmployeeCompanyDetail = () => {
