@@ -72,7 +72,12 @@ const JobApplicationCard = (props: JobApplicationCardProps) => {
     return (
         <div className='p-4 w-full min-w-max flex justify-between items-start bg-white rounded-md shadow-sm'>
             <div>
-                <h1 className='text-2xl font-semibold '>{props.employeeId?.name}</h1>
+                <div
+                    className='text-2xl font-semibold cursor-pointer hover:text-red-500'
+                    onClick={() => navigate(`applicant/${props.employeeId._id}`)}
+                >
+                    {props.employeeId?.name}
+                </div>
                 <h1 className='text-md'>{props.jobId?.title}</h1>
                 <h1 className='text-md'>Status: {props.status}</h1>
                 <h1 className='text-md'>Application Date: {new Date(props.applicationDate).toUTCString()}</h1>

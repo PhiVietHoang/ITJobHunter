@@ -209,3 +209,12 @@ export const downloadCV = async (jobApplicationId: string) => {
         console.error(error)
     }
 }
+
+export const getEmployeeById = async (employeeId: string) => {
+    try {
+        const response = await api.get(`employee/employees/${employeeId}`)
+        return response.data
+    } catch (error) {
+        console.error(error)
+    }
+}

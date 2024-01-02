@@ -18,7 +18,9 @@ const ProfileSection = ({ title, description, editLink, children }: ProfileSecti
                 if (editLink) navigate(editLink)
             }}
         >
-            <button className='absolute right-8 text-[#275df5] font-semibold hover:underline'>Edit</button>
+            {editLink && (
+                <button className='absolute right-8 text-[#275df5] font-semibold hover:underline'>Edit</button>
+            )}
             <h3 className='font-semibold'>{title}</h3>
             <div className='mt-4'>
                 {!children && <p className='text-sm text-gray-600'>{description}</p>}

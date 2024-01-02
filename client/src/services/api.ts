@@ -266,7 +266,7 @@ export const deleteCompanies = async (data: string[]) => {
     try {
         const response = await api.delete(`/company/companies/checked`, { data })
         return response
-      } catch (error) {
+    } catch (error) {
         console.error(error)
     }
 }

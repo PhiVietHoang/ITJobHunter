@@ -33,6 +33,7 @@ import CompanyProfile from './pages/CompanyProfile.tsx'
 import EmployerChat from './pages/EmployerChat.tsx'
 import CompanyCreateJob from './pages/CompanyCreateJob.tsx'
 import CompanyEditJob from './pages/CompanyEditJob.tsx'
+import ApplicantProfile from './pages/ApplicantProfile.tsx'
 
 import AdminCompanyList from './pages/AdminCompanyList.tsx'
 import AdminEmployeeList from './pages/AdminEmployeeList.tsx'
@@ -145,6 +146,10 @@ const router = createBrowserRouter([
             {
                 path: 'jobApplications',
                 element: <CompanyJobApplications />
+            },
+            {
+                path: 'jobApplications/applicant/:id',
+                element: <ApplicantProfile />
             }
         ]
     },
