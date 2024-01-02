@@ -178,6 +178,7 @@ exports.filterAndPaginateJobs = async (req, res) => {
             minSalary,
             maxSalary,
             companyName,
+            workingTime,
             location,
             page = 0,
             pageSize = 10,
@@ -199,6 +200,10 @@ exports.filterAndPaginateJobs = async (req, res) => {
         
         if (level) {
             filter.level = { $regex: new RegExp(level, 'i') };
+        }
+
+        if (workingTime) {
+            filter.workingTime = { $regex: new RegExp(workingTime, 'i') };
         }
 
         if (requiredSkills && requiredSkills.length > 0) {

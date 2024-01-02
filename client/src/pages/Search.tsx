@@ -8,6 +8,7 @@ import SearchJobCard from '~/components/SearchJobCard'
 import { Input } from '~/components/ui/input'
 import Pagination from '~/components/Pagination'
 import { searchJobs } from '~/services/api'
+import { Button } from '~/components/ui/button'
 
 interface JobData {
     _id: string
@@ -34,19 +35,17 @@ interface JobData {
 const Search = () => {
     const { state } = useLocation()
     const navigate = useNavigate()
-    const [searchResults, setSearchResults] = useState(state.jobs as JobData[])
     const [filteredResults, setFilteredResults] = useState(state.jobs as JobData[])
-    const totalPages = state.totalPages
+    const [totalPages, setTotalPages] = useState(state.totalPages)
     const [currentPage, setCurrentPage] = useState(0)
-    const [searchLocation, setSearchLocation] = useState('')
-    const [searchExperience, setSearchExperience] = useState('')
+    const [searchLocation, setSearchLocation] = useState(state.searchLocation)
+    const [searchExperience, setSearchExperience] = useState(state.searchExperience)
     const [searchWorkingTime, setWorkingTime] = useState('')
     const [minSalary, setMinSalary] = useState('')
     const [maxSalary, setMaxSalary] = useState('')
 
     useEffect(() => {
         console.log('useEffect triggered:', {
-            searchResults,
             searchLocation,
             searchWorkingTime,
             searchExperience,
@@ -55,113 +54,116 @@ const Search = () => {
             currentPage
         })
 
-        let filteredResults = searchResults
-        filteredResults = locationFilter(filteredResults, searchLocation)
-        filteredResults = workingTimeFilter(filteredResults, searchWorkingTime)
-        filteredResults = experienceFilter(filteredResults, searchExperience)
-        filteredResults = salaryFilter(filteredResults, minSalary, maxSalary)
+        // let filteredResults = searchResults
+        // filteredResults = locationFilter(filteredResults, searchLocation)
+        // filteredResults = workingTimeFilter(filteredResults, searchWorkingTime)
+        // filteredResults = experienceFilter(filteredResults, searchExperience)
+        // filteredResults = salaryFilter(filteredResults, minSalary, maxSalary)
 
-        console.log('Filtered Results:', filteredResults)
-        setFilteredResults(filteredResults)
-        console.log('Are searchResults and filteredResults different?', searchResults !== filteredResults)
-    }, [searchResults, searchLocation, searchWorkingTime, searchExperience, minSalary, maxSalary, currentPage])
+        // console.log('Filtered Results:', filteredResults)
+        // setFilteredResults(filteredResults)
+        handlePageChange(currentPage)
+    }, [searchLocation, searchWorkingTime, searchExperience, minSalary, maxSalary, currentPage])
 
     // Thêm vào array bên trên khi triển khai xong filter khác, ví dụ [searchResults, searchLocation, searchExperience, searchSalary]
     const handlePageChange = async (page: number) => {
         console.log('Changing to page:', page)
         const response = await searchJobs({
             title: state.searchTitle,
-            yearsOfExp: state.searchExperience,
-            location: state.searchLocation,
-            page
+            yearsOfExp: searchExperience,
+            location: searchLocation,
+            minSalary: minSalary,
+            maxSalary: maxSalary,
+            workingTime: searchWorkingTime,
+            page: page
         })
         if (response?.status === 200) {
-            setSearchResults(response.data.jobs)
             setFilteredResults(response.data.jobs)
             setCurrentPage(page)
-            window.scrollTo(0, 0)
+            setTotalPages(response.data.totalPages)
         } else {
             console.log(response)
         }
     }
-    const locationFilter = (input: JobData[], filterString: string) => {
-        if (!filterString) {
-            return input
-        }
-        return input.filter((item) =>
-            item.companyID.companyLocations.toString().toLowerCase().includes(filterString.toLowerCase())
-        )
-    }
 
-    // TODO
-    const experienceFilter = (input: JobData[], filterString: string) => {
-        if (!filterString) {
-            return input
-        }
+    // const locationFilter = (input: JobData[], filterString: string) => {
+    //     if (!filterString) {
+    //         return input
+    //     }
+    //     return input.filter((item) =>
+    //         item.companyID.companyLocations.toString().toLowerCase().includes(filterString.toLowerCase())
+    //     )
+    // }
 
-        const [minExp, maxExp] = filterString.split('-').map((value) => parseInt(value.trim(), 10))
+    // // TODO
+    // const experienceFilter = (input: JobData[], filterString: string) => {
+    //     if (!filterString) {
+    //         return input
+    //     }
 
-        return input.filter((item) => {
-            const expRange = item.yearsOfExp.split('-').map((value) => parseInt(value.trim(), 10))
+    //     const [minExp, maxExp] = filterString.split('-').map((value) => parseInt(value.trim(), 10))
 
-            if (expRange.length === 2) {
-                const [minOffer, maxOffer] = expRange
+    //     return input.filter((item) => {
+    //         const expRange = item.yearsOfExp.split('-').map((value) => parseInt(value.trim(), 10))
 
-                if (!isNaN(minOffer) && !isNaN(maxOffer)) {
-                    return (minExp >= minOffer && minExp <= maxOffer) || (maxExp >= minOffer && maxExp <= maxOffer)
-                }
-            }
+    //         if (expRange.length === 2) {
+    //             const [minOffer, maxOffer] = expRange
 
-            return false
-        })
-    }
+    //             if (!isNaN(minOffer) && !isNaN(maxOffer)) {
+    //                 return (minExp >= minOffer && minExp <= maxOffer) || (maxExp >= minOffer && maxExp <= maxOffer)
+    //             }
+    //         }
 
-    const workingTimeFilter = (input: JobData[], filterString: string) => {
-        if (!filterString) {
-            return input
-        }
-        return input.filter((item) => item.workingTime.toLowerCase() === filterString.toLowerCase())
-    }
+    //         return false
+    //     })
+    // }
 
-    const salaryFilter = (input: JobData[], minSalary: string, maxSalary: string) => {
-        if (!minSalary && !maxSalary) {
-            return input
-        }
+    // const workingTimeFilter = (input: JobData[], filterString: string) => {
+    //     if (!filterString) {
+    //         return input
+    //     }
+    //     return input.filter((item) => item.workingTime.toLowerCase() === filterString.toLowerCase())
+    // }
 
-        const filteredResults = input.filter((item) => {
-            const offerSalary = item.offerSalary
+    // const salaryFilter = (input: JobData[], minSalary: string, maxSalary: string) => {
+    //     if (!minSalary && !maxSalary) {
+    //         return input
+    //     }
 
-            if (offerSalary) {
-                let minOffer, maxOffer
-                if (!offerSalary.includes('-')) {
-                    const numericValue = offerSalary.match(/\$([\d,]+)/)
-                    minOffer = numericValue ? parseFloat(numericValue[1].replace(/,/g, '')) : NaN
-                    maxOffer = minOffer
-                } else {
-                    ;[minOffer, maxOffer] = offerSalary
-                        .replace(/[^0-9.-]+/g, '')
-                        .split('-')
-                        .map((value) => parseFloat(value))
-                }
-                if (!isNaN(minOffer) && !isNaN(maxOffer)) {
-                    if (minSalary && maxSalary) {
-                        return (
-                            (minOffer >= parseFloat(minSalary) && minOffer <= parseFloat(maxSalary)) ||
-                            (maxOffer >= parseFloat(minSalary) && maxOffer <= parseFloat(maxSalary))
-                        )
-                    } else if (minSalary) {
-                        return minOffer <= parseFloat(minSalary) && maxOffer >= parseFloat(minSalary)
-                    } else if (maxSalary) {
-                        return maxOffer >= parseFloat(maxSalary) && minOffer <= parseFloat(maxSalary)
-                    }
-                }
-            }
+    //     const filteredResults = input.filter((item) => {
+    //         const offerSalary = item.offerSalary
 
-            return false
-        })
+    //         if (offerSalary) {
+    //             let minOffer, maxOffer
+    //             if (!offerSalary.includes('-')) {
+    //                 const numericValue = offerSalary.match(/\$([\d,]+)/)
+    //                 minOffer = numericValue ? parseFloat(numericValue[1].replace(/,/g, '')) : NaN
+    //                 maxOffer = minOffer
+    //             } else {
+    //                 ;[minOffer, maxOffer] = offerSalary
+    //                     .replace(/[^0-9.-]+/g, '')
+    //                     .split('-')
+    //                     .map((value) => parseFloat(value))
+    //             }
+    //             if (!isNaN(minOffer) && !isNaN(maxOffer)) {
+    //                 if (minSalary && maxSalary) {
+    //                     return (
+    //                         (minOffer >= parseFloat(minSalary) && minOffer <= parseFloat(maxSalary)) ||
+    //                         (maxOffer >= parseFloat(minSalary) && maxOffer <= parseFloat(maxSalary))
+    //                     )
+    //                 } else if (minSalary) {
+    //                     return minOffer <= parseFloat(minSalary) && maxOffer >= parseFloat(minSalary)
+    //                 } else if (maxSalary) {
+    //                     return maxOffer >= parseFloat(maxSalary) && minOffer <= parseFloat(maxSalary)
+    //                 }
+    //             }
+    //         }
 
-        return filteredResults
-    }
+    //         return false
+    //     })
+
+    //     return filteredResults
+    // }
 
     const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const searchLocation = e.target.value
@@ -191,6 +193,15 @@ const Search = () => {
     const handleSeeJobDetail = (result: JobData) => {
         navigate(`/job/${result._id}`, { state: result })
     }
+
+    const handClearFilter = () => {
+        setSearchExperience('')
+        setSearchLocation('')
+        setMinSalary('')
+        setMaxSalary('')
+        setWorkingTime('')
+    }
+
     return (
         <div className='my-8'>
             <div className='my-8 flex items-start gap-4'>
@@ -257,6 +268,11 @@ const Search = () => {
                             onChange={handleLocationChange}
                             value={searchLocation}
                         />
+                    </div>
+                    <div className='my-6 flex items-center justify-center'>
+                        <Button className='font-semibold bg-blue-700 hover:bg-blue-500' onClick={handClearFilter}>
+                            Clear all filters
+                        </Button>
                     </div>
                 </div>
                 <div className='min-w-min flex flex-col gap-4 grow'>
