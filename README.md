@@ -9,7 +9,7 @@
   <p align="center">
     Find your dream IT job now
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/PhiVietHoang/ITJobHunter"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://itjobhunter.netlify.app/">View Demo</a>
